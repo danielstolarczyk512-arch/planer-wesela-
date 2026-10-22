@@ -1,0 +1,1200 @@
+/* --- powłoka: 6 zakładek --- */
+.wshell__main {
+  /* Miejsce na dolny pasek i bezpieczny obszar systemu (telefon). */
+  padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+}
+
+.wshell__nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--wp-surface);
+  border-top: 1px solid var(--wp-separator);
+  border-radius: var(--wp-radius-sheet) var(--wp-radius-sheet) 0 0;
+  /* Pasek stoi w miejscu podczas przenikania treści między zakładkami. */
+  view-transition-name: wp-tabbar;
+}
+
+.wshell__tab {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--wp-space-1);
+  min-height: 4rem;
+  padding: var(--wp-space-1) 0;
+  color: var(--wp-text-secondary);
+  text-decoration: none;
+  font: var(--wp-type-navigation) var(--wp-font-body);
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wshell__icon {
+  display: grid;
+  place-items: center;
+  width: min(3.5rem, 100%);
+  height: 2rem;
+  border-radius: 999px;
+  transition: background-color var(--wp-motion-tab-duration) var(--wp-ease-standard);
+}
+
+/* Aktywna zakładka: kolor, tło ikony i pogrubienie (nie sam kolor). */
+.wshell__tab[aria-current="page"] {
+  color: var(--wp-action-primary);
+  font-weight: 700;
+}
+
+.wshell__tab[aria-current="page"] .wshell__icon {
+  background: var(--wp-accent-surface);
+}
+
+.wshell__tab:focus-visible {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: calc(var(--wp-focus-offset) * -2);
+}
+
+/* Tablet i komputer: wąski pasek boczny, treść obok. */
+@media (min-width: 768px) {
+  .wshell {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+  }
+
+  .wshell__nav {
+    position: sticky;
+    top: 4.25rem;
+    align-self: start;
+    grid-template-columns: none;
+    grid-auto-rows: min-content;
+    gap: var(--wp-space-2);
+    height: calc(100dvh - 4.25rem);
+    padding: var(--wp-space-4) 0;
+    border-top: 0;
+    border-right: 1px solid var(--wp-separator);
+    border-radius: 0;
+    background: var(--wp-background);
+  }
+
+  .wshell__main {
+    padding-bottom: var(--wp-space-7);
+  }
+}
+
+
+/* --- Dziś: odliczanie --- */
+.hero {
+  display: grid;
+  gap: var(--wp-space-2);
+  padding: var(--wp-space-5);
+  border-radius: var(--wp-radius-card);
+  background: var(--wp-action-primary);
+  color: var(--wp-text-on-primary);
+}
+
+.hero__overline {
+  color: inherit;
+  opacity: 0.9;
+}
+
+.hero__count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--wp-space-3);
+}
+
+/* Bez animacji odliczania (spec): liczba zmienia się tylko po przeładowaniu danych. */
+.hero__value {
+  font-family: var(--wp-font-heading);
+  font-size: clamp(var(--wp-type-countdown-min), 16vw, var(--wp-type-countdown-max));
+  line-height: 1;
+}
+
+/* Przełącznik wyglądu odliczania: tekst na tle akcentu, cel dotyku 44 px. */
+.hero__switch {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.hero__switch[data-focus-visible] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* --- wspólne elementy widoków --- */
+.view-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--wp-space-3);
+}
+
+.view-head p {
+  margin-top: var(--wp-space-1);
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp-space-3);
+}
+
+.section-head h2 {
+  font: 700 1.125rem/1.4 var(--wp-font-body);
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--wp-space-3);
+}
+
+.stat {
+  display: grid;
+  gap: var(--wp-space-1);
+}
+
+/* Kafelek w siatce nie rozpycha kolumny: długa kwota (twarde spacje, np. „123 456,78 zł”)
+   zmniejsza się do szerokości kafelka zamiast dawać poziomy scroll na 320–390 px. */
+.stat-grid > .stat {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.stat__value {
+  font-size: var(--wp-type-amount-min);
+  line-height: 1.2;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums lining-nums;
+  overflow-wrap: anywhere;
+}
+
+.stat-grid > .stat .stat__value {
+  font-size: clamp(1.125rem, 13cqi, var(--wp-type-amount-min));
+}
+
+.stat__value--ok {
+  color: var(--wp-success-text);
+}
+
+.stat__value--warn {
+  color: var(--wp-warning-text);
+}
+
+.stat__value--neutral {
+  color: var(--wp-neutral-text);
+}
+
+.row-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row-list > li + li {
+  border-top: 1px solid var(--wp-separator);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-3);
+  min-height: 4rem;
+  padding: var(--wp-space-2) 0;
+}
+
+.row__body {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 0.125rem;
+}
+
+.row__title {
+  overflow-wrap: anywhere;
+}
+
+.row__end {
+  display: grid;
+  justify-items: end;
+  gap: 0.125rem;
+  text-align: right;
+}
+
+.amount-lg {
+  font-size: clamp(var(--wp-type-amount-min), 9vw, var(--wp-type-amount-max));
+  line-height: 1.15;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.done-title {
+  text-decoration: line-through;
+  color: var(--wp-text-secondary);
+}
+
+.meter {
+  display: grid;
+  gap: var(--wp-space-2);
+}
+
+.meter__track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--wp-accent-surface);
+  overflow: hidden;
+}
+
+.meter__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--wp-action-primary);
+  transition: width var(--wp-motion-value-change-duration) var(--wp-ease-standard);
+}
+
+.meter__fill--over {
+  background: var(--wp-error-text);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-2);
+  min-width: 0;
+}
+
+/* Długie statusy („Ślub w kościele: bez odpowiedzi”) zawijają się zamiast poszerzać ekran. */
+.chips .wp-chip {
+  white-space: normal;
+  max-width: 100%;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp-space-3);
+  color: inherit;
+  text-decoration: none;
+}
+
+.link-card:hover {
+  border-color: var(--wp-control-border);
+}
+
+/* --- Ustawienia --- */
+.back-link {
+  justify-content: flex-start;
+  padding-left: 0;
+  margin-bottom: var(--wp-space-1);
+}
+
+.card-title {
+  font: 700 1rem/1.4 var(--wp-font-body);
+  margin-bottom: var(--wp-space-2);
+}
+
+.member-row {
+  flex-wrap: wrap;
+}
+
+.member-row__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--wp-space-2);
+  width: 100%;
+}
+
+.member-row__actions .wp-field {
+  flex: 1 1 12rem;
+}
+
+/* Listy w oknach podglądu: bez własnego przewijania (przewija się okno — dostępne z klawiatury). */
+.reschedule-list {
+  min-width: 0;
+}
+
+/* Wiersz klikany do edycji (zadanie, wydatek, osoba). */
+.row-edit {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 0.125rem;
+  padding: var(--wp-space-1) 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+/* Samo imię w karcie rodziny: przycisk na szerokość tekstu, cel dotyku ≥ 44 px wysokości. */
+.row-edit--inline {
+  flex: none;
+  justify-self: start;
+  min-height: var(--wp-touch);
+  align-content: center;
+}
+
+.row-edit[data-focus-visible] {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}
+
+/* --- Goście: karta rodziny (rozwijana) --- */
+.household {
+  padding: 0;
+}
+
+.household__heading {
+  margin: 0;
+  font: inherit;
+}
+
+.household__trigger {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-3);
+  width: 100%;
+  min-height: 4.5rem;
+  padding: var(--wp-space-3) var(--wp-space-4);
+  border: 0;
+  border-radius: var(--wp-radius-card);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.household__trigger[data-focus-visible] {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: calc(var(--wp-focus-offset) * -1);
+}
+
+.household__name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.household__chevron {
+  flex: none;
+  transition: transform var(--wp-motion-expand-duration) var(--wp-ease-standard);
+}
+
+.household[data-expanded] .household__chevron {
+  transform: rotate(180deg);
+}
+
+.household__panel {
+  padding: 0 var(--wp-space-4) var(--wp-space-2);
+}
+
+.household__panel[data-expanded] {
+  animation: wp-fade-in var(--wp-motion-expand-duration) var(--wp-ease-standard);
+}
+
+.form-stack {
+  display: grid;
+  /* Kolumna nie rośnie ponad ekran przez długą treść karty (min-width: auto w siatce). */
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--wp-space-4);
+}
+
+/* --- Harmonogram dnia: godzina w stałej kolumnie, treść obok --- */
+.timeline__row {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--wp-space-3);
+}
+
+.timeline__time {
+  display: grid;
+  color: var(--wp-text-primary);
+}
+
+.conflict-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: var(--wp-space-1);
+}
+
+.shift {
+  margin-top: var(--wp-space-5);
+  padding-top: var(--wp-space-4);
+  border-top: 1px solid var(--wp-separator);
+}
+
+.rsvp-link {
+  margin-top: var(--wp-space-5);
+  padding-top: var(--wp-space-4);
+  border-top: 1px solid var(--wp-separator);
+}
+
+/* Wydruk harmonogramu: sama treść, bez nawigacji i przycisków. */
+@media print {
+  .shell-header,
+  .wshell__nav,
+  .skip-link,
+  .schedule .back-link,
+  .schedule .wp-button,
+  .schedule .wp-chip {
+    display: none !important;
+  }
+
+  .schedule .wp-card {
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
+/* --- Plan stołów: karty stołów w siatce, osoby jako „żetony” --- */
+.seating-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-3);
+  align-items: center;
+}
+
+.table-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: var(--wp-space-3);
+}
+
+.seating-table {
+  display: grid;
+  gap: var(--wp-space-2);
+  align-content: start;
+}
+
+.seating-people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.person-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp-space-1);
+  min-height: 2.25rem;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--wp-control-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--wp-text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+span.person-chip {
+  cursor: default;
+}
+
+.person-chip[data-focus-visible] {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}
+
+.person-chip[data-pressed] {
+  background: var(--wp-separator);
+}
+
+.move-option {
+  width: 100%;
+  min-height: var(--wp-touch);
+}
+
+.move-option[data-disabled] {
+  cursor: default;
+  opacity: 0.7;
+}
+
+
+/* --- Usługodawcy i oferty --- */
+.prewrap {
+  white-space: pre-wrap;
+}
+
+.offer-line {
+  align-items: flex-start;
+}
+
+.offer-line__end {
+  display: grid;
+  justify-items: end;
+  gap: var(--wp-space-1);
+  text-align: right;
+  max-width: 45%;
+}
+
+/* Cytat z dokumentu źródłowego: skąd AI wzięła kwotę. */
+.citation {
+  display: flex;
+  gap: var(--wp-space-2);
+  margin: var(--wp-space-1) 0 0;
+  padding: var(--wp-space-2) var(--wp-space-3);
+  border-left: 3px solid var(--wp-separator);
+  font-size: var(--wp-type-secondary-size);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.citation svg {
+  flex: none;
+  margin-top: 0.2rem;
+}
+
+.offer-row {
+  border: 1px solid var(--wp-separator);
+  box-shadow: none;
+}
+
+.plain-fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.quote__total {
+  display: grid;
+  gap: var(--wp-space-1);
+  margin: 0;
+}
+
+.quote__details {
+  border-top: 1px solid var(--wp-separator);
+}
+
+.consequences {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: var(--wp-space-2);
+}
+
+.ai-box {
+  padding: var(--wp-space-4);
+  border: 1px solid var(--wp-separator);
+  border-radius: 12px;
+}
+
+/* Reakcja na naciśnięcie wierszy, kart-linków i „żetonów” osób (jak przyciski, motion.json „press”). */
+.row-edit,
+.person-chip,
+.link-card {
+  transition: transform var(--wp-motion-press-release-duration) var(--wp-ease-standard);
+}
+
+.row-edit[data-pressed],
+.person-chip[data-pressed],
+.link-card:active {
+  transform: scale(var(--wp-motion-press-scale));
+  transition-duration: var(--wp-motion-press-duration);
+}
+
+/* Płatności w panelu wydatku */
+.item-payments {
+  margin-top: var(--wp-space-5);
+  padding-top: var(--wp-space-4);
+  border-top: 1px solid var(--wp-separator);
+}
+
+.meter__track--thin {
+  display: block;
+  height: 0.375rem;
+  margin-top: var(--wp-space-1);
+}
+
+/* Tekst odczytany z dokumentu */
+.doc-text {
+  border: 1px solid var(--wp-separator);
+  border-radius: 12px;
+}
+
+.doc-text__panel {
+  padding: 0 var(--wp-space-4) var(--wp-space-4);
+  display: grid;
+  gap: var(--wp-space-3);
+}
+
+.doc-text__page h4 {
+  margin: 0 0 var(--wp-space-1);
+  font-size: var(--wp-type-secondary-size);
+}
+
+.doc-text__page p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Wskazówka pod pozycją listy (np. dokument do ślubu): wcięta pod pole wyboru. */
+.subtask-tip {
+  margin: 0 0 var(--wp-space-2) calc(var(--wp-touch) + var(--wp-space-2));
+  font-size: var(--wp-type-secondary-size);
+}
+
+/* --- podzakładki działu (Budżet: wydatki / usługodawcy; Goście: lista / stoły) --- */
+.subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-2);
+}
+
+.subnav__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--wp-touch);
+  padding: 0 var(--wp-space-4);
+  border: 1px solid var(--wp-separator);
+  border-radius: 999px;
+  color: var(--wp-text-primary);
+  text-decoration: none;
+}
+
+/* Aktywna podzakładka: tło, obramowanie i pogrubienie (nie sam kolor). */
+.subnav__link[aria-current="page"] {
+  background: var(--wp-accent-surface);
+  border-color: var(--wp-action-primary);
+  font-weight: 700;
+}
+
+.subnav__link:focus-visible {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}
+
+/* --- listy przy usługodawcy --- */
+.checklist-row {
+  padding: var(--wp-space-2) 0;
+}
+
+/* Własna pozycja: pole i przycisk w jednym wierszu, na wąskim ekranie jedno pod drugim. */
+.inline-add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--wp-space-3);
+  align-items: end;
+}
+
+@media (max-width: 400px) {
+  .inline-add {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Odpowiedzi usługodawcy w porównaniu ofert. */
+.answers {
+  display: grid;
+  gap: var(--wp-space-2);
+  margin: 0;
+}
+
+.answers dd {
+  margin: 0;
+}
+
+/* --- kalendarz --- */
+.month-nav {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--wp-space-2);
+  text-align: center;
+}
+
+.calendar-day {
+  margin: 0;
+  font-size: var(--wp-type-secondary-size);
+  color: var(--wp-text-secondary);
+}
+
+/* Dziś: pogrubienie i znacznik w tekście („· dziś”), nie sam kolor. */
+.calendar-day--today {
+  color: var(--wp-text-primary);
+  font-weight: 700;
+}
+
+.feed-url {
+  overflow-wrap: anywhere;
+  font-family: ui-monospace, monospace;
+}
+
+/* Zadanie w kalendarzu: przycisk w układzie wiersza (ikona, treść, znacznik). */
+.calendar-entry {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: var(--wp-space-3);
+  min-height: 4rem;
+  padding: var(--wp-space-2) 0;
+}
+
+.print-link {
+  gap: var(--wp-space-2);
+  justify-self: start;
+}
+
+/* --- dzień ślubu: plan B i tryb na żywo --- */
+/* „Co jeśli”: dwa scenariusze. Tabela od 768 px; na telefonie karty z wierszami A/B. */
+.scenario-table-wrap {
+  display: none;
+}
+
+.scenario-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.scenario-table th,
+.scenario-table td {
+  padding: var(--wp-space-2);
+  border-bottom: 1px solid var(--wp-separator);
+  text-align: left;
+  vertical-align: top;
+}
+
+.scenario-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.scenario-table__sub {
+  display: block;
+  font-size: var(--wp-type-secondary-size);
+}
+
+.scenario-plan__h {
+  margin: 0;
+  font-size: var(--wp-type-body-size);
+}
+
+@media (min-width: 768px) {
+  .scenario-table-wrap {
+    display: block;
+  }
+
+  /* Kwoty są w tabeli — na karcie zostają uwagi i raty. */
+  .scenario-card__rows {
+    display: none;
+  }
+}
+
+/* Kod QR przy nowym linku RSVP (biały kwadrat także w ciemnym motywie — skanery). */
+.qr-image {
+  width: 10rem;
+  height: 10rem;
+  padding: var(--wp-space-1);
+  border-radius: var(--wp-radius-button);
+  background: #fff;
+}
+
+/* Układ sali (SVG w metrach): kolory z tokenów, czytelne w jasnym i ciemnym motywie. */
+.room-plan {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  touch-action: none; /* przeciąganie stołów palcem bez przewijania strony */
+}
+
+.room-plan__floor {
+  fill: var(--wp-surface);
+  stroke: var(--wp-text-secondary);
+  stroke-width: 0.08;
+}
+
+.room-plan__item rect {
+  fill: var(--wp-neutral-background);
+  stroke: var(--wp-separator);
+  stroke-width: 0.05;
+}
+
+.room-plan__item--dance_floor rect {
+  fill: var(--wp-info-background);
+}
+
+.room-plan__table circle,
+.room-plan__table rect {
+  fill: var(--wp-accent-surface);
+  stroke: var(--wp-action-primary);
+  stroke-width: 0.06;
+  cursor: grab;
+}
+
+.room-plan__table.is-head circle,
+.room-plan__table.is-head rect {
+  fill: var(--wp-selected-surface);
+  stroke-width: 0.12;
+}
+
+.room-plan__table.is-selected circle,
+.room-plan__table.is-selected rect {
+  stroke-width: 0.16;
+}
+
+.room-plan__label {
+  fill: var(--wp-text-primary);
+  font-size: 0.42px;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.room-controls .chips {
+  flex-wrap: wrap;
+}
+
+.room-add {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--wp-space-2);
+}
+
+.room-item-row {
+  flex-wrap: wrap;
+}
+
+.seat-no {
+  margin-right: 0.25em;
+  color: var(--wp-text-secondary);
+}
+
+/* Wyszukiwanie w dokumentach: fragment tekstu z trafieniem. */
+.search-snippet {
+  display: block;
+  margin-top: var(--wp-space-1);
+  color: var(--wp-text-secondary);
+  font-size: var(--wp-type-secondary-size);
+  overflow-wrap: anywhere;
+}
+
+/* Frekwencja i lista rezerwowa */
+.forecast__value {
+  margin: 0;
+  font-size: clamp(var(--wp-type-amount-min), 9vw, var(--wp-type-amount-max));
+  font-weight: 600;
+}
+
+.forecast__people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-2);
+}
+
+.forecast__assumptions > summary,
+.reserve-invited > summary {
+  cursor: pointer;
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.reserve-row {
+  flex-wrap: wrap;
+}
+
+.reserve__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp-space-1);
+  margin-left: auto;
+}
+
+.invite-person {
+  border: 1px solid var(--wp-separator);
+  border-radius: var(--wp-radius-button);
+  padding: var(--wp-space-3);
+  margin: 0;
+}
+
+/* Portfel sponsorów */
+.funder-numbers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--wp-space-3);
+  margin: 0;
+}
+
+.funder-numbers dt {
+  color: var(--wp-text-secondary);
+}
+
+.funder-numbers dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.funder-progress {
+  display: grid;
+  gap: var(--wp-space-1);
+}
+
+.funder-progress progress {
+  width: 100%;
+  height: 0.75rem;
+  accent-color: var(--wp-action-primary);
+}
+
+/* Dokumenty do ślubu */
+.cdocs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--wp-space-3);
+}
+
+.cdocs__title {
+  font-size: var(--wp-type-body-size);
+  font-weight: 600;
+}
+
+.cdocs__window {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-4);
+  margin: 0;
+}
+
+.cdocs__window dt {
+  color: var(--wp-text-secondary);
+}
+
+.cdocs__window dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.cdocs__source {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp-space-1);
+  min-height: 2.75rem;
+}
+
+.cdocs__edit {
+  display: grid;
+  gap: var(--wp-space-3);
+  align-items: end;
+}
+
+@media (min-width: 768px) {
+  .cdocs__edit {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cdocs__edit .wp-sheet__actions {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Nagłówek karty ze znacznikiem stanu: na wąskim ekranie znacznik schodzi pod tytuł. */
+.section-head--wrap {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.section-head--wrap .wp-chip {
+  white-space: normal;
+}
+
+/* Strażnik waloryzacji */
+.indexation-fields > summary {
+  cursor: pointer;
+  min-height: 2.75rem;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+/* Wręczanie zaproszeń */
+.delivery-row {
+  flex-wrap: wrap;
+}
+
+.delivery-row .wp-checkbox {
+  flex: 1;
+  min-width: 12rem;
+}
+
+.delivery-plan {
+  display: grid;
+  gap: var(--wp-space-3);
+}
+
+@media (min-width: 768px) {
+  .delivery-plan {
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+  }
+}
+
+/* Transport i noclegi */
+.logistics__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp-space-2);
+  margin: 0;
+  font-size: var(--wp-type-body-size);
+  font-weight: 700;
+}
+
+/* Po weselu */
+.name-change-row {
+  align-items: flex-start;
+}
+
+/* Wymaga uwagi (Dziś) */
+.attention-row {
+  flex-wrap: wrap;
+}
+
+.attention-row .wp-chip {
+  flex-shrink: 0;
+}
+
+/* Co zabrać na dzień ślubu */
+.checklist__remove {
+  margin-left: auto;
+}
+
+.checklist__add {
+  margin-top: var(--wp-space-3);
+}
+
+@media (min-width: 768px) {
+  .checklist__add {
+    grid-template-columns: 2fr 1fr auto;
+  }
+}
+
+/* Porównanie dat ślubu */
+.chip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-2);
+}
+
+.notes-list {
+  margin: 0;
+  padding-inline-start: var(--wp-space-5);
+  display: grid;
+  gap: var(--wp-space-2);
+}
+
+.row-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-2);
+  margin: 0;
+}
+
+/* Przyciski przy wierszu (kolejność, edycja, decyzja) */
+.row-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: var(--wp-space-1);
+  margin-inline-start: auto;
+}
+
+/* Zdjęcia grupowe: na wąskim ekranie przyciski kolejności schodzą pod nazwę grupy. */
+.photo-groups .row {
+  flex-wrap: wrap;
+}
+
+.photo-groups .row > :first-child {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+/* Menu: 14 alergenów w siatce pól wyboru */
+.allergen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--wp-space-1) var(--wp-space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.allergen-grid > legend {
+  grid-column: 1 / -1;
+  margin-bottom: var(--wp-space-2);
+}
+
+/* Długi link (np. dla pomocnika) łamie się zamiast rozpychać ekran. */
+.link-text {
+  overflow-wrap: anywhere;
+}
+
+/* Plan wydatków: miesiące z paskiem względem najwyższego miesiąca */
+.cashflow {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cashflow th,
+.cashflow td {
+  padding: var(--wp-space-2) var(--wp-space-1);
+  text-align: start;
+  border-bottom: 1px solid var(--wp-separator);
+}
+
+.cashflow td {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.cashflow thead th {
+  font: var(--wp-type-secondary) var(--wp-font-body);
+  color: var(--wp-text-secondary);
+}
+
+.cashflow tbody th {
+  font-weight: 400;
+}
+
+.cashflow__bar {
+  display: block;
+  height: 4px;
+  margin-top: var(--wp-space-1);
+  border-radius: 2px;
+  background: var(--wp-action-primary);
+}
+
+.cashflow .is-peak th {
+  font-weight: 700;
+}

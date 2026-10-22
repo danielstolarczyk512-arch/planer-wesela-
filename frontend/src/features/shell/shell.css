@@ -1,0 +1,75 @@
+.skip-link {
+  position: absolute;
+  left: var(--wp-space-2);
+  top: -4rem;
+  z-index: 300;
+  padding: var(--wp-space-3) var(--wp-space-4);
+  background: var(--wp-action-primary);
+  color: var(--wp-text-on-primary);
+  border-radius: var(--wp-radius-button);
+}
+
+.skip-link:focus {
+  top: var(--wp-space-2);
+}
+
+.shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp-space-3);
+  padding: calc(var(--wp-space-2) + env(safe-area-inset-top)) var(--wp-pad) var(--wp-space-2);
+  background: var(--wp-background);
+  border-bottom: 1px solid var(--wp-separator);
+}
+
+.shell-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp-space-2);
+  min-height: var(--wp-touch);
+  font: var(--wp-type-h2) var(--wp-font-heading);
+  color: var(--wp-action-primary);
+  text-decoration: none;
+}
+
+.shell-brand svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+}
+
+.shell-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-1);
+}
+
+.shell-icon-link {
+  display: grid;
+  place-items: center;
+  width: var(--wp-touch);
+  height: var(--wp-touch);
+  border-radius: 50%;
+  color: var(--wp-text-primary);
+}
+
+.shell-icon-link:hover {
+  background: var(--wp-accent-surface);
+}
+
+.shell-content:focus {
+  outline: none;
+}
+
+/* Wąski telefon: przy „Wyloguj” tylko ikona (nazwa zostaje w aria-label), żeby zmieściła się lupa. */
+@media (max-width: 400px) {
+  .shell-hide-narrow {
+    display: none;
+  }
+}

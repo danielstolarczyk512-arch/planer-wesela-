@@ -1,0 +1,55 @@
+# Caddy (Apache-2.0): TLS z Let's Encrypt automatycznie, przekierowanie HTTP→HTTPS.
+# DOMAIN=twojadomena.pl (produkcja) albo DOMAIN=localhost (lokalny staging, certyfikat wewnętrzny).
+# Aplikacja webowa i API pod jedną domeną: ciasteczko sesji ma SameSite=Strict.
+{
+	email {$ACME_EMAIL}
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		# Ta sama polityka co CSP w frontend/vite.config.ts (test frontendu pilnuje zgodności).
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'sha256-38RhXrc7EdReTKsOm23ZPOCUgniTUUcjky8QOOrQx6o=' 'sha256-gYiS/BvZvRcK27JIXTuwhZ3hs2+VJ1X+2gUlE+farlg='; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+		-Server
+	}
+
+	# Limit treści żądania (pliki do 20 MB + narzut multipart); API sprawdza go też samo.
+	request_body {
+		max_size 25MB
+	}
+
+	# API (dokumentacja API wyłączona w produkcji: WP_EXPOSE_DOCS=false).
+	@api path /api/* /health/*
+	handle @api {
+		reverse_proxy api:8000 {
+			health_uri /health/live
+			health_interval 15s
+		}
+	}
+
+	# Aplikacja webowa (frontend/dist): pliki z hashem w nazwie cache'owane na długo,
+	# index.html zawsze świeży; nieznane ścieżki → index.html (routing po stronie przeglądarki).
+	handle {
+		root * /srv
+		@assets path /assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+		@html path / /index.html /sw.js /manifest.webmanifest
+		header @html Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+
+	log {
+		output stdout
+		format json
+	}
+}

@@ -1,0 +1,138 @@
+"""Rejestr wszystkich modeli: Alembic i testy importują metadane stąd."""
+
+from app.core.db import Base
+from app.core.idempotency import IdempotencyKey
+from app.core.ratelimit import RateLimitHit
+from app.jobs.queue import Job
+from app.modules.aftercare.models import AfterCheck, Deliverable
+from app.modules.ai.models import AiRun
+from app.modules.audit.models import AuditLog, SecurityEvent
+from app.modules.budget.models import (
+    BudgetCategory,
+    BudgetItem,
+    Funder,
+    FunderContribution,
+    Payment,
+)
+from app.modules.calendar.models import CalendarFeedToken
+from app.modules.documents.models import Document, DocumentVersion
+from app.modules.guests.models import (
+    GiftIdea,
+    Guest,
+    GuestEventAttendance,
+    GuestInfo,
+    GuestWish,
+    Household,
+    ReserveEntry,
+    RsvpToken,
+)
+from app.modules.identity.models import (
+    AuthSession,
+    Consent,
+    MfaRecoveryCode,
+    OneTimeToken,
+    User,
+    UserMfa,
+)
+from app.modules.logistics.models import LodgingRoom, RoomGuest, TransportRun, TransportSeat
+from app.modules.menu.models import MenuDish
+from app.modules.notifications.models import DigestLog, NotificationPreference
+from app.modules.offers.models import Offer, OfferTerm, PricingComponent
+from app.modules.planner.models import (
+    CeremonyDocument,
+    Helper,
+    Task,
+    TaskComment,
+    TaskDependency,
+)
+from app.modules.schedule.models import (
+    DayChecklistItem,
+    MusicEntry,
+    PhotoGroup,
+    PhotoGroupGuest,
+    PrepPerson,
+    PrepPlan,
+    ScheduleDependency,
+    ScheduleItem,
+    VendorBrief,
+    VendorDayLink,
+)
+from app.modules.seating.models import (
+    SeatAssignment,
+    SeatingAutoRun,
+    SeatingRoom,
+    SeatingRule,
+    SeatingTable,
+)
+from app.modules.vendors.models import Vendor, VendorChecklistItem
+from app.modules.workspace.models import Event, Wedding, WeddingInvitation, WeddingMember
+
+__all__ = [
+    "AfterCheck",
+    "AiRun",
+    "AuditLog",
+    "AuthSession",
+    "Base",
+    "BudgetCategory",
+    "BudgetItem",
+    "CalendarFeedToken",
+    "CeremonyDocument",
+    "Consent",
+    "DayChecklistItem",
+    "Deliverable",
+    "DigestLog",
+    "Document",
+    "DocumentVersion",
+    "Event",
+    "Funder",
+    "FunderContribution",
+    "GiftIdea",
+    "Guest",
+    "GuestEventAttendance",
+    "GuestInfo",
+    "GuestWish",
+    "Helper",
+    "Household",
+    "IdempotencyKey",
+    "Job",
+    "LodgingRoom",
+    "MenuDish",
+    "MfaRecoveryCode",
+    "MusicEntry",
+    "NotificationPreference",
+    "Offer",
+    "OfferTerm",
+    "OneTimeToken",
+    "Payment",
+    "PhotoGroup",
+    "PhotoGroupGuest",
+    "PrepPerson",
+    "PrepPlan",
+    "PricingComponent",
+    "RateLimitHit",
+    "ReserveEntry",
+    "RoomGuest",
+    "RsvpToken",
+    "ScheduleDependency",
+    "ScheduleItem",
+    "SeatAssignment",
+    "SeatingAutoRun",
+    "SeatingRoom",
+    "SeatingRule",
+    "SeatingTable",
+    "SecurityEvent",
+    "Task",
+    "TaskComment",
+    "TaskDependency",
+    "TransportRun",
+    "TransportSeat",
+    "User",
+    "UserMfa",
+    "Vendor",
+    "VendorBrief",
+    "VendorChecklistItem",
+    "VendorDayLink",
+    "Wedding",
+    "WeddingInvitation",
+    "WeddingMember",
+]

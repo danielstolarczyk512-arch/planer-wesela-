@@ -1,0 +1,60 @@
+.wp-segmented {
+  display: grid;
+  gap: var(--wp-space-2);
+}
+
+.wp-segmented__track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-1);
+  padding: var(--wp-space-1);
+  border-radius: calc(var(--wp-radius-button) + 4px);
+  background: var(--wp-accent-surface);
+}
+
+.wp-segmented__option {
+  flex: 1 1 6rem;
+  display: grid;
+  place-items: center;
+  min-height: var(--wp-touch);
+  padding: 0 var(--wp-space-3);
+  border-radius: var(--wp-radius-button);
+  cursor: pointer;
+  color: var(--wp-text-primary);
+  transition: background-color var(--wp-motion-filter-duration) var(--wp-ease-standard);
+}
+
+.wp-segmented__option[data-selected] {
+  background: var(--wp-surface);
+  color: var(--wp-action-primary);
+  font-weight: 700;
+  box-shadow: var(--wp-shadow-card);
+  outline: 1px solid var(--wp-selected-border);
+}
+
+.wp-segmented--chips .wp-segmented__track {
+  padding: 0;
+  background: transparent;
+  gap: var(--wp-space-2);
+}
+
+.wp-segmented--chips .wp-segmented__option {
+  flex: 0 1 auto;
+  white-space: nowrap;
+  border: 1px solid var(--wp-control-border);
+  border-radius: 999px;
+  padding: 0 var(--wp-space-4);
+  background: var(--wp-surface);
+}
+
+.wp-segmented--chips .wp-segmented__option[data-selected] {
+  background: var(--wp-selected-surface);
+  border: 2px solid var(--wp-selected-border);
+  outline: none;
+  box-shadow: none;
+}
+
+.wp-segmented__option[data-focus-visible] {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}

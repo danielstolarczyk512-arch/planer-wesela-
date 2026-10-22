@@ -1,0 +1,143 @@
+/* Style globalne. Kolory, fonty i ruch wyłącznie ze zmiennych z tokens.css (generowane). */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--wp-background);
+  color: var(--wp-text-primary);
+  font: var(--wp-type-body) var(--wp-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--wp-font-heading);
+  font-weight: 400;
+  text-wrap: balance;
+}
+
+h1 {
+  font: var(--wp-type-h1) var(--wp-font-heading);
+}
+
+h2 {
+  font: var(--wp-type-h2) var(--wp-font-heading);
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--wp-action-primary);
+}
+
+:focus-visible {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}
+
+/* Kwoty, daty, liczniki: cyfry o stałej szerokości. */
+.num {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.text-secondary {
+  font: var(--wp-type-secondary) var(--wp-font-body);
+  color: var(--wp-text-secondary);
+}
+
+.overline {
+  font: var(--wp-type-overline) var(--wp-font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp-text-secondary);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Treść strony: jedna kolumna na telefonie, maks. szerokość na dużych ekranach. */
+.page {
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: var(--wp-space-5) var(--wp-pad) var(--wp-space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp-space-5);
+}
+
+.page > * {
+  min-width: 0;
+}
+
+@media (max-width: 340px) {
+  .page {
+    padding-inline: var(--wp-pad-small);
+  }
+}
+
+@keyframes wp-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes wp-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(var(--wp-motion-detail-translate));
+  }
+}
+
+.enter-detail {
+  animation: wp-slide-in var(--wp-motion-detail-enter-duration) var(--wp-ease-enter);
+}
+
+/* Zakładki: treść przenika się przez View Transition (zakładki to miejsca, nie kroki — bez przesuwu).
+   Przeglądarka bez View Transitions: krótkie pojawienie się. */
+@supports not (view-transition-name: none) {
+  .enter-tab {
+    animation: wp-fade-in var(--wp-motion-tab-duration) var(--wp-ease-standard);
+  }
+}
+
+/* Przenikanie całej strony: zmiana zakładki (180 ms) i motywu (200 ms). Ograniczony ruch: ≤ 100 ms
+   przez zmienne z tokens.css. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--wp-motion-tab-duration);
+  animation-timing-function: var(--wp-ease-standard);
+}
+
+:root.theme-transition::view-transition-old(root),
+:root.theme-transition::view-transition-new(root) {
+  animation-duration: var(--wp-motion-theme-duration);
+}

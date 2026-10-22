@@ -1,0 +1,196 @@
+# Skrypty projektu: task --list
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  setup:
+    desc: Pierwsze uruchomienie (.env z losowym sekretem, zależności, pre-commit)
+    cmds:
+      - uv run python -m scripts.setup_env
+      - uv sync
+      - uv run pre-commit install
+
+  up:
+    desc: Start środowiska (db, migracje, api, worker, mailpit)
+    cmds:
+      - docker compose up -d --build --wait db api mailpit
+      - docker compose up -d worker
+
+  down:
+    desc: Zatrzymanie środowiska (dane zostają)
+    cmds:
+      - docker compose down
+
+  logs:
+    desc: Logi api i workera
+    cmds:
+      - docker compose logs -f api worker
+
+  db:up:
+    desc: Tylko baza i mailpit (do testów i pracy z hosta)
+    cmds:
+      - docker compose up -d --wait db mailpit
+
+  migrate:
+    desc: Migracje z hosta na bazie deweloperskiej
+    cmds:
+      - uv run alembic upgrade head
+
+  migration:
+    desc: "Nowa migracja: task migration -- \"opis zmiany\""
+    cmds:
+      - uv run alembic revision --autogenerate -m "{{.CLI_ARGS}}"
+
+  reset-db:
+    desc: USUWA dane lokalne (wolumen) i tworzy bazę od zera
+    prompt: To usunie wszystkie lokalne dane deweloperskie. Kontynuować?
+    cmds:
+      - docker compose down -v
+      - task: up
+
+  seed:
+    desc: Dane demonstracyjne (fikcyjne)
+    cmds:
+      - uv run python -m scripts.seed
+
+  smoke:
+    desc: Test dymny end-to-end na działającym środowisku (wymaga task up + task seed)
+    cmds:
+      - uv run python -m scripts.smoke_e2e
+
+  load:
+    desc: Test obciążeniowy Locust (wymaga task up); wynik w loadtest/wyniki_*.csv
+    cmds:
+      - uv run python -m scripts.seed --load-users 50
+      - uv run locust -f loadtest/locustfile.py --headless --host http://127.0.0.1:8010 -u {{.USERS | default 50}} -r 5 -t {{.TIME | default "2m"}} --csv loadtest/wyniki --only-summary
+
+  web:install:
+    desc: Zależności frontendu (npm) i przeglądarka testowa Playwright
+    dir: frontend
+    cmds:
+      - npm ci --ignore-scripts
+      - npx playwright install chromium
+
+  web:dev:
+    desc: Frontend w trybie deweloperskim (http://localhost:5173, API z task up)
+    dir: frontend
+    cmds:
+      - npm run dev
+
+  web:types:
+    desc: Typy TypeScript z OpenAPI (po zmianach API)
+    cmds:
+      - task: openapi
+      - npm --prefix frontend run api:types
+
+  web:ci:
+    desc: "Frontend: typy, lint, testy jednostkowe, licencje, build, budżet JS, E2E (dev i build z CSP)"
+    dir: frontend
+    cmds:
+      - npx tsc -b
+      - npx eslint .
+      - npx vitest run
+      - npm run licenses
+      - npm run build
+      - npm run budget
+      # E2E w osobnym środowisku (baza wedding_e2e, API 8011) — nie dotyka bazy dev.
+      - docker compose --profile e2e up -d
+      - docker exec wedding-planner-db-1 psql -U wedding -d wedding_e2e -c "delete from rate_limit_hits"
+      - npx playwright test
+      - cmd: npx playwright test
+        env:
+          E2E_PROD: "1"
+
+  gui:contrast:
+    desc: Kontrast par tokenów kolorów GUI (design/tokens/tokens.json) → docs/gui/kontrast.md
+    cmds:
+      - uv run python -m scripts.check_contrast
+
+  gui:tokens:
+    desc: Tokeny GUI → zmienne CSS podglądu (design/podglad/tokens.css)
+    cmds:
+      - uv run python -m scripts.tokens_to_css
+
+  gui:icons:
+    desc: Ikony PWA (PNG) z logo SVG → frontend/public/icons
+    dir: frontend
+    cmds:
+      - node scripts/make-icons.mjs
+
+  rotate-key:
+    desc: Rotacja klucza szyfrowania (procedura w docs/wdrozenie.md)
+    cmds:
+      - uv run python -m scripts.rotate_encryption_key {{.CLI_ARGS}}
+
+  backup:
+    desc: Kopia bazy (pg_dump) + weryfikacja odtworzenia + kopia na NAS (BACKUP_TARGET)
+    cmds:
+      - uv run python -m scripts.backup_db backup
+
+  test:
+    desc: Testy z pokryciem (wymaga task db:up)
+    cmds:
+      - uv run pytest --cov --cov-report=term-missing {{.CLI_ARGS}}
+
+  test:docker:
+    desc: Pełne testy w kontenerze (te same biblioteki co produkcja, w tym OCR Tesseract)
+    cmds:
+      - docker compose --profile test build test
+      - docker compose --profile test run --rm test {{.CLI_ARGS}}
+
+  test:llm:
+    desc: Regresja jakości AI na prawdziwym modelu Ollama (wolne; wymaga ollama serve)
+    env:
+      WP_TEST_OLLAMA: "1"
+    cmds:
+      - uv run pytest tests/ai_regression -s -p no:cacheprovider {{.CLI_ARGS}}
+
+  ai:eval:
+    desc: "Porównanie modeli na korpusie → docs/ai-ewaluacja.md (task ai:eval -- model1 model2)"
+    cmds:
+      - uv run python -m scripts.eval_llm {{.CLI_ARGS}}
+
+  lint:
+    desc: Ruff (lint + format check) i mypy
+    cmds:
+      - uv run ruff check .
+      - uv run ruff format --check .
+      - uv run mypy app
+
+  fmt:
+    desc: Automatyczne formatowanie i poprawki
+    cmds:
+      - uv run ruff format .
+      - uv run ruff check --fix .
+
+  security:
+    desc: Bandit, pip-audit, Gitleaks
+    cmds:
+      - uv run bandit -q -r app -c pyproject.toml
+      - uv run pip-audit
+      - gitleaks dir . --redact --no-banner
+
+  licenses:
+    desc: Raport licencji i blokada AGPL/SSPL (ADR-0006)
+    cmds:
+      - uv run pip-licenses --from=mixed --format=markdown --output-file=docs/licenses.md --with-urls
+      - uv run pip-licenses --from=mixed --fail-on="GNU Affero General Public License v3;GNU Affero General Public License v3 or later (AGPLv3+);Server Side Public License;SSPL"
+
+  image:scan:
+    desc: Skan obrazu Dockera Trivy (uruchamiany z kontenera, bez instalacji)
+    cmds:
+      - docker run --rm -v //var/run/docker.sock:/var/run/docker.sock aquasec/trivy:0.69.1 image --severity HIGH,CRITICAL --ignore-unfixed wedding-planner:dev
+
+  openapi:
+    desc: Eksport specyfikacji OpenAPI do docs/openapi.json
+    cmds:
+      - uv run python -m scripts.export_openapi
+
+  ci:
+    desc: Pełna lokalna weryfikacja przed commitem
+    cmds:
+      - task: lint
+      - task: test
+      - task: security
+      - task: licenses

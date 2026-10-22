@@ -1,0 +1,151 @@
+.wp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--wp-space-4);
+  background: var(--wp-scrim);
+}
+
+.wp-overlay[data-entering] {
+  animation: wp-fade-in var(--wp-motion-dialog-duration) var(--wp-ease-standard);
+}
+
+.wp-overlay[data-exiting] {
+  animation: wp-fade-in var(--wp-motion-sheet-exit-duration) var(--wp-ease-exit) reverse;
+}
+
+.wp-dialog {
+  width: min(100%, 26rem);
+  max-height: calc(100dvh - 2 * var(--wp-space-4));
+  overflow: auto;
+  background: var(--wp-surface-raised);
+  color: var(--wp-text-primary);
+  border-radius: var(--wp-radius-card);
+  box-shadow: var(--wp-shadow-sheet);
+}
+
+.wp-dialog[data-entering] {
+  animation: wp-dialog-in var(--wp-motion-dialog-duration) var(--wp-ease-enter);
+}
+
+@keyframes wp-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(var(--wp-motion-dialog-scale));
+  }
+}
+
+.wp-dialog__body,
+.wp-sheet__body {
+  display: grid;
+  gap: var(--wp-space-4);
+  padding: var(--wp-space-5);
+  outline: none;
+}
+
+.wp-overlay--sheet {
+  place-items: end center;
+  padding: 0;
+}
+
+.wp-sheet {
+  width: 100%;
+  max-width: 36rem;
+  max-height: 90dvh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  background: var(--wp-surface-raised);
+  color: var(--wp-text-primary);
+  border-radius: var(--wp-radius-sheet) var(--wp-radius-sheet) 0 0;
+  box-shadow: var(--wp-shadow-sheet);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Bez sprężystego odbicia (overshoot: false). */
+.wp-sheet[data-entering] {
+  animation: wp-sheet-in var(--wp-motion-sheet-enter-duration) var(--wp-ease-enter);
+}
+
+.wp-sheet[data-exiting] {
+  animation: wp-sheet-in var(--wp-motion-sheet-exit-duration) var(--wp-ease-exit) reverse;
+}
+
+@keyframes wp-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--wp-motion-sheet-translate));
+  }
+}
+
+@media (min-width: 768px) {
+  .wp-overlay--sheet {
+    place-items: center;
+    padding: var(--wp-space-4);
+  }
+
+  .wp-sheet {
+    border-radius: var(--wp-radius-card);
+  }
+
+  .wp-sheet__handle {
+    display: none;
+  }
+}
+
+.wp-sheet__body {
+  padding-top: var(--wp-space-2);
+}
+
+.wp-sheet__handle {
+  justify-self: center;
+  width: 2.5rem;
+  height: 0.25rem;
+  border-radius: 2px;
+  background: var(--wp-control-border);
+}
+
+.wp-sheet__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--wp-space-3);
+}
+
+.wp-sheet__ask {
+  display: grid;
+  gap: var(--wp-space-3);
+}
+
+.wp-sheet__actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--wp-space-3);
+}
+
+/* Trzy wybory (np. „Anuluj / tylko osoba / całe zaproszenie”) zawsze jeden pod drugim. */
+.wp-sheet__actions--stack {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.wp-icon-button {
+  display: grid;
+  place-items: center;
+  width: var(--wp-touch);
+  height: var(--wp-touch);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--wp-text-primary);
+  cursor: pointer;
+}
+
+.wp-icon-button[data-hovered] {
+  background: var(--wp-accent-surface);
+}
+
+.wp-icon-button[data-focus-visible] {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}

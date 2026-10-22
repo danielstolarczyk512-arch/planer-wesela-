@@ -1,0 +1,167 @@
+# Lokalne środowisko deweloperskie. Porty wystawione wyłącznie na 127.0.0.1.
+name: wedding-planner
+
+x-app: &app
+  build:
+    context: .
+    target: runtime
+  image: wedding-planner:dev
+  env_file: .env
+  environment: &app-env
+    WP_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-wedding}:${POSTGRES_PASSWORD:-wedding}@db:5432/${POSTGRES_DB:-wedding}
+    WP_SMTP_HOST: mailpit
+    WP_SMTP_PORT: "1025"
+    # Ollama działa na laptopie (GPU); kontenery łączą się z nią przez bramę hosta.
+    WP_OLLAMA_URL: ${WP_OLLAMA_URL_DOCKER:-http://host.docker.internal:11434}
+    # Skanowanie plików (ClamAV, osobny kontener): `docker compose --profile scan up -d`
+    # i WP_CLAMAV_HOST_DOCKER=clamav w .env. Domyślnie wyłączone (pliki: „nie sprawdzono”).
+    WP_CLAMAV_HOST: ${WP_CLAMAV_HOST_DOCKER:-}
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  restart: unless-stopped
+
+services:
+  db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-wedding}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wedding}
+      POSTGRES_DB: ${POSTGRES_DB:-wedding}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  migrate:
+    <<: *app
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api:
+    <<: *app
+    environment:
+      <<: *app-env
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-2}  # procesy uvicorn
+    ports:
+      - "127.0.0.1:${API_PORT:-8010}:8000"
+    volumes:
+      - filestore:/app/storage  # wspólny z workerem (upload → ekstrakcja)
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "app.jobs.worker"]
+    volumes:
+      - filestore:/app/storage
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  # --- osobne środowisko testów E2E (profil e2e): własna baza wedding_e2e, API na 8011 ---
+  # Testy przeglądarkowe nie dotykają bazy dev (tam są prawdziwe dane właściciela).
+  # Start: docker compose --profile e2e up -d  (migrate-e2e tworzy bazę i wgrywa dane demo).
+  migrate-e2e:
+    <<: *app
+    profiles: ["e2e"]
+    # Obraz testowy (runtime + scripts): produkcyjny celowo nie zawiera skryptów seed.
+    build:
+      context: .
+      target: test
+    image: wedding-planner:test
+    environment: &e2e-env
+      <<: *app-env
+      WP_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-wedding}:${POSTGRES_PASSWORD:-wedding}@db:5432/wedding_e2e
+      WP_PUBLIC_APP_URL: http://localhost:5174
+      # Testy przeglądarkowe otwierają wiele stron RSVP z jednego adresu IP.
+      WP_RSVP_RATE_LIMIT: "2000"
+    command:
+      - sh
+      - -c
+      - python -m scripts.ensure_database && alembic upgrade head && python -m scripts.seed && python -m scripts.seed --content
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  api-e2e:
+    <<: *app
+    profiles: ["e2e"]
+    environment:
+      <<: *e2e-env
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-2}
+    ports:
+      - "127.0.0.1:${API_E2E_PORT:-8011}:8000"
+    volumes:
+      - filestore_e2e:/app/storage
+    depends_on:
+      migrate-e2e:
+        condition: service_completed_successfully
+
+  worker-e2e:
+    <<: *app
+    profiles: ["e2e"]
+    environment: *e2e-env
+    command: ["python", "-m", "app.jobs.worker"]
+    volumes:
+      - filestore_e2e:/app/storage
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate-e2e:
+        condition: service_completed_successfully
+
+  clamav:
+    # ClamAV (GPL) wyłącznie jako osobny proces — aplikacja łączy się z clamd przez TCP (ADR-0006).
+    # Pierwszy start pobiera bazę sygnatur (ok. 300 MB) i ładuje ją 1–2 min; potrzebuje ok. 1,5 GB RAM.
+    profiles: ["scan"]
+    image: clamav/clamav:1.4
+    environment:
+      CLAMAV_NO_MILTERD: "true"
+    volumes:
+      - clamav_db:/var/lib/clamav
+    ports:
+      - "127.0.0.1:${CLAMAV_PORT:-3310}:3310"  # test EICAR z hosta: WP_TEST_CLAMAV_HOST=127.0.0.1
+    restart: unless-stopped
+
+  test:
+    # Pełne testy w kontenerze (w tym OCR): task test:docker
+    profiles: ["test"]
+    build:
+      context: .
+      target: test
+    image: wedding-planner:test
+    environment:
+      WP_TEST_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-wedding}:${POSTGRES_PASSWORD:-wedding}@db:5432/wedding_test
+      WP_TEST_CLAMAV_HOST: ${WP_TEST_CLAMAV_HOST_DOCKER:-}
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  mailpit:
+    # Przechwytuje e-maile w dev (nic nie wychodzi do internetu). UI: http://localhost:8025
+    image: axllent/mailpit:v1.27
+    ports:
+      - "127.0.0.1:8025:8025"
+      - "127.0.0.1:1025:1025"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  filestore:
+  clamav_db:
+  filestore_e2e:

@@ -1,0 +1,20 @@
+# Hooki lokalne: wersje narzędzi pochodzą z uv.lock / zainstalowanego Gitleaks,
+# więc pre-commit nie pobiera kodu z internetu.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check
+        entry: uv run ruff check --fix
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format
+        language: system
+        types: [python]
+      - id: gitleaks
+        name: gitleaks (sekrety w zmianach)
+        entry: gitleaks git --pre-commit --staged --redact --no-banner
+        language: system
+        pass_filenames: false

@@ -1,0 +1,18 @@
+title = "Wedding Planner: konfiguracja Gitleaks"
+
+[extend]
+useDefault = true
+
+# Wyłączenia ograniczone do plików, które nigdy nie trafiają do repozytorium
+# (.venv = biblioteki zewnętrzne, .env = lokalne sekrety w .gitignore).
+# Pojedyncze wartości testowe oznaczone są w kodzie komentarzem "gitleaks:allow".
+[[allowlists]]
+description = "Pliki lokalne spoza repozytorium"
+paths = [
+  '''(^|/)\.venv/''',
+  '''(^|/)node_modules/''',
+  '''(^|/)frontend/(dist|test-results|playwright-report)/''',
+  '''(^|/)\.env$''',
+  '''(^|/)deploy/\.env\.prod$''',
+  '''(^|/)\.(mypy|ruff|pytest)_cache/''',
+]

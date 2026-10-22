@@ -1,0 +1,36 @@
+import { describe, expect, it } from "vitest";
+
+import { defaultPositions, tableSize } from "./RoomLayout";
+import type { SeatingTable } from "./data";
+
+const table = (over: Partial<SeatingTable>): SeatingTable =>
+  ({ id: "t", name: "Stół", kind: "regular", shape: "round", capacity: 10, pos_x: null, pos_y: null, rotation: 0, guests: [], free_seats: 10, ...over }) as SeatingTable;
+
+describe("układ sali", () => {
+  it("rozmiar stołu z liczby miejsc (ok. 60 cm na osobę)", () => {
+    expect(tableSize(table({ capacity: 10 })).w).toBeCloseTo(1.91, 1);
+    expect(tableSize(table({ capacity: 2 })).w).toBe(1.2); // minimum
+    expect(tableSize(table({ shape: "rectangular", capacity: 8 }))).toEqual({ w: 2.4, h: 0.9 });
+  });
+
+  it("stoły bez pozycji dostają siatkę w granicach sali; ustawione zostają", () => {
+    const tables = [table({ id: "a" }), table({ id: "b" }), table({ id: "c", pos_x: 5, pos_y: 5 })];
+    const pos = defaultPositions(tables, { width_m: 7, length_m: 10 });
+    expect([...pos.keys()]).toEqual(["a", "b"]);
+    for (const p of pos.values()) {
+      expect(p.x).toBeLessThanOrEqual(6);
+      expect(p.y).toBeLessThanOrEqual(9);
+    }
+    expect(pos.get("a")!.x).not.toBe(pos.get("b")!.x);
+  });
+});
+
+describe("zdjęcia z iPhone'a (HEIC)", () => {
+  it("rozpoznaje pliki HEIC/HEIF po nazwie", async () => {
+    const { isHeicName } = await import("./Documents");
+    expect(isHeicName("IMG_0001.HEIC")).toBe(true);
+    expect(isHeicName("zdjecie.heif")).toBe(true);
+    expect(isHeicName("oferta.pdf")).toBe(false);
+    expect(isHeicName("heic.jpg")).toBe(false);
+  });
+});

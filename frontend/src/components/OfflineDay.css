@@ -1,0 +1,66 @@
+/* Program dnia: lista godzin i „teraz / za chwilę” — wspólne dla harmonogramu, strony
+   usługodawcy i kopii bez sieci. */
+.day-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.day-item {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--wp-space-3);
+  padding: var(--wp-space-3) var(--wp-space-2);
+  border-bottom: 1px solid var(--wp-separator);
+}
+
+.day-item:last-child {
+  border-bottom: 0;
+}
+
+.day-item--mine {
+  background: var(--wp-accent-surface);
+  border-radius: var(--wp-radius-button);
+}
+
+.day-item__time {
+  font-weight: 700;
+}
+
+.day-item__body {
+  display: grid;
+  gap: var(--wp-space-1);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.day-item__body p {
+  margin: 0;
+}
+
+.day-item__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp-space-2);
+  font-weight: 600;
+}
+
+.plan-b {
+  overflow-wrap: anywhere;
+}
+
+.live__item {
+  display: grid;
+  gap: var(--wp-space-1);
+}
+
+.live__item p {
+  margin: 0;
+}
+
+.live__title {
+  font-family: var(--wp-font-heading);
+  font-size: 1.375rem;
+}

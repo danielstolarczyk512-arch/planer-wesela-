@@ -1,0 +1,18 @@
+.gallery__section {
+  display: grid;
+  gap: var(--wp-space-4);
+}
+
+.gallery__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-3);
+  align-items: center;
+}
+
+.gallery__list {
+  margin: 0;
+  padding-left: var(--wp-space-5);
+  display: grid;
+  gap: var(--wp-space-1);
+}

@@ -1,0 +1,133 @@
+{
+  "version": "1.0",
+  "units": "logical px unless stated",
+  "themes": {
+    "light": {
+      "background": "#FAF7F2",
+      "surface": "#FFFFFF",
+      "surfaceRaised": "#FFFFFF",
+      "textPrimary": "#242124",
+      "textSecondary": "#6F656B",
+      "actionPrimary": "#63364A",
+      "textOnPrimary": "#FFFFFF",
+      "accentSurface": "#F1E8EB",
+      "separator": "#E6DED5",
+      "controlBorder": "#8B7B83",
+      "goldDecorative": "#A88754",
+      "successText": "#315944",
+      "successBackground": "#EAF2EB",
+      "warningText": "#78551E",
+      "warningBackground": "#FAF0DA",
+      "errorText": "#9B2638",
+      "errorBackground": "#FCECEF"
+    },
+    "dark": {
+      "background": "#19191C",
+      "surface": "#242428",
+      "surfaceRaised": "#2E2B30",
+      "textPrimary": "#F4EFE7",
+      "textSecondary": "#B7AEA5",
+      "actionPrimary": "#D5BA8D",
+      "textOnPrimary": "#241E18",
+      "accentSurface": "#302B2F",
+      "separator": "#464047",
+      "controlBorder": "#A28D73",
+      "goldDecorative": "#D5BA8D",
+      "successText": "#C0DBC8",
+      "successBackground": "#2B3B32",
+      "warningText": "#F1D6A6",
+      "warningBackground": "#403523",
+      "errorText": "#FFC3CA",
+      "errorBackground": "#482A32"
+    }
+  },
+  "fonts": {
+    "light": {
+      "heading": "Lora",
+      "body": "DM Sans"
+    },
+    "dark": {
+      "heading": "Bodoni Moda",
+      "body": "Inter"
+    }
+  },
+  "typography": {
+    "h1": {
+      "size": 30,
+      "lineHeight": 38
+    },
+    "h2": {
+      "size": 22,
+      "lineHeight": 30
+    },
+    "body": {
+      "size": 16,
+      "lineHeight": 24
+    },
+    "secondary": {
+      "size": 14,
+      "lineHeight": 20
+    },
+    "navigation": {
+      "size": 12,
+      "lineHeight": 16
+    },
+    "amount": {
+      "min": 32,
+      "max": 40
+    },
+    "countdown": {
+      "min": 56,
+      "max": 80
+    }
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48
+  ],
+  "layout": {
+    "phonePadding": 20,
+    "smallPhonePadding": 16,
+    "contentMaxWidth": 1200,
+    "breakpoints": {
+      "tablet": 768,
+      "desktop": 1024
+    },
+    "touchTargetMinimum": 48,
+    "safeAreas": "respect system insets; do not bake device frame into UI"
+  },
+  "radius": {
+    "card": {
+      "light": 16,
+      "dark": 12
+    },
+    "button": {
+      "light": 12,
+      "dark": 10
+    },
+    "sheetTop": 24
+  },
+  "icons": {
+    "size": [
+      20,
+      24
+    ],
+    "stroke": 1.75
+  },
+  "themeModes": [
+    "light",
+    "dark",
+    "system"
+  ],
+  "defaultThemeMode": "system",
+  "notes": [
+    "Token values are implementation targets. PNGs are concept compositions, not exact pixel specifications.",
+    "Separators are decorative. Use controlBorder for interactive boundaries.",
+    "Verify contrast for every rendered state, not only the pairs in the contrast report."
+  ]
+}

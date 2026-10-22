@@ -1,0 +1,174 @@
+.wp-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp-space-2);
+}
+
+.wp-field__label {
+  font-weight: 600;
+}
+
+.wp-field__description {
+  font: var(--wp-type-secondary) var(--wp-font-body);
+  color: var(--wp-text-secondary);
+}
+
+.wp-field__error {
+  font: var(--wp-type-secondary) var(--wp-font-body);
+  color: var(--wp-error-text);
+  font-weight: 600;
+}
+
+.wp-field__input,
+.wp-field__group {
+  min-height: 3.25rem;
+  width: 100%;
+  padding: 0 var(--wp-space-4);
+  background: var(--wp-surface);
+  color: var(--wp-text-primary);
+  /* Obrys pola zawsze controlBorder (≥ 3:1), nigdy kolor separatora. */
+  border: 1px solid var(--wp-control-border);
+  border-radius: var(--wp-radius-button);
+}
+
+.wp-field__input::placeholder {
+  color: var(--wp-text-secondary);
+}
+
+.wp-field__input[data-focused],
+.wp-field__group[data-focus-within] {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}
+
+.wp-field__input[data-invalid],
+.wp-field[data-invalid] .wp-field__group,
+.wp-field[data-invalid] .wp-field__date {
+  border-color: var(--wp-error-text);
+  border-width: 2px;
+}
+
+.wp-field__group {
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 var(--wp-space-4);
+}
+
+.wp-field__input--grouped {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  outline: none;
+}
+
+.wp-field__input--grouped[data-focused] {
+  outline: none;
+}
+
+.wp-field__adornment {
+  display: grid;
+  place-items: center;
+  width: var(--wp-touch);
+  height: var(--wp-touch);
+  border: 0;
+  background: transparent;
+  color: var(--wp-text-secondary);
+  cursor: pointer;
+  border-radius: var(--wp-radius-button);
+}
+
+.wp-field__adornment[data-focus-visible] {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+}
+
+.wp-field__date {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.wp-field__segment {
+  /* Cel dotyku co najmniej 24 × 24 px (WCAG 2.5.8), także przy wąskich kolumnach. */
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  text-align: center;
+  padding: 2px 3px;
+  border-radius: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.wp-field__segment[data-placeholder] {
+  color: var(--wp-text-secondary);
+}
+
+.wp-field__segment[data-focused] {
+  background: var(--wp-action-primary);
+  color: var(--wp-text-on-primary);
+  outline: none;
+}
+
+.wp-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-3);
+  min-height: var(--wp-touch);
+  cursor: pointer;
+}
+
+.wp-checkbox__box {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--wp-control-border);
+  border-radius: 6px;
+  background: var(--wp-surface);
+  transition:
+    background-color var(--wp-motion-checkbox-duration) var(--wp-ease-standard),
+    border-color var(--wp-motion-checkbox-duration) var(--wp-ease-standard);
+}
+
+.wp-checkbox__box svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: var(--wp-text-on-primary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+}
+
+.wp-checkbox[data-selected] .wp-checkbox__box {
+  background: var(--wp-action-primary);
+  border-color: var(--wp-action-primary);
+}
+
+.wp-checkbox[data-selected] .wp-checkbox__box svg {
+  opacity: 1;
+}
+
+.wp-checkbox[data-focus-visible] .wp-checkbox__box {
+  outline: var(--wp-focus-width) solid var(--wp-focus-ring);
+  outline-offset: var(--wp-focus-offset);
+}
+
+.wp-checkbox[data-invalid] .wp-checkbox__box {
+  border-color: var(--wp-error-text);
+}
+
+.wp-checkbox[data-disabled] {
+  color: var(--wp-text-disabled);
+  cursor: not-allowed;
+}
+
+.wp-field__textarea {
+  min-height: 6rem;
+  padding-block: var(--wp-space-2);
+  resize: vertical;
+  font: inherit;
+  line-height: 1.5;
+}

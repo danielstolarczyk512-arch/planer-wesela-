@@ -1,0 +1,72 @@
+.auth-page {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--wp-space-5) var(--wp-pad);
+}
+
+.auth-card {
+  width: min(100%, 26rem);
+  display: grid;
+  gap: var(--wp-space-4);
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-2);
+  font: var(--wp-type-h2) var(--wp-font-heading);
+  color: var(--wp-action-primary);
+}
+
+.auth-brand__icon {
+  width: 1.75rem;
+  height: 1.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+}
+
+.auth-form {
+  display: grid;
+  gap: var(--wp-space-4);
+  margin-top: var(--wp-space-2);
+}
+
+.auth-links {
+  color: var(--wp-text-secondary);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-2) var(--wp-space-4);
+}
+
+/* Weryfikacja dwuetapowa (ustawienia konta) */
+.mfa-steps {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: var(--wp-space-1);
+}
+
+.mfa-qr {
+  justify-self: start;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.mfa-secret {
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  overflow-wrap: anywhere;
+}
+
+.mfa-codes {
+  list-style: none;
+  margin: 0;
+  padding: var(--wp-space-3);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: var(--wp-space-2);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  border: 1px dashed var(--wp-separator);
+  border-radius: 8px;
+}

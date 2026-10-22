@@ -1,0 +1,19 @@
+/* Znaczek „Premium”: obramowanie, ikona i tekst (nie sam kolor). */
+.wp-premium {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem var(--wp-space-2);
+  border: 1px solid var(--wp-action-primary);
+  border-radius: 999px;
+  color: var(--wp-action-primary);
+  font-size: var(--wp-type-secondary-size);
+  font-weight: 700;
+  line-height: 1.4;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.wp-premium-note {
+  margin: 0;
+}

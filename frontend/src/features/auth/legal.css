@@ -1,0 +1,23 @@
+/* Regulamin i polityka prywatności: czytelna kolumna tekstu. */
+.legal {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: var(--wp-space-6) var(--wp-pad) var(--wp-space-7);
+  display: grid;
+  gap: var(--wp-space-3);
+}
+
+.legal h2 {
+  margin-top: var(--wp-space-4);
+}
+
+.legal ul {
+  padding-left: 1.25rem;
+  display: grid;
+  gap: var(--wp-space-2);
+}
+
+.legal p,
+.legal li {
+  overflow-wrap: anywhere;
+}

@@ -1,0 +1,9 @@
+/* Informacje dla usługodawcy (aplikacja i strona linku) */
+.brief-view h3 {
+  margin: 0 0 var(--wp-space-1);
+}
+
+.brief-view ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}

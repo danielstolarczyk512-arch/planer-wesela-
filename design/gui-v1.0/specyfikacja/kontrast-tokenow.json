@@ -1,0 +1,165 @@
+{
+  "scope": "Selected opaque semantic token pairs only. Not a WCAG audit of screens or application.",
+  "results": [
+    {
+      "theme": "light",
+      "foreground": "textPrimary",
+      "background": "background",
+      "ratio": 14.91,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "textPrimary",
+      "background": "surface",
+      "ratio": 15.933,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "textSecondary",
+      "background": "background",
+      "ratio": 5.241,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "textSecondary",
+      "background": "surface",
+      "ratio": 5.6,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "textOnPrimary",
+      "background": "actionPrimary",
+      "ratio": 9.735,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "actionPrimary",
+      "background": "background",
+      "ratio": 9.11,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "successText",
+      "background": "successBackground",
+      "ratio": 6.961,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "warningText",
+      "background": "warningBackground",
+      "ratio": 5.949,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "errorText",
+      "background": "errorBackground",
+      "ratio": 6.739,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "light",
+      "foreground": "controlBorder",
+      "background": "surface",
+      "ratio": 3.993,
+      "minimum": 3,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "textPrimary",
+      "background": "background",
+      "ratio": 15.326,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "textPrimary",
+      "background": "surface",
+      "ratio": 13.51,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "textSecondary",
+      "background": "background",
+      "ratio": 8.028,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "textSecondary",
+      "background": "surface",
+      "ratio": 7.077,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "textOnPrimary",
+      "background": "actionPrimary",
+      "ratio": 8.821,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "actionPrimary",
+      "background": "background",
+      "ratio": 9.387,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "successText",
+      "background": "successBackground",
+      "ratio": 8.007,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "warningText",
+      "background": "warningBackground",
+      "ratio": 8.512,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "errorText",
+      "background": "errorBackground",
+      "ratio": 8.417,
+      "minimum": 4.5,
+      "passed": true
+    },
+    {
+      "theme": "dark",
+      "foreground": "controlBorder",
+      "background": "surface",
+      "ratio": 4.855,
+      "minimum": 3,
+      "passed": true
+    }
+  ]
+}

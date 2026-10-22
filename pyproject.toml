@@ -1,0 +1,100 @@
+[project]
+name = "wedding-planner"
+version = "0.1.0"
+description = "Wedding Planner AI — backend API (modularny monolit)"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.0",
+    "argon2-cffi>=25.1.0",
+    "boto3>=1.35",
+    "cryptography>=50.0.2",
+    "email-validator>=2.3.0",
+    "fastapi>=0.146.0",
+    "httpx>=0.28.1",
+    "ortools>=9.12",
+    "pillow>=13.0.0",
+    "psycopg[binary]>=3.3.6",
+    "pydantic-settings>=2.16.0",
+    "pyjwt>=2.15.1",
+    "pyotp>=2.9",
+    "pypdf>=6.21.1",
+    "pypdfium2>=5.14.0",
+    "pytesseract>=0.3.13",
+    "python-docx>=1.2.0",
+    "python-multipart>=0.0.32",
+    "segno>=1.6",
+    "sqlalchemy>=2",
+    "structlog>=26.1.0",
+    "tzdata>=2026.5",
+    "uvicorn[standard]>=0.54.0",
+    "zxcvbn>=4.5",
+]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.4",
+    "boto3-stubs[s3]>=1.35",
+    "httpx>=0.28.1",
+    "hypothesis>=6.170.2",
+    "locust>=2.30",
+    "moto[s3]>=5",
+    "mypy>=2.4.0",
+    "pip-audit>=2.10.1",
+    "pip-licenses>=5.5.5",
+    "pre-commit>=4.7.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "reportlab>=5.0.1",
+    "ruff>=0.17.1",
+    "schemathesis>=4.32.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "N", "SIM", "RUF", "DTZ", "PT"]
+ignore = [
+    "B008",  # FastAPI Depends() w argumentach domyślnych
+    "N818",  # wyjątki nazwane jak statusy HTTP (NotFound, Conflict), celowo bez sufiksu Error
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]
+"migrations/**" = ["E501"]
+"loadtest/**" = ["S311"]  # losowanie scenariuszy testu, nie kryptografia
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["migrations/"]
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+# Biblioteki bez adnotacji typów (ekstrakcja dokumentów, ocena haseł).
+module = ["pytesseract", "pypdfium2", "zxcvbn"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 85
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", "migrations"]

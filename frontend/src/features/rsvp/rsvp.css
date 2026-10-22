@@ -1,0 +1,253 @@
+/* Strona odpowiedzi gościa: ta sama rama co logowanie, ale szersza i od góry (długi formularz). */
+.rsvp-page {
+  place-items: start center;
+}
+
+.rsvp-card {
+  width: min(100%, 34rem);
+}
+
+.rsvp-card > * {
+  min-width: 0;
+}
+
+.rsvp-event {
+  display: grid;
+  gap: var(--wp-space-1);
+}
+
+.rsvp-event__line {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-2);
+}
+
+.rsvp-event__line svg {
+  flex: none;
+}
+
+.rsvp-guest {
+  margin: 0;
+}
+
+.rsvp-privacy {
+  font-size: var(--wp-type-secondary-size);
+}
+
+/* Program dla usługodawcy: godzina w kolumnie, jego punkty wyróżnione tłem i znacznikiem. */
+/* Strona dla gości: informacje od pary i plan dnia. */
+.rsvp-info {
+  display: grid;
+  gap: var(--wp-space-3);
+  margin: 0;
+}
+
+.rsvp-info dt {
+  font-weight: 700;
+}
+
+.rsvp-info dd {
+  margin: 0;
+}
+
+.rsvp-plan {
+  display: grid;
+  gap: var(--wp-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rsvp-map-link {
+  justify-self: start;
+  color: var(--wp-action-primary);
+}
+
+.prewrap {
+  white-space: pre-wrap;
+}
+
+/* Osoba towarzysząca dopisana przez gościa. */
+.rsvp-guest-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp-space-2);
+}
+
+.rsvp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-2);
+}
+
+/* Link dla sali: liczby dla kuchni i stoły; czytelne na tablecie i na wydruku. */
+.day-tables {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.day-tables > li + li {
+  border-top: 1px solid var(--wp-separator);
+}
+
+.day-table {
+  padding-block: var(--wp-space-2);
+}
+
+.day-table p {
+  margin: 0;
+}
+
+.day-table__guests {
+  margin: 0;
+  padding-left: var(--wp-space-4);
+}
+
+@media print {
+  .no-print,
+  .auth-brand {
+    display: none !important;
+  }
+
+  .rsvp-page,
+  .rsvp-card {
+    padding: 0;
+    box-shadow: none;
+    background: #fff;
+    color: #000;
+  }
+
+  .day-table {
+    break-inside: avoid;
+  }
+}
+
+/* Wygląd strony dla gości (Premium). Akcent: zmienne z themes.ts, wersja jasna albo ciemna;
+   bez akcentu — kolor główny aplikacji. Tylko zmienne --wp-*, bez zewnętrznych czcionek. */
+.guest-themed {
+  --guest-accent: var(--guest-accent-light, var(--wp-action-primary));
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .guest-themed {
+    --guest-accent: var(--guest-accent-dark, var(--wp-action-primary));
+  }
+}
+
+:root[data-theme="dark"] .guest-themed {
+  --guest-accent: var(--guest-accent-dark, var(--wp-action-primary));
+}
+
+.guest-themed h1,
+.guest-themed .overline,
+.guest-themed .rsvp-map-link {
+  color: var(--guest-accent);
+}
+
+[data-guest-theme="garden"] .rsvp-card,
+.guest-preview[data-guest-theme="garden"] {
+  border-top: 6px solid var(--guest-accent);
+  border-radius: calc(var(--wp-radius-card, 16px) * 1.5);
+}
+
+[data-guest-theme="garden"] h1,
+[data-guest-theme="garden"] h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+[data-guest-theme="modern"] .rsvp-card,
+.guest-preview[data-guest-theme="modern"] {
+  border-left: 6px solid var(--guest-accent);
+  border-radius: 4px;
+}
+
+[data-guest-theme="modern"] .overline {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+[data-guest-theme="modern"] h1 {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* Podgląd w ustawieniach (arkusz „Strona dla gości”). */
+.guest-preview {
+  display: grid;
+  gap: var(--wp-space-1);
+  padding: var(--wp-space-4);
+  border: 1px solid var(--wp-separator);
+  border-radius: var(--wp-radius-card, 16px);
+  background: var(--wp-surface);
+}
+
+.guest-preview h1 {
+  margin: 0;
+  font-size: var(--wp-type-h2-size);
+}
+
+.guest-preview p {
+  margin: 0;
+}
+
+.accent-swatch {
+  display: inline-block;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-right: var(--wp-space-1);
+  border-radius: 50%;
+  vertical-align: -0.1em;
+  background: var(--guest-accent);
+}
+
+/* Przełączniki strony gościa: język (PL / EN) i wielkość tekstu. */
+.rsvp-lang {
+  display: grid;
+  justify-items: end;
+  gap: var(--wp-space-3);
+}
+
+/* Tryb czytelny (np. dla babci i dziadka): większy tekst, mocniejszy kontrast, większe pola. */
+.rsvp-page[data-readable="true"] {
+  --wp-type-body: 1.25rem/1.6;
+  --wp-type-body-size: 1.25rem;
+  --wp-type-h1: 2.25rem/1.25;
+  --wp-type-h1-size: 2.25rem;
+  --wp-type-h2: 1.625rem/1.3;
+  --wp-type-h2-size: 1.625rem;
+  --wp-type-secondary-size: 1.125rem;
+  /* Kolor tekstu pomocniczego jak głównego — mocniejszy kontrast. */
+  --wp-text-secondary: var(--wp-text-primary);
+  --wp-touch: 56px;
+  font: var(--wp-type-body) var(--wp-font-body);
+}
+
+.rsvp-page[data-readable="true"] .text-secondary {
+  font-size: var(--wp-type-secondary-size);
+}
+
+.rsvp-page[data-readable="true"] :is(input, select, textarea, button) {
+  font-size: var(--wp-type-body-size);
+}
+
+.rsvp-lang .wp-segmented__track {
+  flex-wrap: nowrap;
+}
+
+.rsvp-menu {
+  margin: 0;
+  padding-inline-start: var(--wp-space-5);
+  display: grid;
+  gap: var(--wp-space-2);
+}
+
+.rsvp-gift {
+  flex-wrap: wrap;
+}
+
+.rsvp-gift > .row__body {
+  flex: 1 1 12rem;
+}

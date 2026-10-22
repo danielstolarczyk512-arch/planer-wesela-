@@ -1,0 +1,113 @@
+{
+  "version": "1.0",
+  "units": {
+    "duration": "ms",
+    "translation": "logical px"
+  },
+  "easing": {
+    "standard": [
+      0.2,
+      0,
+      0,
+      1
+    ],
+    "enter": [
+      0.16,
+      1,
+      0.3,
+      1
+    ],
+    "exit": [
+      0.4,
+      0,
+      1,
+      1
+    ]
+  },
+  "transitions": {
+    "press": {
+      "duration": 80,
+      "releaseDuration": 140,
+      "scaleTo": 0.985
+    },
+    "tab": {
+      "duration": 180,
+      "effect": "crossfade",
+      "persistentNavigation": true
+    },
+    "detail": {
+      "enterDuration": 240,
+      "exitDuration": 200,
+      "translateX": 20,
+      "effect": "translate-and-fade"
+    },
+    "expand": {
+      "duration": 220,
+      "scope": "small content block"
+    },
+    "sheet": {
+      "enterDuration": 300,
+      "exitDuration": 220,
+      "effect": "from-bottom",
+      "overshoot": false
+    },
+    "dialog": {
+      "duration": 180,
+      "scaleFrom": 0.98
+    },
+    "checkbox": {
+      "duration": 160
+    },
+    "filter": {
+      "duration": 120,
+      "effect": "optional crossfade"
+    },
+    "valueChange": {
+      "duration": 120,
+      "numericUpdate": "immediate",
+      "effect": "highlight or crossfade; no odometer"
+    },
+    "theme": {
+      "duration": 200,
+      "effect": "crossfade-or-instant",
+      "preserveState": true
+    },
+    "toast": {
+      "enterDuration": 180,
+      "exitDuration": 140
+    },
+    "sharedElement": {
+      "optional": true,
+      "duration": 260,
+      "fallback": "crossfade"
+    },
+    "stagger": {
+      "optional": true,
+      "maxItems": 3,
+      "delayPerItem": 30
+    }
+  },
+  "reducedMotion": {
+    "when": "system reduce OR app reduce",
+    "translation": 0,
+    "scaling": false,
+    "sharedElements": false,
+    "stagger": false,
+    "opacityMaxDuration": 100,
+    "instantAllowed": true,
+    "functionalParityRequired": true
+  },
+  "interactionRules": {
+    "interruptible": true,
+    "latestNavigationIntentWins": true,
+    "blockDuplicateSubmitOnly": true,
+    "undoVisibleMinimumMs": 6000,
+    "preserveFocusAndScroll": true,
+    "haptics": "optional platform-dependent; never required"
+  },
+  "performanceTargets": {
+    "fps": 60,
+    "frameBudgetMs": 16.7,
+    "status": "targets to verify on real devices, not measured results"
+  }
+}

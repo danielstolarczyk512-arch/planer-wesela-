@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pl" data-theme="system">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Nasz dzień: podgląd systemu v1.1</title>
+<meta name="description" content="Interaktywny podgląd tokenów, komponentów i ruchu GUI v1.1 (dane fikcyjne).">
+<link rel="stylesheet" href="tokens.css">
+<style>
+/* Fonty z własnego katalogu (OFL), bez zewnętrznych serwerów. */
+@font-face { font-family: "Inter"; src: url(fonts/inter-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; src: url(fonts/inter-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 900; font-display: swap; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20C0, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "DM Sans"; src: url(fonts/dm-sans-latin-wght-normal.woff2) format("woff2"); font-weight: 100 1000; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "DM Sans"; src: url(fonts/dm-sans-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 100 1000; font-display: swap; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20C0, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Lora"; src: url(fonts/lora-latin-wght-normal.woff2) format("woff2"); font-weight: 400 700; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Lora"; src: url(fonts/lora-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 700; font-display: swap; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20C0, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Bodoni Moda"; src: url(fonts/bodoni-moda-latin-wght-normal.woff2) format("woff2"); font-weight: 400 900; font-display: swap; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Bodoni Moda"; src: url(fonts/bodoni-moda-latin-ext-wght-normal.woff2) format("woff2"); font-weight: 400 900; font-display: swap; unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+1E00-1E9F, U+20A0-20C0, U+2C60-2C7F, U+A720-A7FF; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--wp-background); color: var(--wp-text-primary); font: var(--wp-type-body) var(--wp-font-body); }
+button, input, select { font: inherit; color: inherit; }
+h1, h2 { font-family: var(--wp-font-heading); font-weight: 400; margin: 0; text-wrap: balance; }
+h1 { font-size: 30px; line-height: 38px; }
+h2 { font-size: 22px; line-height: 30px; }
+p { margin: 0; }
+.num { font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; }
+.secondary { font: var(--wp-type-secondary) var(--wp-font-body); color: var(--wp-text-secondary); }
+.overline { font: var(--wp-type-overline) var(--wp-font-body); letter-spacing: .08em; text-transform: uppercase; color: var(--wp-text-secondary); }
+:focus-visible { outline: var(--wp-focus-width) solid var(--wp-focus-ring); outline-offset: var(--wp-focus-offset); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* --- pasek narzędzi podglądu (nie jest częścią GUI) --- */
+.tools { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: center; padding: 12px 16px; border-bottom: 1px solid var(--wp-separator); background: var(--wp-surface); }
+.tools label { display: inline-flex; gap: 8px; align-items: center; min-height: var(--wp-touch); cursor: pointer; }
+.tools input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--wp-action-primary); }
+.seg { display: inline-flex; padding: 4px; gap: 4px; border-radius: 999px; background: var(--wp-accent-surface); }
+.seg button { min-height: 40px; padding: 0 14px; border: 0; border-radius: 999px; background: transparent; cursor: pointer; }
+.seg button[aria-pressed=true] { background: var(--wp-surface); color: var(--wp-action-primary); box-shadow: var(--wp-shadow-card); font-weight: 600; }
+.layout { display: grid; gap: 24px; justify-content: center; padding: 24px 16px 48px; grid-template-columns: minmax(0, 420px); }
+@media (min-width: 1000px) { .layout { grid-template-columns: 420px 380px; align-items: start; } }
+.notes { font: var(--wp-type-secondary) var(--wp-font-body); color: var(--wp-text-secondary); }
+.notes h2 { font-size: 20px; color: var(--wp-text-primary); margin-bottom: 8px; }
+.notes li { margin-bottom: 6px; }
+
+/* --- aplikacja --- */
+.app { position: relative; border: 1px solid var(--wp-separator); border-radius: 28px; overflow: hidden; background: var(--wp-background); min-height: 780px; display: flex; flex-direction: column; }
+.screen { flex: 1; padding: 20px var(--wp-pad) 24px; display: flex; flex-direction: column; gap: 24px; view-transition-name: screen; }
+@media (max-width: 340px) { .screen { padding-inline: var(--wp-pad-small); } }
+.topbar { display: flex; align-items: center; justify-content: space-between; min-height: var(--wp-touch); }
+.brand { font-family: var(--wp-font-heading); font-size: 22px; color: var(--wp-action-primary); display: flex; gap: 8px; align-items: center; }
+.avatars { display: flex; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--wp-accent-surface); border: 2px solid var(--wp-background); font-weight: 600; font-size: 14px; }
+.avatar + .avatar { margin-left: -8px; }
+.card { background: var(--wp-surface); border: 1px solid var(--wp-separator); border-radius: var(--wp-radius-card); box-shadow: var(--wp-shadow-card); padding: 16px; }
+.hero { background: var(--wp-action-primary); color: var(--wp-text-on-primary); border-radius: var(--wp-radius-card); padding: 20px; display: grid; gap: 8px; }
+.count { display: flex; gap: 12px; align-items: baseline; }
+.count b { font-family: var(--wp-font-heading); font-weight: 400; font-size: clamp(var(--wp-type-countdown-min), 18vw, var(--wp-type-countdown-max)); line-height: 1; }
+.hero .overline { color: inherit; opacity: .85; }
+.row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.amount { font-size: 32px; line-height: 40px; font-weight: 500; }
+.linkbtn { border: 0; background: none; color: var(--wp-action-primary); font-weight: 600; min-height: var(--wp-touch); padding: 0 4px; cursor: pointer; }
+.btn { min-height: 52px; padding: 0 20px; border-radius: var(--wp-radius-button); border: 1px solid transparent; cursor: pointer; font-weight: 600; display: inline-flex; gap: 8px; align-items: center; justify-content: center;
+  transition: transform var(--wp-motion-press-release-duration) var(--wp-ease-standard), background-color var(--wp-motion-press-release-duration) var(--wp-ease-standard); }
+.btn:active { transform: scale(.985); transition-duration: var(--wp-motion-press-duration); }
+.btn-primary { background: var(--wp-action-primary); color: var(--wp-text-on-primary); width: 100%; }
+.btn-secondary { background: var(--wp-surface); color: var(--wp-action-primary); border-color: var(--wp-control-border); }
+.btn-danger { background: var(--wp-action-danger); color: var(--wp-text-on-danger); }
+.btn[disabled] { background: var(--wp-accent-surface); color: var(--wp-text-disabled); cursor: not-allowed; transform: none; }
+.list { display: grid; }
+.item { display: flex; gap: 12px; align-items: center; min-height: 64px; padding: 8px 0; border-bottom: 1px solid var(--wp-separator); }
+.item:last-child { border-bottom: 0; }
+.check { appearance: none; width: 24px; height: 24px; border: 2px solid var(--wp-control-border); border-radius: 6px; display: grid; place-items: center; margin: 12px; cursor: pointer; flex: none;
+  transition: background-color var(--wp-motion-checkbox-duration) var(--wp-ease-standard), border-color var(--wp-motion-checkbox-duration) var(--wp-ease-standard); }
+.check:checked { background: var(--wp-action-primary); border-color: var(--wp-action-primary); }
+.check:checked::after { content: ""; width: 6px; height: 11px; border: solid var(--wp-text-on-primary); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+.done-text { text-decoration: line-through; color: var(--wp-text-secondary); }
+.chip { display: inline-flex; gap: 6px; align-items: center; padding: 4px 10px; border-radius: 999px; font: var(--wp-type-secondary) var(--wp-font-body); white-space: nowrap; }
+.s-ok { color: var(--wp-success-text); background: var(--wp-success-background); }
+.s-warn { color: var(--wp-warning-text); background: var(--wp-warning-background); }
+.s-err { color: var(--wp-error-text); background: var(--wp-error-background); }
+.s-neutral { color: var(--wp-neutral-text); background: var(--wp-neutral-background); }
+.s-info { color: var(--wp-info-text); background: var(--wp-info-background); }
+.stat b { display: block; font-size: 32px; line-height: 40px; font-weight: 500; }
+.t-ok { color: var(--wp-success-text); } .t-warn { color: var(--wp-warning-text); } .t-neutral { color: var(--wp-neutral-text); } .t-gold { color: var(--wp-text-gold); }
+.offers { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.offer { text-align: left; cursor: pointer; display: grid; gap: 8px; border: 1px solid var(--wp-control-border); }
+.offer[aria-pressed=true] { border: 2px solid var(--wp-selected-border); background: var(--wp-selected-surface); padding: 15px; }
+.offer h3 { font-family: var(--wp-font-heading); font-weight: 400; font-size: 20px; line-height: 26px; margin: 0; }
+.notice { border-radius: var(--wp-radius-card); padding: 12px 16px; display: grid; gap: 4px; }
+.nav { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--wp-separator); background: var(--wp-surface); padding-bottom: env(safe-area-inset-bottom); }
+.nav button { border: 0; background: none; min-height: 64px; display: grid; justify-items: center; align-content: center; gap: 4px; font: var(--wp-type-navigation) var(--wp-font-body); color: var(--wp-text-secondary); cursor: pointer; }
+.nav button svg { width: 24px; height: 24px; padding: 2px 14px; box-sizing: content-box; border-radius: 999px; }
+.nav button[aria-current=page] { color: var(--wp-action-primary); font-weight: 600; }
+.nav button[aria-current=page] svg { background: var(--wp-accent-surface); }
+.icon { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* Szczegóły: wejście z prawej. */
+.detail-enter { animation: detail-in var(--wp-motion-detail-enter-duration) var(--wp-ease-enter); }
+@keyframes detail-in { from { opacity: 0; transform: translateX(20px); } }
+/* Przełączanie zakładek: przenikanie (View Transitions), pasek nawigacji nieruchomy. */
+::view-transition-old(screen), ::view-transition-new(screen) { animation-duration: var(--wp-motion-tab-duration); animation-timing-function: var(--wp-ease-standard); }
+
+/* Dialog i dolny panel (natywny <dialog>: fokus w środku, Escape, powrót fokusu). */
+dialog { border: 0; padding: 0; background: transparent; color: inherit; max-width: none; max-height: none; }
+dialog::backdrop { background: var(--wp-scrim); }
+.dialog-box { background: var(--wp-surface-raised); color: var(--wp-text-primary); border-radius: var(--wp-radius-card); padding: 24px; width: min(92vw, 400px); display: grid; gap: 16px; }
+dialog.modal[open] .dialog-box { animation: dlg-in var(--wp-motion-dialog-duration) var(--wp-ease-enter); }
+@keyframes dlg-in { from { opacity: 0; transform: scale(.98); } }
+dialog.sheet { margin: auto 0 0; width: 100%; }
+dialog.sheet .sheet-box { background: var(--wp-surface-raised); border-radius: var(--wp-radius-sheet) var(--wp-radius-sheet) 0 0; box-shadow: var(--wp-shadow-sheet); padding: 8px var(--wp-pad) calc(24px + env(safe-area-inset-bottom)); max-width: 560px; margin: 0 auto; display: grid; gap: 16px; max-height: 85vh; overflow: auto; overscroll-behavior: contain; }
+dialog.sheet[open] .sheet-box { animation: sheet-in var(--wp-motion-sheet-enter-duration) var(--wp-ease-enter); }
+@keyframes sheet-in { from { transform: translateY(100%); } }
+.handle { width: 40px; height: 4px; border-radius: 2px; background: var(--wp-control-border); margin: 4px auto 0; }
+.toast { position: absolute; left: 16px; right: 16px; bottom: 80px; display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 8px 8px 8px 16px; border-radius: 12px; background: var(--wp-text-primary); color: var(--wp-background); animation: toast-in var(--wp-motion-toast-enter-duration) var(--wp-ease-enter); }
+.toast .linkbtn { color: inherit; text-decoration: underline; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* Ograniczenie ruchu: bez przesunięć i skalowania, przenikania maks. 100 ms. */
+@media (prefers-reduced-motion: reduce) {
+  .detail-enter, dialog[open] .dialog-box, dialog[open] .sheet-box, .toast { animation: fade 100ms linear !important; }
+  .btn:active { transform: none; }
+  ::view-transition-old(screen), ::view-transition-new(screen) { animation-duration: 100ms; }
+}
+:root.reduce-motion .detail-enter, :root.reduce-motion dialog[open] .dialog-box, :root.reduce-motion dialog[open] .sheet-box, :root.reduce-motion .toast { animation: fade 100ms linear !important; }
+:root.reduce-motion .btn:active { transform: none; }
+:root.reduce-motion ::view-transition-old(screen), :root.reduce-motion ::view-transition-new(screen) { animation-duration: 100ms; }
+@keyframes fade { from { opacity: 0; } }
+</style>
+</head>
+<body>
+<div class="tools" role="region" aria-label="Ustawienia podglądu">
+  <div class="seg" role="group" aria-label="Motyw">
+    <button type="button" data-theme-btn="system" aria-pressed="true">Systemowy</button>
+    <button type="button" data-theme-btn="light" aria-pressed="false">Jasny</button>
+    <button type="button" data-theme-btn="dark" aria-pressed="false">Ciemny</button>
+  </div>
+  <label><input type="checkbox" id="reduce"> Ogranicz animacje</label>
+  <label><input type="checkbox" id="monthOnly"> Wesele ma tylko miesiąc</label>
+</div>
+
+<div class="layout">
+  <div class="app" id="app">
+    <main class="screen" id="screen" tabindex="-1"></main>
+    <nav class="nav" aria-label="Główne">
+      <button type="button" data-tab="dzis" aria-current="page"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg>Dziś</button>
+      <button type="button" data-tab="plan"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3v3M15 3v3M8 11h8M8 15h5"/></svg>Plan</button>
+      <button type="button" data-tab="budzet"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M16 13h2M3 10h18"/></svg>Budżet</button>
+      <button type="button" data-tab="goscie"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6M16 4.5a3.5 3.5 0 010 7M18 14c2 .8 3 3 3 6"/></svg>Goście</button>
+      <button type="button" data-tab="wiecej"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>Więcej</button>
+    </nav>
+    <div id="toastSlot" aria-live="polite"></div>
+  </div>
+
+  <aside class="notes" aria-labelledby="notes-h">
+    <h2 id="notes-h">Co pokazuje podgląd v1.1</h2>
+    <ul>
+      <li>Kolory z <code>design/tokens/tokens.json</code> (kontrast sprawdzony skryptem): złoto jako tekst w jasnym motywie ciemniejsze, obrysy pól i checkboxów zawsze widoczne, pierścień fokusu (sprawdź klawiszem Tab).</li>
+      <li>Odliczanie z polską liczbą mnogą i wariantem „tylko miesiąc”.</li>
+      <li>Kwoty przez <code>Intl.NumberFormat</code> z grupowaniem także dla 4 cyfr; brak wyceny ≠ 0 zł.</li>
+      <li>Zadanie: natychmiastowa reakcja, „Cofnij” przez 6 s (pauza przy fokusie).</li>
+      <li>Wybór oferty: dialog z konsekwencjami (budżet, płatność, odrzucenie drugiej oferty).</li>
+      <li>Goście: liczby w kolorach statusów, „Jeszcze nie wiem” osobno.</li>
+      <li>Stoły: „Rozsadź automatycznie” w dolnym panelu z podglądem i ochroną niezapisanych zmian.</li>
+      <li>Ruch: przenikanie zakładek (View Transitions), wejście szczegółów, panel bez odbicia; przy ograniczeniu ruchu tylko krótkie przenikania.</li>
+      <li>Fonty z własnego katalogu (licencja OFL), bez zewnętrznych serwerów.</li>
+    </ul>
+    <p>Dane są fikcyjne. To podgląd systemu wizualnego, nie aplikacja: nic nie jest wysyłane do API.</p>
+  </aside>
+</div>
+
+<dialog class="modal" id="offerDialog" aria-labelledby="offerDialogTitle">
+  <form method="dialog" class="dialog-box">
+    <h2 id="offerDialogTitle">Wybrać Dwór pod Lipami?</h2>
+    <p>Po zatwierdzeniu:</p>
+    <ul class="secondary" style="margin:0;padding-left:20px;display:grid;gap:6px">
+      <li>dodamy do budżetu <span class="num" data-money="37200"></span>,</li>
+      <li>zaplanujemy zadatek <span class="num" data-money="5000"></span> do 1 grudnia 2027,</li>
+      <li>ofertę Ogród nad Jeziorem oznaczymy jako odrzuconą.</li>
+    </ul>
+    <p class="secondary">Nie wysyłamy niczego do sali. Rezerwację potwierdzasz bezpośrednio z obiektem.</p>
+    <div class="grid2">
+      <button class="btn btn-secondary" value="cancel">Anuluj</button>
+      <button class="btn btn-primary" value="ok">Wybieram</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog class="sheet" id="seatSheet" aria-labelledby="seatSheetTitle">
+  <div class="sheet-box">
+    <div class="handle" aria-hidden="true"></div>
+    <div class="row"><h2 id="seatSheetTitle">Rozsadź automatycznie</h2><button class="linkbtn" type="button" data-close>Zamknij</button></div>
+    <p class="secondary">Przypięte miejsca i reguły „razem/osobno” zostaną zachowane.</p>
+    <fieldset style="border:0;margin:0;padding:0;display:grid;gap:4px">
+      <legend class="sr">Opcje</legend>
+      <label class="item" style="border:0"><input class="check" type="checkbox" checked data-opt> Rodziny razem</label>
+      <label class="item" style="border:0"><input class="check" type="checkbox" checked data-opt> Dzieci przy stole dziecięcym</label>
+      <label class="item" style="border:0"><input class="check" type="checkbox" data-opt> Tylko potwierdzeni goście</label>
+    </fieldset>
+    <div id="seatPreview" class="card" hidden>
+      <p class="overline">Podgląd zmian</p>
+      <p><strong class="num">8</strong> osób dostanie miejsce · <strong class="num">0</strong> problemów</p>
+      <p class="secondary">Stół 2: Marta Zielińska i Paweł Zieliński · Stół 3: Kasia, Tomek, Ola (+3)</p>
+    </div>
+    <div id="dirtyAsk" class="notice s-warn" hidden role="alert">
+      <strong>Zapisać zmiany opcji?</strong>
+      <div class="grid2"><button class="btn btn-secondary" type="button" data-discard>Odrzuć</button><button class="btn btn-primary" type="button" data-keep>Wróć</button></div>
+    </div>
+    <button class="btn btn-secondary" type="button" id="previewBtn">Pokaż podgląd</button>
+    <button class="btn btn-primary" type="button" id="applyBtn" disabled>Zastosuj</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+const pl = {
+  money: new Intl.NumberFormat("pl-PL", { style: "currency", currency: "PLN", maximumFractionDigits: 0, useGrouping: "always" }),
+  plural: new Intl.PluralRules("pl-PL"),
+  forms: { day: { one: "dzień", few: "dni", many: "dni", other: "dnia" }, person: { one: "osoba", few: "osoby", many: "osób", other: "osoby" }, task: { one: "zadanie", few: "zadania", many: "zadań", other: "zadania" },
+    left: { one: "Zostało", few: "Zostały", many: "Zostało", other: "Zostało" } },  // czasownik też się odmienia
+  n(count, word) { return `${count} ${this.forms[word][this.plural.select(count)]}`; },
+};
+const money = (v) => (v === null ? "Brak wyceny" : pl.money.format(v));
+const state = { tab: "dzis", tasks: [
+  { id: 1, title: "Potwierdź liczbę gości", meta: "Do 10 czerwca · Anna", done: false },
+  { id: 2, title: "Wybierz menu", meta: "Do 12 czerwca · Michał", done: false },
+  { id: 3, title: "Sprawdź plan stołów", meta: "8 osób czeka na miejsce", done: false },
+], offer: 1, offerSaved: false };
+
+const views = {
+  dzis() {
+    const monthOnly = document.getElementById("monthOnly").checked;
+    const open = state.tasks.filter((t) => !t.done).length;
+    const hero = monthOnly
+      ? `<p class="overline">Lipiec 2028</p><div class="count"><b class="num">ok. 9</b><span>miesięcy do ślubu</span></div>
+         <button class="btn btn-secondary" style="justify-self:start;min-height:48px" type="button">Ustal dokładną datę</button>`
+      : `<p class="overline">1 lipca 2028</p><div class="count"><b class="num">30</b><span>${pl.n(30, "day").replace(/^30 /, "")} do Waszego ślubu</span></div>`;
+    return `
+      ${topbar()}
+      <div><h1>Wasz dzień,<br>pod kontrolą.</h1><p class="secondary" style="margin-top:8px">Anna i Michał</p></div>
+      <section class="hero" aria-label="Odliczanie">${hero}<p>${open ? `${pl.forms.left[pl.plural.select(open)]} ${pl.n(open, "task")} na ten tydzień.` : "Na ten tydzień wszystko zrobione."}</p></section>
+      <section aria-labelledby="h-steps"><div class="row"><h2 id="h-steps" style="font-family:var(--wp-font-body);font-weight:600;font-size:18px">Najbliższe kroki</h2><button class="linkbtn" data-go="plan">Cały plan</button></div>
+        <div class="card list" style="padding-block:4px">${state.tasks.map(taskRow).join("")}</div></section>
+      <div class="grid2">
+        <div class="card"><p class="secondary">Przewidywany koszt</p><p class="amount num">${money(86400)}</p></div>
+        <div class="card"><p class="secondary">Potwierdzeni goście</p><p class="amount num">82</p><p class="secondary">z 100 zaproszonych</p></div>
+      </div>
+      <button class="card row" style="text-align:left;cursor:pointer" type="button" data-go="budzet"><span><span class="secondary">Najbliższa płatność · zadatek · 20 czerwca</span><br><strong>DJ · <span class="num">${money(2000)}</span></strong></span><span class="chip s-warn">za ${pl.n(12, "day")}</span></button>`;
+  },
+  plan() {
+    return `${topbar()}<h1>Plan przygotowań</h1><div class="card list" style="padding-block:4px">${state.tasks.map(taskRow).join("")}</div>
+      <button class="btn btn-primary" type="button">Dodaj zadanie</button>`;
+  },
+  budzet() {
+    return `${topbar()}<div><h1>Porównaj oferty</h1><p class="secondary">Te same założenia: 100 osób, wesele.</p></div>
+      <div class="offers" role="group" aria-label="Oferty sal">
+        ${offerCard(1, "Dwór pod Lipami", 37200, "350 zł / osoba", "100 osób", 2200, "Przy mniej niż 100 osobach płacisz za 100.")}
+        ${offerCard(2, "Ogród nad Jeziorem", 37000, "370 zł / osoba", "80 osób", null, "Brak informacji o opłacie serwisowej.")}
+      </div>
+      <div class="notice s-info"><strong>Różnica: <span class="num">${money(200)}</span></strong><span>Porównaj też zakres usług i minimalną liczbę gości.</span></div>
+      ${state.offerSaved ? `<p class="chip s-ok" role="status">Wybrano Dwór pod Lipami · dodano do budżetu</p>` : `<button class="btn btn-primary" type="button" id="chooseOffer">Wybierz ${state.offer === 1 ? "Dwór pod Lipami" : "Ogród nad Jeziorem"}…</button>`}`;
+  },
+  goscie() {
+    return `${topbar()}<h1>Goście</h1>
+      <div class="grid2" style="grid-template-columns:repeat(4,1fr);text-align:center">
+        <div class="stat"><b class="num t-ok">82</b><span class="secondary">Potwierdzeni</span></div>
+        <div class="stat"><b class="num t-warn">9</b><span class="secondary">Bez odpowiedzi</span></div>
+        <div class="stat"><b class="num t-neutral">3</b><span class="secondary">Nie wiedzą</span></div>
+        <div class="stat"><b class="num t-neutral">6</b><span class="secondary">Odmowy</span></div>
+      </div>
+      <div class="card"><div class="row"><strong>Kowalscy</strong><span class="chip s-ok">3 potwierdzone</span></div>
+        <p class="secondary">Joanna, Piotr, Zosia</p><p class="secondary">Wesele: 3 · Poprawiny: 2 · Zosia: <span class="chip s-neutral">jeszcze nie wie</span></p></div>
+      <div class="card"><div class="row"><strong>Plan stołów</strong><span class="chip s-warn">8 bez miejsca</span></div>
+        <p class="secondary">Problemy planu: brak.</p>
+        <button class="btn btn-secondary" type="button" id="openSeat" style="width:100%;margin-top:12px">Rozsadź automatycznie</button></div>`;
+  },
+  wiecej() {
+    return `${topbar()}<h1>Dzień wesela</h1>
+      <div class="card list" style="padding-block:4px">
+        <div class="item"><span class="num" style="width:56px">15:00</span><span>Ceremonia<br><span class="secondary">Urząd Stanu Cywilnego</span></span></div>
+        <div class="item"><span class="num" style="width:56px">16:15</span><span>Powitanie na sali<br><span class="chip s-err">Konflikt: zespół gra jeszcze w kościele do 16:30</span></span></div>
+        <div class="item"><span class="num" style="width:56px">17:00</span><span>Obiad</span></div>
+      </div>
+      <button class="btn btn-secondary" type="button">Opóźnienie? Przesuń program</button>
+      <div class="card"><p class="secondary">Przykład stanu nieaktywnego i usuwania</p><div class="grid2" style="margin-top:8px"><button class="btn" disabled>Zapisz</button><button class="btn btn-danger" type="button">Usuń punkt</button></div></div>`;
+  },
+};
+
+function topbar() {
+  return `<div class="topbar"><span class="brand"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>Nasz dzień</span>
+    <span class="avatars"><span class="avatar" role="img" aria-label="Anna">A</span><span class="avatar" role="img" aria-label="Michał">M</span></span></div>`;
+}
+function taskRow(t) {
+  return `<label class="item"><input class="check" type="checkbox" data-task="${t.id}" ${t.done ? "checked" : ""}>
+    <span><span class="${t.done ? "done-text" : ""}">${t.title}</span><br><span class="secondary">${t.meta}</span></span></label>`;
+}
+function offerCard(id, name, total, menu, min, other, note) {
+  return `<button type="button" class="card offer" data-offer="${id}" aria-pressed="${state.offer === id}">
+    <h3>${name}</h3><span class="secondary">Koszt łączny</span><span class="amount num">${money(total)}</span>
+    <span class="secondary">Menu</span><span class="num">${menu}</span><span class="secondary">Minimum gości</span><span class="num">${min}</span>
+    <span class="secondary">Pozostałe opłaty</span><span class="num ${other === null ? "t-neutral" : ""}">${other === null ? "Brak informacji" : money(other)}</span>
+    <span class="secondary">${note}</span><span>${state.offer === id ? "✓ Zaznaczona" : "Zaznacz do porównania"}</span></button>`;
+}
+
+let transition = null;
+function render(tab, { focus = false } = {}) {
+  const swap = () => {
+    state.tab = tab;
+    document.getElementById("screen").innerHTML = views[tab]();
+    document.querySelectorAll(".nav button").forEach((b) =>
+      b.dataset.tab === tab ? b.setAttribute("aria-current", "page") : b.removeAttribute("aria-current"));
+    document.querySelectorAll("[data-money]").forEach((el) => (el.textContent = money(Number(el.dataset.money))));
+    if (focus) document.getElementById("screen").focus({ preventScroll: true });
+  };
+  // Najnowszy zamiar wygrywa: przerwij trwające przejście zamiast kolejkować.
+  if (transition) transition.skipTransition();
+  if (document.startViewTransition && tab !== state.tab) {
+    transition = document.startViewTransition(swap);
+    transition.finished.finally(() => (transition = null));
+  } else swap();
+}
+
+document.querySelector(".nav").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) render(b.dataset.tab, { focus: true }); });
+document.getElementById("screen").addEventListener("click", (e) => {
+  const go = e.target.closest("[data-go]");
+  if (go) return render(go.dataset.go, { focus: true });
+  const o = e.target.closest("[data-offer]");
+  if (o) { state.offer = Number(o.dataset.offer); render("budzet"); return document.querySelector(`[data-offer="${state.offer}"]`).focus(); }
+  if (e.target.id === "chooseOffer") return openModal(document.getElementById("offerDialog"), e.target);
+  if (e.target.id === "openSeat") return openModal(document.getElementById("seatSheet"), e.target);
+});
+document.getElementById("screen").addEventListener("change", (e) => {
+  const id = Number(e.target.dataset.task);
+  if (!id) return;
+  const t = state.tasks.find((x) => x.id === id);
+  t.done = e.target.checked;
+  e.target.closest("label").querySelector("span > span").className = t.done ? "done-text" : "";
+  if (t.done) toast(`„${t.title}” oznaczone jako zrobione`, () => { t.done = false; render(state.tab); });
+});
+
+let opener = null;
+function openModal(dlg, from) { opener = from; dlg.showModal(); }
+document.querySelectorAll("dialog").forEach((d) => d.addEventListener("close", () => { if (opener) opener.focus(); }));
+document.getElementById("offerDialog").addEventListener("close", (e) => {
+  if (e.target.returnValue === "ok") { state.offerSaved = true; render("budzet"); toast("Dodano do budżetu: Dwór pod Lipami", null); }
+});
+
+// Dolny panel: Escape / Zamknij / tło, z ochroną niezapisanych zmian.
+const sheet = document.getElementById("seatSheet");
+let dirty = false;
+sheet.addEventListener("change", (e) => { if (e.target.matches("[data-opt]")) { dirty = true; document.getElementById("seatPreview").hidden = true; document.getElementById("applyBtn").disabled = true; } });
+function tryClose() { if (dirty) { document.getElementById("dirtyAsk").hidden = false; document.querySelector("[data-keep]").focus(); } else sheet.close(); }
+sheet.addEventListener("cancel", (e) => { e.preventDefault(); tryClose(); });
+sheet.addEventListener("click", (e) => {
+  if (e.target === sheet || e.target.matches("[data-close]")) tryClose();
+  if (e.target.matches("[data-discard]")) { dirty = false; document.getElementById("dirtyAsk").hidden = true; sheet.close(); }
+  if (e.target.matches("[data-keep]")) document.getElementById("dirtyAsk").hidden = true;
+  if (e.target.id === "previewBtn") { document.getElementById("seatPreview").hidden = false; document.getElementById("applyBtn").disabled = false; dirty = true; }
+  if (e.target.id === "applyBtn") { dirty = false; sheet.close(); toast("Rozsadzono 8 osób", null); }
+});
+
+let toastTimer = null;
+function toast(text, undo) {
+  const slot = document.getElementById("toastSlot");
+  clearTimeout(toastTimer);
+  slot.innerHTML = `<div class="toast"><span>${text}</span>${undo ? '<button class="linkbtn" type="button">Cofnij</button>' : ""}</div>`;
+  const el = slot.firstElementChild;
+  const hide = () => (toastTimer = setTimeout(() => (slot.innerHTML = ""), 6000));
+  if (undo) el.querySelector("button").addEventListener("click", () => { undo(); slot.innerHTML = ""; });
+  el.addEventListener("focusin", () => clearTimeout(toastTimer));
+  el.addEventListener("mouseenter", () => clearTimeout(toastTimer));
+  el.addEventListener("focusout", hide);
+  el.addEventListener("mouseleave", hide);
+  hide();
+}
+
+// Motyw: Systemowy / Jasny / Ciemny (bez przeładowania; fokus i wpisany tekst zostają).
+document.querySelectorAll("[data-theme-btn]").forEach((b) => b.addEventListener("click", () => {
+  document.documentElement.dataset.theme = b.dataset.themeBtn;
+  document.querySelectorAll("[data-theme-btn]").forEach((x) => x.setAttribute("aria-pressed", x === b));
+}));
+document.getElementById("reduce").addEventListener("change", (e) => document.documentElement.classList.toggle("reduce-motion", e.target.checked));
+document.getElementById("monthOnly").addEventListener("change", () => render("dzis"));
+render("dzis");
+</script>
+</body>
+</html>

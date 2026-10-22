@@ -1,0 +1,293 @@
+/* --- wydruki (strony /druk/...) --- */
+.print-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--wp-space-3);
+}
+
+.print-toolbar p {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.print-head h1 {
+  margin: 0;
+}
+
+.print-block {
+  break-inside: avoid-page;
+}
+
+.print-block h2 {
+  margin-bottom: var(--wp-space-2);
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Kolumna z nazwą szersza; kwoty wyrównane do prawej (te same szerokości w każdej sekcji). */
+.print-col-main {
+  width: 55%;
+}
+
+.print-table .num {
+  text-align: right;
+}
+
+.print-table th,
+.print-table td {
+  padding: var(--wp-space-2);
+  border-bottom: 1px solid var(--wp-separator);
+  text-align: left;
+  vertical-align: top;
+}
+
+.print-table thead th {
+  font-weight: 700;
+}
+
+.print-table tr {
+  break-inside: avoid;
+}
+
+.print-summary {
+  max-width: 28rem;
+}
+
+.print-summary td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.print-checklist {
+  display: grid;
+  gap: var(--wp-space-2);
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.print-checklist .print-checklist {
+  margin-top: var(--wp-space-2);
+  padding-left: var(--wp-space-5);
+}
+
+/* Winietki: karty 2 w rzędzie, linie cięcia przerywane. */
+.place-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: 0;
+}
+
+.place-card {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--wp-space-1);
+  min-height: 6rem;
+  padding: var(--wp-space-4);
+  border: 1px dashed var(--wp-separator);
+  text-align: center;
+  break-inside: avoid;
+}
+
+.place-card__name {
+  font-family: var(--wp-font-heading);
+  font-size: 1.375rem;
+}
+
+.place-card__table {
+  color: var(--wp-text-secondary);
+}
+
+@media print {
+  .shell-header,
+  .wshell__nav,
+  .skip-link,
+  .no-print,
+  .print-page .wp-notice {
+    display: none !important;
+  }
+
+  .wshell,
+  .wshell__main,
+  .shell-content {
+    display: block;
+    padding: 0 !important;
+  }
+
+  .print-page {
+    max-width: none;
+    padding: 0;
+    color: #000;
+    background: #fff;
+  }
+
+  .print-table th,
+  .print-table td {
+    border-bottom-color: #999;
+  }
+
+  .place-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .room-plan--print {
+    max-height: none;
+    break-inside: avoid;
+  }
+
+  .room-plan__floor,
+  .room-plan__item rect,
+  .room-plan__table circle,
+  .room-plan__table rect {
+    fill: #fff;
+    stroke: #000;
+  }
+
+  .room-plan__label {
+    fill: #000;
+  }
+
+  .place-card {
+    min-height: 5cm;
+    border-color: #999;
+  }
+
+  /* Karty QR: 4 na A4 (A6 każda). */
+  .qr-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+
+  .qr-card {
+    height: 13.5cm;
+    border-color: #999;
+  }
+
+  @page {
+    margin: 1.5cm;
+  }
+}
+
+@media print {
+  .schedule .live {
+    display: none !important;
+  }
+}
+
+.qr-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: var(--wp-space-3);
+}
+
+.qr-card {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--wp-space-2);
+  padding: var(--wp-space-4);
+  border: 1px dashed var(--wp-separator);
+  text-align: center;
+  break-inside: avoid;
+}
+
+.qr-card p {
+  margin: 0;
+}
+
+.qr-card__name {
+  font-family: var(--wp-font-heading);
+  font-size: 1.375rem;
+}
+
+.qr-card__code {
+  width: 4.5cm;
+  height: 4.5cm;
+  background: #fff;
+}
+
+.qr-card__url {
+  font-size: 0.6875rem;
+  color: var(--wp-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+/* Kolor przewodni (akcent strony dla gości): na ekranie wersja dla motywu, w druku — jasna. */
+.print-accented {
+  --print-accent: var(--guest-accent-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .print-accented {
+    --print-accent: var(--guest-accent-dark);
+  }
+}
+
+:root[data-theme="dark"] .print-accented {
+  --print-accent: var(--guest-accent-dark);
+}
+
+.print-accented .place-card__name,
+.print-accented .qr-card__name,
+.print-accented .qr-card .overline {
+  color: var(--print-accent);
+}
+
+.print-accented .place-card,
+.print-accented .qr-card {
+  border-top: 3px solid var(--print-accent);
+}
+
+@media print {
+  .print-accented,
+  :root[data-theme="dark"] .print-accented,
+  :root:not([data-theme="light"]) .print-accented {
+    --print-accent: var(--guest-accent-light);
+  }
+}
+
+/* Objazd z zaproszeniami: miejscowość nie dzieli się między strony. */
+.print-group {
+  break-inside: avoid;
+  margin-bottom: var(--wp-space-5, 1.5rem);
+}
+
+.print-wishes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--wp-space-5);
+}
+
+.print-wishes li {
+  break-inside: avoid;
+}
+
+.print-wishes p {
+  margin: 0;
+}
+
+.print-summary {
+  display: grid;
+  gap: var(--wp-space-5);
+}
+
+.print-summary section {
+  break-inside: avoid;
+}
+
+.print-summary h2 {
+  margin: 0 0 var(--wp-space-2);
+}
+
+.print-summary ul {
+  margin: var(--wp-space-2) 0 0;
+  padding-inline-start: var(--wp-space-5);
+}

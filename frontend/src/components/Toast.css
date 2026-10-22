@@ -1,0 +1,47 @@
+.wp-toast-region {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--wp-space-4) + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 2 * var(--wp-space-4)), 30rem);
+  z-index: 200;
+  pointer-events: none;
+}
+
+.wp-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp-space-3);
+  padding: var(--wp-space-2) var(--wp-space-2) var(--wp-space-2) var(--wp-space-4);
+  min-height: var(--wp-touch);
+  border-radius: var(--wp-radius-button);
+  background: var(--wp-text-primary);
+  color: var(--wp-background);
+  box-shadow: var(--wp-shadow-sheet);
+  animation: wp-toast-in var(--wp-motion-toast-enter-duration) var(--wp-ease-enter);
+}
+
+@keyframes wp-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--wp-motion-detail-translate) * 0.4));
+  }
+}
+
+.wp-toast__undo {
+  min-height: var(--wp-touch);
+  padding: 0 var(--wp-space-3);
+  border: 0;
+  border-radius: var(--wp-radius-button);
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wp-toast__undo:focus-visible {
+  outline: var(--wp-focus-width) solid var(--wp-background);
+}

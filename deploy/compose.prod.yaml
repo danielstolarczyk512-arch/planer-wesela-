@@ -1,0 +1,124 @@
+# Produkcja / staging: jeden serwer z Dockerem (instrukcja: docs/wdrozenie.md).
+# Uruchomienie z katalogu deploy/:  docker compose -f compose.prod.yaml --env-file .env.prod up -d
+# Na zewnątrz wystawiony jest wyłącznie Caddy (80/443). API, worker i baza są w sieciach wewnętrznych.
+name: wedding-planner-prod
+
+x-app: &app
+  build:
+    context: ..
+    target: runtime
+  image: ${APP_IMAGE:-wedding-planner:prod}
+  env_file: .env.prod
+  environment: &app-env
+    WP_ENV: prod
+    WP_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    WP_CLAMAV_HOST: clamav  # wymagane w produkcji (skan plików przed pobraniem)
+  restart: unless-stopped
+  # Utwardzenie: system plików tylko do odczytu, bez uprawnień jądra, bez eskalacji.
+  read_only: true
+  tmpfs:
+    - /tmp
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+  # backend: tylko baza (bez internetu); edge: ruch od Caddy i wyjście do SMTP/S3/AI.
+  networks: [backend, edge]
+  logging:
+    driver: json-file
+    options: { max-size: "20m", max-file: "5" }
+
+services:
+  db:
+    image: postgres:17-bookworm
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    networks: [backend]
+    shm_size: 256mb
+
+  migrate:
+    <<: *app
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+    depends_on:
+      db: { condition: service_healthy }
+
+  api:
+    <<: *app
+    environment:
+      <<: *app-env
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-4}  # = liczba vCPU serwera
+      # API nie ma opublikowanych portów: łączy się z nim tylko Caddy, więc ufamy jego
+      # nagłówkom X-Forwarded-* (prawdziwy adres klienta dla limitów żądań).
+      FORWARDED_ALLOW_IPS: "*"
+    volumes:
+      - filestore:/app/storage  # przy WP_STORAGE_BACKEND=s3 nieużywany
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "app.jobs.worker"]
+    volumes:
+      - filestore:/app/storage
+    healthcheck:
+      disable: true
+    # scan: osobna sieć tylko worker ↔ ClamAV.
+    networks: [backend, edge, scan]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  clamav:
+    # ClamAV (GPL) jako osobny proces; aplikacja rozmawia z clamd przez TCP (ADR-0006).
+    # Bez publikowanych portów. Potrzebuje internetu do aktualizacji sygnatur (freshclam)
+    # i ok. 1,5–2 GB RAM. Domyślny limit strumienia clamd (25 MB) > WP_MAX_UPLOAD_MB (20).
+    image: clamav/clamav:1.4
+    environment:
+      CLAMAV_NO_MILTERD: "true"
+    volumes:
+      - clamav_db:/var/lib/clamav
+    restart: unless-stopped
+    networks: [scan]
+    logging:
+      driver: json-file
+      options: { max-size: "20m", max-file: "5" }
+
+  caddy:
+    image: caddy:2.10-alpine
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Zbudowana aplikacja webowa: npm --prefix ../frontend ci && npm --prefix ../frontend run build
+      - ../frontend/dist:/srv:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    networks: [edge]
+    depends_on:
+      api: { condition: service_healthy }
+
+networks:
+  backend:
+    internal: true  # baza bez dostępu z/do internetu
+  edge: {}
+  scan: {}  # worker ↔ ClamAV; z dostępem do internetu dla aktualizacji sygnatur
+
+volumes:
+  pgdata:
+  filestore:
+  caddy_data:
+  caddy_config:
+  clamav_db:
