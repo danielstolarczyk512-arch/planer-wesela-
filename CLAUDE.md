@@ -7,7 +7,10 @@ i następne kroki. **Aktualizuj sekcję „Stan” i „Następne kroki” przy 
 
 **„Nasz dzień” (Wedding Planner AI)** — komercyjna polska aplikacja do planowania wesela:
 oferty i umowy usługodawców, realny koszt, budżet i płatności, goście z RSVP, plan stołów,
-harmonogram dnia. Repo `D:\aplikacjaweselna`, gałąź `main`. Właściciel pisze po polsku —
+harmonogram dnia. Repo `D:\aplikacjaweselna`, **publiczne** na GitHubie
+`danielstolarczyk512-arch/planer-wesela-` (od 2026-10-23). Pracujemy na lokalnej gałęzi `publikacja` (śledzi `origin/main`);
+lokalny `main` i tag `historia-lokalna-2026-10-23` to stara historia z danymi prywatnymi — **nie wysyłać**. W plikach
+repo nie wpisywać danych osobowych właściciela ani gości. Właściciel pisze po polsku —
 odpowiadaj, komentuj kod i pisz dokumentację **po polsku**.
 
 - **Backend:** Python 3.12, FastAPI, SQLAlchemy 2, Alembic, PostgreSQL 17; modularny monolit
