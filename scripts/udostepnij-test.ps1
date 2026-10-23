@@ -50,7 +50,15 @@ try {
     Write-Host "Gotowe. Wyslij koledze ten adres:  $url"
     Write-Host "E-maile (potwierdzenie konta, reset hasla) podgladasz na laptopie: http://127.0.0.1:8026"
     Write-Host "Adres zmienia sie przy kazdym uruchomieniu skryptu. Ctrl+C zamyka tunel."
-    Wait-Process -Id $tunnel.Id
+    # Szybki tunel bywa usuwany po stronie Cloudflare; cloudflared ponawia wtedy w nieskończoność.
+    while (-not $tunnel.HasExited) {
+        Start-Sleep -Seconds 10
+        if (Select-String -Path $log -Pattern "Tunnel not found" -SimpleMatch -Quiet) {
+            Write-Host ""
+            Write-Host "Cloudflare zamknal tunel - adres $url juz nie dziala. Uruchom skrypt ponownie (nowy adres)."
+            break
+        }
+    }
 }
 finally {
     if ($tunnel -and -not $tunnel.HasExited) { Stop-Process -Id $tunnel.Id }
