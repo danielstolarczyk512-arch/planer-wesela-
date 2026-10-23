@@ -1,0 +1,2 @@
+# Skrypty powłoki uruchamiane na Linuksie — zawsze LF.
+*.sh text eol=lf

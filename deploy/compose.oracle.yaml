@@ -1,0 +1,17 @@
+# Serwer testowy Oracle Cloud Always Free (ARM, Ubuntu). Instrukcja: docs/oracle-cloud.md.
+# Uruchamia deploy/oracle/instaluj.sh; ręcznie (z katalogu deploy/):
+#   docker compose -f compose.prod.yaml -f compose.oracle.yaml --env-file .env.prod up -d --build
+# Dopóki nie ma dostawcy SMTP, e-maile trafiają do Mailpit. Podgląd tylko przez tunel SSH:
+#   ssh -L 8025:127.0.0.1:8025 ubuntu@<adres serwera>   →   http://127.0.0.1:8025
+
+services:
+  clamav:
+    # clamav/clamav (Alpine) nie ma wersji ARM; wariant Debian tego samego wydania ma (linux/arm64).
+    image: clamav/clamav-debian:1.4
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - "127.0.0.1:8025:8025"
+    restart: unless-stopped
+    networks: [edge]

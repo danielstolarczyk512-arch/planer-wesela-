@@ -172,6 +172,9 @@ Ostatnia migracja: `a1d4c7e9b2f0`.
 `127.0.0.1:8090`, Mailpit `127.0.0.1:8026`, własna baza; `deploy/compose.test.yaml`, sekrety w `deploy/.env.test`),
 udostępnianie szybkim tunelem Cloudflare: `scripts/udostepnij-test.ps1`, instrukcja `docs/test-dla-znajomych.md`.
 `deploy/.env.prod` (lokalny staging z 19.10) zostaje nietknięty.
+**Serwer testowy 24/7 (23.10, przygotowany, czeka na konta właściciela):** Oracle Cloud Always Free (ARM) + DuckDNS —
+`deploy/oracle/instaluj.sh`, `deploy/oracle/aktualizuj.sh`, `deploy/compose.oracle.yaml` (ClamAV `clamav-debian` — obraz
+Alpine nie ma ARM), instrukcja `docs/oracle-cloud.md`. Obraz aplikacji arm64 zbudowany i sprawdzony lokalnie (emulacja).
 
 ## Następne kroki (kolejność uzgodniona z właścicielem)
 
