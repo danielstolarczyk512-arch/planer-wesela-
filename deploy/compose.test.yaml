@@ -1,0 +1,24 @@
+# Środowisko testowe dla znajomych: konfiguracja produkcyjna uruchomiona na laptopie,
+# wystawiona do internetu tunelem Cloudflare (instrukcja: docs/test-dla-znajomych.md).
+# Uruchomienie z katalogu deploy/:
+#   docker compose -p naszdzien-test -f compose.prod.yaml -f compose.test.yaml --env-file .env.test up -d
+# Osobny projekt, osobna baza i wolumeny — baza dev (prawdziwe wesele) nie jest używana.
+name: naszdzien-test
+
+x-test-env: &test-env
+  # compose.prod.yaml czyta .env.prod — tu podmieniamy go w całości na .env.test.
+  env_file: !override [.env.test]
+
+services:
+  migrate: *test-env
+  api: *test-env
+  worker: *test-env
+
+  # Bez dostawcy SMTP e-maile (weryfikacja adresu, reset hasła, linki RSVP) trafiają do Mailpit.
+  # Podgląd tylko z laptopa: http://127.0.0.1:8026 — linki można przekazać testerom ręcznie.
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - "127.0.0.1:8026:8025"
+    restart: unless-stopped
+    networks: [edge]

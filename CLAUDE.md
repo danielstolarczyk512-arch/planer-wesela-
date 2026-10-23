@@ -168,6 +168,10 @@ czyszczony przy wylogowaniu/zmianie konta; redakcja tokenów w logach Caddy i be
 (30 dni) i usługodawcy (7 dni) wygasają po weselu; worker AI ponawia kontrolę uprawnień; heartbeat blokady zadań;
 walidator AI (NaN, ilość bez dowodu). Z audytu czekają na decyzję: A6 (oferta → raty), koszt oferty przy zmianie gości, S4.
 Ostatnia migracja: `a1d4c7e9b2f0`.
+**Test dla znajomych (23.10):** projekt Dockera `naszdzien-test` (konfiguracja prod na laptopie, Caddy
+`127.0.0.1:8090`, Mailpit `127.0.0.1:8026`, własna baza; `deploy/compose.test.yaml`, sekrety w `deploy/.env.test`),
+udostępnianie szybkim tunelem Cloudflare: `scripts/udostepnij-test.ps1`, instrukcja `docs/test-dla-znajomych.md`.
+`deploy/.env.prod` (lokalny staging z 19.10) zostaje nietknięty.
 
 ## Następne kroki (kolejność uzgodniona z właścicielem)
 
