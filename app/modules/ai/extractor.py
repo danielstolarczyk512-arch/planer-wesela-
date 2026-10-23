@@ -80,7 +80,8 @@ def _decimal(value: Any) -> Decimal | None:
         d = Decimal(str(value))
     except InvalidOperation:
         return None
-    if d < 0 or d > MAX_AMOUNT or not d.is_finite():
+    # is_finite najpierw: porównanie NaN z liczbą rzuca InvalidOperation.
+    if not d.is_finite() or d < 0 or d > MAX_AMOUNT:
         return None
     return d.quantize(Decimal("0.01"))
 
@@ -114,15 +115,21 @@ def suspicious_fragments(text: str) -> list[str]:
 
 
 def _confidence(
-    amount: Decimal | None, citation: dict[str, Any] | None, suspicious: Sequence[str] = ()
+    amount: Decimal | None,
+    citation: dict[str, Any] | None,
+    suspicious: Sequence[str] = (),
+    quantity: Decimal | None = None,
 ) -> str:
     if citation is None:
         return "unverified"
     quote = norm(citation["quote"])
     if _SUSPICIOUS.search(quote) or any(quote in line for line in suspicious):
         return "unverified"  # cytat z linii wyglądającej na polecenie, nie na ofertę
-    if amount is not None and amount not in numbers_in(citation["quote"]):
+    numbers = numbers_in(citation["quote"])
+    if amount is not None and amount not in numbers:
         return "unverified"  # liczba spoza cytatu: możliwa halucynacja
+    if quantity is not None and quantity != 1 and quantity not in numbers:
+        return "unverified"  # ilość też musi stać w cytacie (np. „Menu 300 zł” i ilość 999)
     return "medium"  # zweryfikowane automatycznie, ale wciąż do przejrzenia przez parę
 
 
@@ -194,7 +201,8 @@ def validate(
         if item["kind"] == "percent" and amount is not None and amount > 100:
             amount = None
         citation = _citation(item, doc_norm, page_count)
-        confidence = _confidence(amount, citation, flagged)
+        quantity = _decimal(item.get("quantity"))
+        confidence = _confidence(amount, citation, flagged, quantity)
         event = item.get("event_kind")
         if event not in EVENT_KINDS and "poprawin" in norm(f"{label} {item.get('quote') or ''}"):
             event = "after_party"  # reguła domenowa: poprawiny liczone osobno (inna liczba gości)
@@ -203,7 +211,7 @@ def validate(
                 "label": label.strip()[:200],
                 "kind": item["kind"],
                 "amount": amount,
-                "quantity": _decimal(item.get("quantity")),
+                "quantity": quantity,
                 "included": bool(item.get("included")),
                 "optional": bool(item.get("optional")),
                 "event_kind": event if event in EVENT_KINDS else None,

@@ -151,6 +151,44 @@ def test_rsvp_closed_after_deadline_and_invalid_token(client, alice, wedding, mo
     assert revoke.status_code == 204
 
 
+def test_guest_page_works_after_rsvp_deadline_until_week_after_wedding(
+    client, alice, wedding, db, monkeypatch
+):
+    """Termin RSVP zamyka edycję odpowiedzi, ale nie stronę gościa (audyt 2026-10-23, P0)."""
+    from datetime import datetime
+
+    from app.modules.guests import service as guests_service
+
+    url, _, _, h, _, _ = setup_household(client, alice, wedding)
+    db.execute(
+        update(Wedding).where(Wedding.id == wedding["id"]).values(wedding_date=date(2027, 8, 14))
+    )
+    db.commit()
+    token = client.post(f"{url}/households/{h['id']}/rsvp-link", headers=alice).json()["token"]
+
+    def at(moment: datetime) -> None:
+        monkeypatch.setattr(clock, "today", lambda: moment.date())
+        monkeypatch.setattr(guests_service, "utcnow", lambda: moment)
+
+    at(datetime(2027, 8, 10, 12, tzinfo=clock.WARSAW))  # po terminie RSVP, przed ślubem
+    view = client.get(f"{API}/rsvp/{token}")
+    assert view.status_code == 200, view.text
+    assert view.json()["is_open"] is False
+    households = client.get(f"{url}/households", headers=alice).json()
+    assert households[0]["rsvp_link_active"] is True
+
+    # Data wesela przesunięta po wydaniu linku: ważność liczy się od nowej daty.
+    db.execute(
+        update(Wedding).where(Wedding.id == wedding["id"]).values(wedding_date=date(2027, 9, 4))
+    )
+    db.commit()
+    at(datetime(2027, 9, 10, 12, tzinfo=clock.WARSAW))
+    assert client.get(f"{API}/rsvp/{token}").status_code == 200
+
+    at(datetime(2027, 9, 12, 12, tzinfo=clock.WARSAW))  # ponad 7 dni po weselu
+    assert client.get(f"{API}/rsvp/{token}").status_code == 404
+
+
 def test_rsvp_companion_added_and_removed_by_guest(client, alice, wedding, monkeypatch):
     url, reception, _, h, adult, _ = setup_household(client, alice, wedding)
     token = client.post(f"{url}/households/{h['id']}/rsvp-link", headers=alice).json()["token"]

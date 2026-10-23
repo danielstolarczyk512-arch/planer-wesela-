@@ -40,6 +40,36 @@ def test_idempotency_is_per_user(client, alice, bob, wedding):
     assert a.json()["id"] != b.json()["id"]
 
 
+def test_idempotency_replay_requires_active_session(client, alice, wedding):
+    """Audyt 2026-10-23 S1: wylogowana sesja nie odtwarza zapisanej odpowiedzi."""
+    url = f"{API}/weddings/{wedding['id']}/tasks"
+    headers = {**alice, "Idempotency-Key": "task-logout-0001"}
+    assert client.post(url, headers=headers, json={"title": "Tort"}).status_code == 201
+    assert client.post(f"{API}/auth/logout", headers=alice).status_code == 204
+    replay = client.post(url, headers=headers, json={"title": "Tort"})
+    assert replay.status_code == 401
+    assert replay.headers.get("idempotency-replayed") is None
+
+
+def test_idempotency_replay_rechecks_membership_and_role(client, alice, bob, wedding):
+    invite_and_accept(client, alice, bob, wedding, "bob@example.com")
+    bob_id = client.get(f"{API}/me", headers=bob).json()["id"]
+    url = f"{API}/weddings/{wedding['id']}/tasks"
+    headers = {**bob, "Idempotency-Key": "task-role-0001"}
+    assert client.post(url, headers=headers, json={"title": "Kwiaty"}).status_code == 201
+
+    members = f"{API}/weddings/{wedding['id']}/members/{bob_id}"
+    assert client.patch(members, headers=alice, json={"role": "viewer"}).status_code == 200
+    changed = client.post(url, headers=headers, json={"title": "Kwiaty"})
+    assert changed.status_code == 403
+    assert changed.json()["code"] == "idempotency.context_changed"
+
+    assert client.delete(members, headers=alice).status_code == 204
+    removed = client.post(url, headers=headers, json={"title": "Kwiaty"})
+    assert removed.status_code == 404
+    assert removed.headers.get("idempotency-replayed") is None
+
+
 def test_summary(client, alice, wedding, monkeypatch):
     monkeypatch.setattr(clock, "today", lambda: date(2027, 6, 1))
     s = client.get(f"{API}/weddings/{wedding['id']}/summary", headers=alice)

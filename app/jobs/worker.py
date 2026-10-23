@@ -4,8 +4,10 @@ Uruchomienie: python -m app.jobs.worker
 """
 
 import signal
+import threading
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from datetime import datetime, timedelta
 from types import FrameType
 from typing import Any
@@ -20,7 +22,7 @@ from app.core.config import get_settings
 from app.core.db import get_engine, get_sessionmaker, utcnow
 from app.core.email import SEND_EMAIL_JOB, send_email
 from app.core.logging import configure_logging
-from app.jobs.queue import Job, claim_next, purge_finished, requeue_stale
+from app.jobs.queue import Job, claim_next, extend_lock, purge_finished, requeue_stale
 from app.modules.ai import service as ai
 from app.modules.audit import service as audit
 from app.modules.documents import service as documents
@@ -36,6 +38,9 @@ MAINTENANCE_INTERVAL = timedelta(minutes=15)
 MAINTENANCE_LOCK_ID = 7_340_001  # pg_advisory_lock: jedna instancja utrzymania naraz
 DAILY_INTERVAL = timedelta(hours=24)  # retencja audytu i sprzątanie plików (kosztowne)
 _last_daily: datetime | None = None
+# Odnowienie blokady co minutę (blokada 5 min): długi OCR/AI (do 10 min) nie zostanie uznany
+# za osierocony i uruchomiony drugi raz przez inny worker.
+HEARTBEAT_INTERVAL = 60.0
 
 
 def _send_email(_: Session, payload: dict[str, Any]) -> None:
@@ -56,6 +61,30 @@ def _backoff(attempts: int) -> timedelta:
     return timedelta(seconds=min(30 * 2 ** (attempts - 1), 3600))
 
 
+@contextmanager
+def _heartbeat(job_id: UUID, interval: float | None = None) -> Iterator[None]:
+    """Wątek odnawiający blokadę zadania, dopóki handler pracuje (osobna sesja bazy)."""
+    stop = threading.Event()
+    every = HEARTBEAT_INTERVAL if interval is None else interval
+
+    def beat() -> None:
+        while not stop.wait(every):
+            try:
+                with get_sessionmaker()() as db:
+                    if not extend_lock(db, job_id):
+                        return
+            except Exception as exc:  # brak bazy chwilowo: spróbujemy przy następnym takcie
+                log.warning("job_heartbeat_failed", job_id=str(job_id), error=type(exc).__name__)
+
+    thread = threading.Thread(target=beat, name=f"heartbeat-{job_id}", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        stop.set()
+        thread.join(timeout=5)
+
+
 def run_job(job_id: UUID, handlers: dict[str, Handler] | None = None) -> None:
     handlers = handlers or HANDLERS
     session_factory = get_sessionmaker()
@@ -65,7 +94,8 @@ def run_job(job_id: UUID, handlers: dict[str, Handler] | None = None) -> None:
         try:
             if handler is None:
                 raise LookupError(f"Brak obsługi zadania typu {job.type}")
-            handler(db, job.payload)
+            with _heartbeat(job_id):
+                handler(db, job.payload)
             job.status = "succeeded"
             job.finished_at = utcnow()
             job.last_error = None

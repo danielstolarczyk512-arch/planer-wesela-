@@ -18,7 +18,8 @@ from app.modules.ai.models import AiRun
 from app.modules.ai.providers import ProviderError, get_provider
 from app.modules.ai.redaction import redact
 from app.modules.documents import service as documents
-from app.modules.identity.service import Principal, has_active_consent
+from app.modules.identity.models import User
+from app.modules.identity.service import ACTIVE_STATUSES, Principal, has_active_consent
 from app.modules.offers import service as offers
 from app.modules.vendors import service as vendors
 from app.modules.vendors.models import Vendor
@@ -91,6 +92,26 @@ def request_offer_extraction(
     return run
 
 
+def _still_allowed(db: Session, run: AiRun, provider_name: str, external: bool) -> str | None:
+    """Kontrola z chwili zlecenia powtórzona w workerze (audyt 2026-10-23, S6).
+
+    Między zleceniem a wykonaniem można stracić rolę, konto albo wycofać zgodę; zmienić mógł się
+    też dostawca. Zwraca powód odmowy albo None.
+    """
+    user = db.get(User, run.requested_by) if run.requested_by else None
+    if user is None or user.status not in ACTIVE_STATUSES:
+        return "Konto, które zleciło analizę, nie jest już aktywne."
+    try:
+        authorize(db, user.id, run.wedding_id, Action.RUN_AI)
+    except AppError:
+        return "Osoba, która zleciła analizę, nie ma już do niej uprawnień."
+    if provider_name != run.provider or external != run.external_processing:
+        return "Dostawca AI zmienił się po zleceniu. Zleć analizę ponownie."
+    if external and not has_active_consent(db, user.id, "ai_external_processing"):
+        return "Zgoda na analizę u zewnętrznego dostawcy została wycofana."
+    return None
+
+
 def _finish(db: Session, run: AiRun, status: str, error: str | None = None) -> None:
     run.status, run.error, run.finished_at = status, error, utcnow()
     db.commit()
@@ -104,6 +125,11 @@ def run_offer_extraction(db: Session, payload: dict[str, Any]) -> None:
     settings = get_settings()
     if not settings.ai_enabled:
         _finish(db, run, "blocked", "Funkcje AI zostały wyłączone przed uruchomieniem.")
+        return
+    provider = get_provider()
+    refusal = _still_allowed(db, run, provider.name, provider.external)
+    if refusal is not None:
+        _finish(db, run, "blocked", refusal)
         return
     version = (
         documents.version_in_wedding(db, run.wedding_id, run.document_version_id)
@@ -119,7 +145,6 @@ def run_offer_extraction(db: Session, payload: dict[str, Any]) -> None:
 
     pages = documents.pages(version)
     document, truncated = extractor.build_document(pages, settings.ai_max_input_chars)
-    provider = get_provider()
     user_text = document
     redactions: dict[str, int] = {}
     if provider.external:

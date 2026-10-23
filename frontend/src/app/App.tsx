@@ -5,6 +5,7 @@ import { createBrowserRouter, Navigate, Outlet, RouterProvider, useHref, useNavi
 
 import { restoreSession } from "../api/auth";
 import { ApiError } from "../api/errors";
+import { bindQueryCacheToSession } from "../api/sessionCache";
 import { Skeleton } from "../components/Surface";
 import { ToastProvider } from "../components/Toast";
 import { LoginPage } from "../features/auth/LoginPage";
@@ -24,6 +25,7 @@ const queryClient = new QueryClient({
     },
   },
 });
+bindQueryCacheToSession(queryClient);
 
 /** Linki React Aria korzystają z routera aplikacji (bez przeładowania strony). */
 function Root() {

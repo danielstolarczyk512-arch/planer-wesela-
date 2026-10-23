@@ -35,6 +35,7 @@ from app.modules.guests.models import (
 from app.modules.identity.service import Principal
 from app.modules.workspace.models import Event, Wedding
 from app.modules.workspace.permissions import Action, authorize
+from app.modules.workspace.service import access_end, last_wedding_day
 
 CHILD_GROUPS = ("child", "infant")
 RETENTION_DAYS_AFTER_WEDDING = 90
@@ -150,15 +151,13 @@ def attendance_map(db: Session, guest_ids: list[UUID]) -> dict[UUID, dict[UUID, 
 def active_links(db: Session, household_ids: list[UUID]) -> set[UUID]:
     if not household_ids:
         return set()
-    return set(
-        db.scalars(
-            select(RsvpToken.household_id).where(
-                RsvpToken.household_id.in_(household_ids),
-                RsvpToken.revoked_at.is_(None),
-                RsvpToken.expires_at > utcnow(),
-            )
-        )
-    )
+    rows = db.execute(
+        select(RsvpToken, Household.wedding_id)
+        .join(Household, Household.id == RsvpToken.household_id)
+        .where(RsvpToken.household_id.in_(household_ids), RsvpToken.revoked_at.is_(None))
+    ).all()
+    last = {wid: last_wedding_day(db, db.get_one(Wedding, wid)) for wid in {w for _, w in rows}}
+    return {t.household_id for t, wid in rows if _token_valid(t, last[wid])}
 
 
 def age_breakdown(db: Session, wedding: Wedding, basis: str) -> tuple[int, int]:
@@ -517,11 +516,36 @@ def stats(db: Session, principal: Principal, wedding_id: UUID) -> dict[str, Any]
 # --- link RSVP ----------------------------------------------------------------------------
 
 
+LINK_DAYS_AFTER_WEDDING = 7
+
+
+def _access_end(last_day: date) -> datetime:
+    return access_end(last_day, LINK_DAYS_AFTER_WEDDING)
+
+
 def _rsvp_expiry(db: Session, wedding: Wedding, household: Household) -> datetime:
-    """Link wygasa po terminie RSVP, a najpóźniej 7 dni po ostatnim wydarzeniu."""
-    last = _last_wedding_day(db, wedding) or (clock.today() + timedelta(days=365))
-    end_day = min(household.rsvp_deadline or last, last) + timedelta(days=1)
-    return datetime.combine(end_day, time(23, 59), tzinfo=clock.WARSAW)
+    """Strona gościa działa do 7 dni po ostatnim dniu wesela — niezależnie od terminu RSVP.
+
+    Termin odpowiedzi (`rsvp_deadline`) zamyka tylko edycję odpowiedzi (`_is_open`); po nim gość
+    nadal widzi program, dojazd i komunikaty. Bez daty wesela: rok od wydania linku.
+    """
+    last = last_wedding_day(db, wedding)
+    if last is None:
+        return datetime.combine(
+            clock.today() + timedelta(days=365), time(23, 59), tzinfo=clock.WARSAW
+        )
+    return _access_end(last)
+
+
+def _token_valid(t: RsvpToken, last: date | None) -> bool:
+    """Ważność liczona od aktualnej daty wesela (data mogła się zmienić po wydaniu linku).
+
+    Zapisane `expires_at` obowiązuje tylko, gdy wesele nie ma daty.
+    """
+    if t.revoked_at is not None:
+        return False
+    expires = _access_end(last) if last is not None else t.expires_at
+    return expires > utcnow()
 
 
 def create_rsvp_link(
@@ -633,10 +657,14 @@ def _resolve_token(db: Session, token: str, ip: str) -> tuple[RsvpToken, Househo
     ratelimit.hit(db, ratelimit.key_for("rsvp:ip", ip), limit, timedelta(minutes=10))
     db.commit()
     t = db.scalars(select(RsvpToken).where(RsvpToken.token_hash == hash_token(token))).first()
-    if t is None or t.revoked_at is not None or t.expires_at <= utcnow():
-        raise NotFound("Link jest nieprawidłowy lub wygasł.", code="rsvp.not_found")
+    gone = NotFound("Link jest nieprawidłowy lub wygasł.", code="rsvp.not_found")
+    if t is None or t.revoked_at is not None:
+        raise gone
     h = db.get_one(Household, t.household_id)
-    return t, h, db.get_one(Wedding, h.wedding_id)
+    wedding = db.get_one(Wedding, h.wedding_id)
+    if not _token_valid(t, last_wedding_day(db, wedding)):
+        raise gone
+    return t, h, wedding
 
 
 def _is_open(h: Household) -> bool:
@@ -1251,29 +1279,12 @@ def _parse_row(row: dict[str, str]) -> tuple[str, dict[str, Any], dict[str, Any]
 # --- retencja (RODO) -------------------------------------------------------------------
 
 
-def _last_wedding_day(db: Session, wedding: Wedding) -> date | None:
-    last_event = db.scalar(
-        select(func.max(func.coalesce(Event.ends_at, Event.starts_at))).where(
-            Event.wedding_id == wedding.id
-        )
-    )
-    candidates = [
-        d
-        for d in (
-            wedding.wedding_date,
-            last_event.astimezone(clock.WARSAW).date() if last_event else None,
-        )
-        if d is not None
-    ]
-    return max(candidates) if candidates else None
-
-
 def anonymize_after_wedding(db: Session) -> int:
     """Anonimizacja danych gości 90 dni po ostatnim dniu wesela (zadanie okresowe)."""
     cutoff = clock.today() - timedelta(days=RETENTION_DAYS_AFTER_WEDDING)
     done = 0
     for wedding in db.scalars(select(Wedding).where(Wedding.guests_anonymized_at.is_(None))):
-        last_day = _last_wedding_day(db, wedding)
+        last_day = last_wedding_day(db, wedding)
         if last_day is None or last_day >= cutoff:
             continue
         for i, g in enumerate(

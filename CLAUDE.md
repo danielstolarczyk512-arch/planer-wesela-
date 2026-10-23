@@ -162,7 +162,12 @@ dla gości i księga życzeń (Goście → „Komunikat, stół i życzenia”, 
 listach; wyszukiwarka (lupa w nagłówku, `/szukaj`, `overview/search.py`), plan wydatków i koszt gościa (`budget/insights.py`),
 lista prezentów z rezerwacją gości (`guests/gifts.py`), wiadomości do usługodawców (`lib/vendorMessages.ts`), komentarze przy
 zadaniach (`planner/comments.py`), podsumowanie dla rodziców (`/druk/podsumowanie`). Raport: `docs/gui/raport-spojnosc-i-funkcje-08.md`.
-Ostatnia migracja: `62688b77b348`.
+**Audyt zewnętrzny 23.10 — poprawki P0/P1 zrobione** (raport `docs/gui/raport-audyt-2026-10-23.md`): strona gościa
+działa do 7 dni po weselu niezależnie od terminu RSVP; replay `Idempotency-Key` sprawdza sesję i rolę; cache React Query
+czyszczony przy wylogowaniu/zmianie konta; redakcja tokenów w logach Caddy i bez access logu uvicorna; linki pomocnika
+(30 dni) i usługodawcy (7 dni) wygasają po weselu; worker AI ponawia kontrolę uprawnień; heartbeat blokady zadań;
+walidator AI (NaN, ilość bez dowodu). Z audytu czekają na decyzję: A6 (oferta → raty), koszt oferty przy zmianie gości, S4.
+Ostatnia migracja: `a1d4c7e9b2f0`.
 
 ## Następne kroki (kolejność uzgodniona z właścicielem)
 

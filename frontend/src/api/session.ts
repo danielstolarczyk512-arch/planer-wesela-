@@ -19,9 +19,24 @@ function emit() {
   listeners.forEach((l) => l());
 }
 
+/** Identyfikator użytkownika (`sub`) z access tokena — tylko do rozpoznania zmiany konta. */
+function subjectOf(token: string | null): string | null {
+  if (!token) return null;
+  try {
+    const payload = (token.split(".")[1] ?? "").replaceAll("-", "+").replaceAll("_", "/");
+    const sub = (JSON.parse(atob(payload)) as { sub?: unknown }).sub;
+    return typeof sub === "string" ? sub : null;
+  } catch {
+    return null;
+  }
+}
+
 export const session = {
   get token() {
     return accessToken;
+  },
+  get subject() {
+    return subjectOf(accessToken);
   },
   get status() {
     return status;

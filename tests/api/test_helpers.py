@@ -84,3 +84,35 @@ def test_helper_from_other_wedding_and_viewer(client, alice, user_factory, weddi
     invite_and_accept(client, alice, viewer, wedding, "ogladam@example.com", role="viewer")
     assert client.get(f"{w}/helpers", headers=viewer).status_code == 200
     assert client.post(f"{w}/helpers", headers=viewer, json={"name": "X"}).status_code == 403
+
+
+def test_links_without_login_expire_after_wedding(client, alice, wedding, db, monkeypatch):
+    """Audyt 2026-10-23 S5: link pomocnika (30 dni) i usługodawcy (7 dni) wygasają po weselu."""
+    from datetime import date, datetime
+
+    from sqlalchemy import update
+
+    from app.core import clock
+    from app.modules.workspace import service as workspace
+    from app.modules.workspace.models import Wedding
+    from tests.api.test_offers import vendor
+
+    w = f"{API}/weddings/{wedding['id']}"
+    db.execute(
+        update(Wedding).where(Wedding.id == wedding["id"]).values(wedding_date=date(2027, 8, 14))
+    )
+    db.commit()
+    helper = client.post(f"{w}/helpers", headers=alice, json={"name": "Ciocia"}).json()["token"]
+    band = vendor(client, alice, wedding, "Zespół", category="band")
+    day = client.post(f"{w}/vendors/{band['id']}/day-link", headers=alice).json()["token"]
+
+    def status_at(moment: datetime) -> tuple[int, int]:
+        monkeypatch.setattr(workspace, "utcnow", lambda: moment)
+        return (
+            client.get(f"{API}/helper/{helper}").status_code,
+            client.get(f"{API}/day/{day}").status_code,
+        )
+
+    assert status_at(datetime(2027, 8, 21, 12, tzinfo=clock.WARSAW)) == (200, 200)
+    assert status_at(datetime(2027, 8, 22, 12, tzinfo=clock.WARSAW)) == (200, 404)
+    assert status_at(datetime(2027, 9, 14, 12, tzinfo=clock.WARSAW)) == (404, 404)

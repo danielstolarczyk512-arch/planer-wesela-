@@ -105,6 +105,8 @@ export function WeddingWizard({ isOpen, onOpenChange }: { isOpen: boolean; onOpe
         }),
       );
       let split = 0;
+      // Częściowe błędy nie blokują startu, ale para musi o nich wiedzieć (audyt 2026-10-23).
+      const failed: string[] = [];
       if (amount) {
         // Budżet od razu na kategorie (typowe proporcje) — para widzi, gdzie przekracza plan.
         // Błąd podziału nie blokuje startu: wesele już jest, podział można zrobić w Budżecie.
@@ -113,7 +115,10 @@ export function WeddingWizard({ isOpen, onOpenChange }: { isOpen: boolean; onOpe
             params: { path: { wedding_id: w.id } },
             body: { dry_run: false },
           }),
-        ).catch(() => null);
+        ).catch(() => {
+          failed.push("podział budżetu (zrobisz go w Budżecie)");
+          return null;
+        });
         split = result?.proposals.length ?? 0;
       }
       for (const side of ["bride", "groom"] as const) {
@@ -124,20 +129,21 @@ export function WeddingWizard({ isOpen, onOpenChange }: { isOpen: boolean; onOpe
             params: { path: { wedding_id: w.id } },
             body: { name: side === "bride" ? "Rodzice Panny Młodej" : "Rodzice Pana Młodego", side, pledged_amount: null, notes: null },
           }),
-        ).catch(() => null);
+        ).catch(() => {
+          failed.push(`sponsor „${side === "bride" ? "Rodzice Panny Młodej" : "Rodzice Pana Młodego"}” (dodasz w Budżecie → Kto płaci)`);
+        });
       }
-      return { w, split };
+      return { w, split, failed };
     },
-    onSuccess: async ({ w, split }) => {
+    onSuccess: async ({ w, split, failed }) => {
       idempotencyKey.current = newIdempotencyKey();
       reset();
       onOpenChange(false);
       await queryClient.invalidateQueries({ queryKey: ["weddings"] });
-      toast(
-        split
-          ? `Gotowe: plan zadań i budżet podzielony na ${plural(split, { one: "# kategorię", few: "# kategorie", many: "# kategorii", other: "# kategorii" })}`
-          : `Utworzono wesele „${w.name}” z planem zadań`,
-      );
+      const done = split
+        ? `Gotowe: plan zadań i budżet podzielony na ${plural(split, { one: "# kategorię", few: "# kategorie", many: "# kategorii", other: "# kategorii" })}`
+        : `Utworzono wesele „${w.name}” z planem zadań`;
+      toast(failed.length ? `${done}. Nie udało się zapisać: ${failed.join(", ")}.` : done);
       navigate(`/w/${w.id}`);
     },
   });

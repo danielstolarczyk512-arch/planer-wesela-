@@ -102,3 +102,26 @@ def test_maintenance_requeues_stale_jobs():
         db.commit()
     stats = worker.run_maintenance()
     assert stats["stale_jobs_requeued"] == 1
+
+
+def test_long_job_keeps_its_lock(monkeypatch):
+    """Audyt 2026-10-23 (4.2): heartbeat odnawia blokadę, gdy zadanie trwa dłużej niż takt."""
+    import time
+
+    monkeypatch.setattr(worker, "HEARTBEAT_INTERVAL", 0.05)
+    seen: list = []
+
+    def slow(_db, _payload):
+        with get_sessionmaker()() as other:
+            first = other.scalars(select(Job.locked_until)).one()
+        time.sleep(0.3)
+        with get_sessionmaker()() as other:
+            seen.extend([first, other.scalars(select(Job.locked_until)).one()])
+
+    with get_sessionmaker()() as db:
+        enqueue(db, "wolne", {})
+        db.commit()
+    assert worker.run_once({"wolne": slow})
+    assert seen[1] > seen[0]
+    with get_sessionmaker()() as db:
+        assert db.scalars(select(Job)).one().status == "succeeded"

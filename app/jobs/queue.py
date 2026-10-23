@@ -4,7 +4,18 @@ from datetime import datetime, timedelta
 from typing import Any
 from uuid import UUID
 
-from sqlalchemy import CheckConstraint, DateTime, Index, Integer, String, Text, delete, select, text
+from sqlalchemy import (
+    CheckConstraint,
+    DateTime,
+    Index,
+    Integer,
+    String,
+    Text,
+    delete,
+    select,
+    text,
+    update,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, Session, mapped_column
 
@@ -71,6 +82,17 @@ def claim_next(db: Session) -> Job | None:
     job.locked_until = now + LOCK_DURATION
     db.commit()
     return job
+
+
+def extend_lock(db: Session, job_id: UUID) -> bool:
+    """Odnawia blokadę trwającego zadania (heartbeat workera). False: zadanie już nie nasze."""
+    result = db.execute(
+        update(Job)
+        .where(Job.id == job_id, Job.status == "running")
+        .values(locked_until=utcnow() + LOCK_DURATION)
+    )
+    db.commit()
+    return bool(getattr(result, "rowcount", 0))
 
 
 def requeue_stale(db: Session) -> int:

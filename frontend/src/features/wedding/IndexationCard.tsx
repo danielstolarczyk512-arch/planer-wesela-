@@ -9,6 +9,7 @@ import { Segmented } from "../../components/Segmented";
 import { Card, Notice, StatusChip } from "../../components/Surface";
 import { formatDate, formatMoney } from "../../lib/format";
 import { keys } from "./data";
+import { EXPECTED_RATE, WORST_RATE } from "./indexationRates";
 
 type Item = components["schemas"]["IndexationItem"];
 
@@ -29,8 +30,8 @@ export function clauseText(i: Pick<Item, "indexation" | "indexation_cap_percent"
 }
 
 export function IndexationCard({ weddingId }: { weddingId: string }) {
-  const [expected, setExpected] = useState<string>("0.05");
-  const [worst, setWorst] = useState<string>("0.10");
+  const [expected, setExpected] = useState<string>(EXPECTED_RATE);
+  const [worst, setWorst] = useState<string>(WORST_RATE);
   const data = useQuery({
     queryKey: [...keys.budget(weddingId), "indexation", expected, worst],
     queryFn: ({ signal }) =>

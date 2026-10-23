@@ -1,6 +1,6 @@
 """Logika przestrzeni wesela: wesela, wydarzenia, członkowie, zaproszenia."""
 
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 from typing import Any
 from uuid import UUID
 
@@ -8,7 +8,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import StaleDataError
 
-from app.core import mail_templates, ratelimit
+from app.core import clock, mail_templates, ratelimit
 from app.core.config import get_settings
 from app.core.db import utcnow
 from app.core.email import queue_mail
@@ -627,3 +627,34 @@ def remove_user_everywhere(db: Session, user_id: UUID) -> None:
                 )
         else:
             db.delete(m)
+
+
+def last_wedding_day(db: Session, wedding: Wedding) -> date | None:
+    """Ostatni dzień wesela: data wesela albo koniec ostatniego wydarzenia (np. poprawin)."""
+    last_event = db.scalar(
+        select(func.max(func.coalesce(Event.ends_at, Event.starts_at))).where(
+            Event.wedding_id == wedding.id
+        )
+    )
+    candidates = [
+        d
+        for d in (
+            wedding.wedding_date,
+            last_event.astimezone(clock.WARSAW).date() if last_event else None,
+        )
+        if d is not None
+    ]
+    return max(candidates) if candidates else None
+
+
+def access_end(last_day: date, days_after: int) -> datetime:
+    """Koniec ważności linku bez logowania: `days_after` dni po ostatnim dniu wesela, 23:59."""
+    return datetime.combine(
+        last_day + timedelta(days=days_after), time(23, 59), tzinfo=clock.WARSAW
+    )
+
+
+def link_active(db: Session, wedding: Wedding, days_after: int) -> bool:
+    """Link bez logowania działa do `days_after` dni po weselu; bez daty wesela — bez limitu."""
+    last = last_wedding_day(db, wedding)
+    return last is None or access_end(last, days_after) > utcnow()

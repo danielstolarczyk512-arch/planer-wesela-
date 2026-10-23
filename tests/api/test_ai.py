@@ -228,3 +228,28 @@ def test_external_provider_requires_consent_and_redacts(client, alice, wedding, 
     run = client.get(f"{API}/weddings/{wedding['id']}/ai-runs/{run_id}", headers=alice).json()
     assert run["external_processing"] is True
     assert run["validation"]["redactions"]["pesel"] == 1
+
+
+def test_worker_rechecks_role_and_provider_before_processing(
+    client, alice, bob, wedding, monkeypatch
+):
+    """Audyt 2026-10-23 S6: uprawnienia sprawdzane ponownie w workerze, nie tylko przy zleceniu."""
+    invite_and_accept(client, alice, bob, wedding, "bob@example.com")
+    bob_id = client.get(f"{API}/me", headers=bob).json()["id"]
+    base, v = prepared(client, alice, wedding)
+    run_id = analyze(client, bob, base, v["id"]).json()["id"]
+    client.patch(
+        f"{API}/weddings/{wedding['id']}/members/{bob_id}", headers=alice, json={"role": "viewer"}
+    )
+    drain_jobs()
+    run = client.get(f"{API}/weddings/{wedding['id']}/ai-runs/{run_id}", headers=alice).json()
+    assert run["status"] == "blocked"
+    assert FakeProvider.calls == 0
+
+    # Zlecone lokalnie, a przed wykonaniem przełączono na zewnętrznego dostawcę.
+    run_id = analyze(client, alice, base, v["id"]).json()["id"]
+    monkeypatch.setattr(get_settings(), "ai_provider", "fake_external")
+    drain_jobs()
+    run = client.get(f"{API}/weddings/{wedding['id']}/ai-runs/{run_id}", headers=alice).json()
+    assert run["status"] == "blocked"
+    assert "Dostawca AI zmienił się" in run["error"]

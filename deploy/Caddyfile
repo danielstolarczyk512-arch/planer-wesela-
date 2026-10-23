@@ -48,8 +48,20 @@
 		file_server
 	}
 
+	# Tokeny linków bez logowania (RSVP, dzień, pomocnik, reset hasła, zaproszenia) są w ścieżce
+	# albo w query: 43 znaki base64url. W logu zastępujemy je napisem REDACTED (UUID mają 36 znaków
+	# i zostają — pomagają w diagnozie). Nagłówki uwierzytelnienia i ciasteczka usuwamy.
 	log {
 		output stdout
-		format json
+		format filter {
+			wrap json
+			fields {
+				request>uri regexp "([/=])[A-Za-z0-9_-]{40,}" "${1}REDACTED"
+				request>headers>Authorization delete
+				request>headers>Cookie delete
+				request>headers>Referer delete
+				resp_headers>Set-Cookie delete
+			}
+		}
 	}
 }

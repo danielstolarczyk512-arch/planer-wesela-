@@ -23,6 +23,10 @@ from app.modules.identity.service import Principal
 from app.modules.planner.models import Helper, Task
 from app.modules.workspace.models import Wedding
 from app.modules.workspace.permissions import Action, authorize
+from app.modules.workspace.service import link_active
+
+# Link pomocnika działa jeszcze miesiąc po weselu (zwroty, rozliczenia), potem wygasa sam.
+HELPER_LINK_DAYS = 30
 
 OPEN = ("todo", "in_progress")
 
@@ -155,7 +159,7 @@ def _by_token(db: Session, token: str, ip: str) -> Helper:
     ratelimit.hit(db, ratelimit.key_for("helper:ip", ip), 120, timedelta(minutes=10))
     db.commit()
     h = db.scalars(select(Helper).where(Helper.token_hash == hash_token(token))).first()
-    if h is None:
+    if h is None or not link_active(db, db.get_one(Wedding, h.wedding_id), HELPER_LINK_DAYS):
         raise NotFound("Link nieprawidłowy lub wyłączony.", code="helper_link.not_found")
     return h
 

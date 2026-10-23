@@ -235,3 +235,25 @@ def test_deposit_pattern_does_not_duplicate_or_guess():
     # Procent zadatku bez kwoty w zł — pomijamy.
     pct = "Zadatek 30% wartości zamówienia."
     assert validate({"terms": []}, pct, 1, [pct]).terms == []
+
+
+def test_non_finite_amounts_are_dropped_not_crashing():
+    """Audyt 2026-10-23: NaN/Infinity od modelu → brak kwoty, bez wyjątku InvalidOperation."""
+    doc = "Menu 300 zł za osobę"
+    raw = {
+        "components": [
+            {"label": "Menu", "kind": "per_guest", "amount": "NaN", "quote": "Menu 300 zł"},
+            {"label": "Menu", "kind": "per_guest", "amount": "Infinity", "quote": "Menu 300 zł"},
+        ]
+    }
+    result = validate(raw, doc, 1)
+    assert [c["amount"] for c in result.components] == [None, None]
+
+
+def test_quantity_without_evidence_is_unverified():
+    doc = "Menu 300 zł za osobę"
+    item = {"label": "Menu", "kind": "per_guest", "amount": 300, "quote": "Menu 300 zł"}
+    ok = validate({"components": [item]}, doc, 1).components[0]
+    assert ok["confidence"] == "medium"
+    bad = validate({"components": [{**item, "quantity": 999}]}, doc, 1).components[0]
+    assert bad["confidence"] == "unverified"

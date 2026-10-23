@@ -22,6 +22,10 @@ from app.modules.vendors import service as vendors
 from app.modules.vendors.models import Vendor
 from app.modules.workspace.models import Event, Wedding, WeddingMember
 from app.modules.workspace.permissions import Action, authorize
+from app.modules.workspace.service import link_active
+
+# Link usługodawcy z programem dnia wygasa sam tydzień po weselu.
+DAY_LINK_DAYS = 7
 
 
 def _conflict() -> Conflict:
@@ -493,7 +497,11 @@ def link_by_token(db: Session, token: str, ip: str) -> VendorDayLink:
     link = db.scalars(
         select(VendorDayLink).where(VendorDayLink.token_hash == hash_token(token))
     ).first()
-    if link is None or link.revoked_at is not None:
+    if (
+        link is None
+        or link.revoked_at is not None
+        or not link_active(db, db.get_one(Wedding, link.wedding_id), DAY_LINK_DAYS)
+    ):
         raise NotFound("Link nieprawidłowy lub wyłączony.", code="day_link.not_found")
     return link
 

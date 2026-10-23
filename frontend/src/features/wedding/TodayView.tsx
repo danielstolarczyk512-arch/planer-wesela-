@@ -10,6 +10,7 @@ import { Button } from "../../components/Button";
 import { Card, Notice, Skeleton, StatusChip } from "../../components/Surface";
 import { daysUntil, formatDate, formatMoney, plural, todayInWarsaw } from "../../lib/format";
 import { EditTaskSheet } from "./EditTaskSheet";
+import { EXPECTED_RATE, percent, WORST_RATE } from "./indexationRates";
 import { CatchUpNotice } from "./PlanAssist";
 import { isOpen, TaskRow, topLevel, useToggleTask } from "./tasks";
 import { AttentionCard } from "./AttentionCard";
@@ -295,11 +296,11 @@ export function TodayView() {
 /** Koszt z podwyżkami cen z umów (najgorszy wariant); te same założenia co na ekranie Budżet. */
 function IndexationHint({ weddingId }: { weddingId: string }) {
   const data = useQuery({
-    queryKey: [...keys.budget(weddingId), "indexation", "0.05", "0.10"],
+    queryKey: [...keys.budget(weddingId), "indexation", EXPECTED_RATE, WORST_RATE],
     queryFn: ({ signal }) =>
       unwrap(
         api.GET("/api/v1/weddings/{wedding_id}/budget/indexation", {
-          params: { path: { wedding_id: weddingId }, query: { expected_rate: 0.05, worst_rate: 0.1 } },
+          params: { path: { wedding_id: weddingId }, query: { expected_rate: Number(EXPECTED_RATE), worst_rate: Number(WORST_RATE) } },
           signal,
         }),
       ),
@@ -308,7 +309,7 @@ function IndexationHint({ weddingId }: { weddingId: string }) {
   if (!o || o.items.length === 0 || Number(o.worst_total.amount) <= Number(o.today_total.amount)) return null;
   return (
     <Link to={`/w/${weddingId}/budzet#podwyzki`} className="text-secondary num">
-      z podwyżkami cen do {formatMoney(o.worst_total)}
+      z podwyżkami cen do {formatMoney(o.worst_total)} (przy inflacji {percent(WORST_RATE)} rocznie, jak w Budżecie)
     </Link>
   );
 }
