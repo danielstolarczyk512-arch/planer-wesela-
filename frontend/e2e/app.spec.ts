@@ -7,6 +7,9 @@ const DEMO = { email: "demo@example.com", password: process.env.WP_SEED_PASSWORD
 async function expectAccessible(page: Page) {
   const result = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+    // Strona tytułowa: słowa przygaszone do czasu przewinięcia (animacja, aria-hidden). Pełne zdanie
+    // jest w ukrytym tekście dla czytników, a po przewinięciu lub przy ograniczeniu ruchu — w pełnym kontraście.
+    .exclude(".landing__words > span[aria-hidden]")
     .analyze();
   expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(", ")}`)).toEqual([]);
 }
@@ -21,6 +24,10 @@ async function signIn(page: Page) {
   await page.getByLabel("E-mail").fill(DEMO.email);
   await page.getByLabel("Hasło", { exact: true }).fill(DEMO.password);
   await page.getByRole("button", { name: "Zaloguj się" }).click();
+  // Po każdym logowaniu: powitanie z przewijanym wideo, dalej przycisk do aplikacji.
+  await expect(page).toHaveURL(/\/powitanie$/);
+  await expect(page.getByRole("heading", { level: 1, name: /Witajcie/ })).toBeVisible();
+  await page.getByRole("link", { name: "Przejdź do planowania" }).first().click();
   await expectSignedIn(page);
 }
 
@@ -72,11 +79,20 @@ test.describe("logowanie", () => {
     expect(await page.evaluate(() => JSON.stringify(localStorage) + document.cookie)).not.toContain(cookie!.value);
     await page.reload();
     await expectSignedIn(page);
+    // Powitanie nie wraca po przeładowaniu (tylko tuż po wpisaniu hasła).
+    await page.goto("/powitanie");
+    await expectSignedIn(page);
+    await expect(page).not.toHaveURL(/powitanie/);
     await expectAccessible(page);
     await expectNoHorizontalScroll(page);
     await page.getByRole("button", { name: "Wyloguj" }).click();
     await expect(page.getByRole("heading", { name: "Zaloguj się" })).toBeVisible();
     await page.goto("/");
+    // Adres główny bez sesji: strona tytułowa z przejściem do logowania (nie dane wesela).
+    await expect(page.getByRole("heading", { level: 1, name: /Zaplanujcie swoje wesele/ })).toBeVisible();
+    await expectAccessible(page);
+    await expectNoHorizontalScroll(page);
+    await page.getByRole("link", { name: "Zaloguj się" }).click();
     await expect(page.getByRole("heading", { name: "Zaloguj się" })).toBeVisible();
   });
 });
@@ -141,10 +157,12 @@ test.describe("komponenty", () => {
     const field = page.getByLabel("Nazwa usługodawcy");
     await field.fill("Dworek pod Lipami");
     // Kliknięcie w etykietę opcji (jak palcem); pole radio jest wizualnie ukryte.
-    await page.locator(".wp-segmented__option", { hasText: "Ciemny" }).click();
+    await page.locator(".wp-segmented__option", { hasText: "Ciemna elegancja" }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await expect(page.getByRole("radio", { name: "Ciemny" })).toBeChecked();
+    await expect(page.getByRole("radio", { name: "Ciemna elegancja" })).toBeChecked();
     await expect(field).toHaveValue("Dworek pod Lipami");
-    await page.locator(".wp-segmented__option", { hasText: "Systemowy" }).click();
+    // Powrót do domyślnego motywu (bez zapisu w pamięci urządzenia).
+    await page.locator(".wp-segmented__option", { hasText: "Romantyczny" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "romantic");
   });
 });

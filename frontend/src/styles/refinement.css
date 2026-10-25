@@ -1,0 +1,120 @@
+/* Wspólne dopracowanie wszystkich ekranów, bez zmiany danych i logiki modułów. */
+.appearance-tools { position: fixed; right: max(16px, env(safe-area-inset-right)); bottom: calc(5.5rem + env(safe-area-inset-bottom)); z-index: 25; }
+.appearance-tools__buttons { display: flex; justify-content: flex-end; gap: 8px; }
+.appearance-icon { display: grid; place-items: center; flex: none; width: 48px; height: 48px; background: var(--wp-surface-raised); color: var(--wp-action-primary); border: 1px solid var(--wp-control-border); border-radius: 50%; cursor: pointer; box-shadow: var(--wp-shadow-card); }
+.appearance-icon:hover { background: var(--wp-accent-surface); }
+.appearance-panel { width: min(360px, calc(100vw - 32px)); max-height: calc(100dvh - 12rem); overflow-y: auto; display: grid; gap: 16px; padding: 20px; margin-bottom: 12px; border: 1px solid var(--wp-separator); border-radius: 20px; background: var(--wp-surface-raised); box-shadow: var(--wp-shadow-sheet); }
+.appearance-panel__head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.appearance-panel__head h2 { font-size: 1.25rem; }
+.auth-card { background: var(--wp-surface); padding: clamp(20px, 4vw, 40px); border: 1px solid var(--wp-separator); border-radius: 24px; box-shadow: var(--wp-shadow-card); width: min(100%, 30rem); }
+.auth-page { background: radial-gradient(ellipse at 10% 10%, var(--wp-accent-surface), transparent 65%), var(--wp-background); }
+.shell-header { box-shadow: var(--wp-shadow-card); }
+.wp-card { border-radius: max(12px, var(--wp-radius-card)); }
+.wshell__tab:hover { background: var(--wp-accent-surface); color: var(--wp-action-primary); }
+.hero { position: relative; overflow: hidden; border: 1px solid var(--wp-selected-border); }
+.hero::after { content: ""; position: absolute; pointer-events: none; width: 220px; height: 220px; border: 1px solid currentColor; border-radius: 50%; opacity: .12; right: -90px; top: -100px; }
+@media (min-width: 768px) { .appearance-tools { bottom: 24px; } }
+@media print { .appearance-tools { display: none; } }
+
+.appearance-panel .wp-segmented__track { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.appearance-panel .wp-segmented__option { padding: 8px; text-align: center; }
+@media (max-width: 400px) { .auth-page { padding: 16px 12px 144px; } .auth-card { padding: 20px; } }
+
+/* Selektory powłoki mają pierwszeństwo także po doładowaniu stylów modułu. */
+@media (min-width: 1100px) {
+  .wshell.wshell { grid-template-columns: 12rem minmax(0, 1fr); }
+  .wshell .wshell__nav { padding: 24px 12px; gap: 8px; }
+  .wshell .wshell__tab { display: flex; justify-content: flex-start; text-align: left; padding: 10px 12px; gap: 12px; min-height: 56px; border-radius: 12px; font-size: .875rem; }
+  .wshell .wshell__icon { width: 32px; flex: none; }
+  .wshell__main > .page { max-width: 60rem; padding: 32px 40px 100px; }
+  .wshell__main > .page[aria-labelledby="today-h"] { max-width: 72rem; }
+  .page[aria-labelledby="today-h"] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .page[aria-labelledby="today-h"] > * { grid-column: 1 / -1; }
+  .page[aria-labelledby="today-h"] > .hero { min-height: 280px; align-content: center; }
+  .page[aria-labelledby="today-h"] > section[aria-labelledby="attention-h"] { grid-column: 1; }
+  .page[aria-labelledby="today-h"] > section[aria-labelledby="attention-h"] + section[aria-labelledby="steps-h"] { grid-column: 2; }
+  .page[aria-labelledby="today-h"] .hero__value { font-size: clamp(3.5rem, 5vw, 5rem); }
+}
+
+.action-menu { position: relative; }
+.action-menu > summary { cursor: pointer; min-height: 48px; display: flex; align-items: center; gap: 8px; padding: 8px 16px; border: 1px solid var(--wp-control-border); border-radius: var(--wp-radius-button); color: var(--wp-action-primary); }
+.action-menu > summary::after { content: "+"; font-size: 1.25rem; }
+.action-menu[open] > summary::after { content: "−"; }
+.action-menu__items { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding: 12px; border: 1px solid var(--wp-separator); border-radius: var(--wp-radius-card); background: var(--wp-surface); }
+.search-control { display: flex; align-items: center; gap: 8px; }
+.search-control > input { min-width: 0; flex: 1; }
+.search-clear { min-height: 48px; padding: 8px; border: 0; background: transparent; color: var(--wp-action-primary); cursor: pointer; text-decoration: underline; }
+@media (max-width: 767px) {
+  .wshell .subnav { flex-wrap: nowrap; overflow-x: auto; min-width: 0; max-width: 100%; padding: 4px 4px 10px; scroll-padding-inline: 16px; scrollbar-width: thin; }
+  .wshell .subnav__link { flex: 0 0 auto; white-space: nowrap; }
+  .action-menu { width: 100%; }
+  .action-menu__items { flex-direction: column; align-items: stretch; }
+  .action-menu__items > * { justify-content: flex-start; }
+  .wshell__main > .page { padding-bottom: calc(11rem + env(safe-area-inset-bottom)); }
+  .wp-field__input { font-size: max(1rem, var(--wp-type-body-size)); }
+}
+/* Polerowane złoto: refleksy metalu, jasny rdzeń i ciemna krawędź. */
+:root[data-theme="gold"] {
+  --wp-metal-gold: linear-gradient(118deg, #b58a32 0%, #dfbd68 15%, #f8e7a8 27%, #c59b40 39%, #e9ca79 52%, #fff4c9 59%, #d2aa50 72%, #b58a32 86%, #edd38c 100%);
+  --wp-metal-ink: #2d2109;
+}
+:root[data-theme="gold"] .hero,
+:root[data-theme="gold"] .wp-button--primary:not([data-disabled]) {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--wp-metal-gold);
+  color: var(--wp-metal-ink);
+  border: 1px solid #927025;
+  box-shadow: inset 0 1px 0 #fff6d9, inset 0 -2px 1px #8b651e66, 0 5px 18px #9d762d26;
+}
+:root[data-theme="gold"] .hero > *,
+:root[data-theme="gold"] .wp-button--primary > * { position: relative; z-index: 1; }
+:root[data-theme="gold"] .hero::before,
+:root[data-theme="gold"] .wp-button--primary::before {
+  content: "";
+  position: absolute;
+  inset: -60% -100%;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, #fff9e000 43%, #fffdf2a6 49%, #ffffffcf 50%, #fff9e000 57%, transparent 62%);
+  transform: translateX(-45%);
+  opacity: 0;
+}
+:root[data-theme="gold"] .hero::before { animation: wp-gold-reflection 1800ms 250ms ease-out 1; }
+:root[data-theme="gold"] .wp-button--primary:not([data-disabled]):hover::before,
+:root[data-theme="gold"] .wp-button--primary:focus-visible::before,
+:root[data-theme="gold"] .hero:focus-within::before { animation: wp-gold-reflection 1200ms ease-out 1; }
+:root[data-theme="gold"] .hero::after { border-color: #fff4c4; opacity: .55; }
+:root[data-theme="gold"] .shell-brand svg,
+:root[data-theme="gold"] .auth-brand__icon { stroke: #a67d26; filter: drop-shadow(0 1px 0 #ffefb5); }
+:root[data-theme="gold"] .wshell__tab[aria-current="page"] .wshell__icon {
+  background: var(--wp-metal-gold);
+  color: var(--wp-metal-ink);
+  box-shadow: inset 0 1px 0 #fff6d9, 0 1px 4px #9d762d33;
+}
+@keyframes wp-gold-reflection {
+  0% { transform: translateX(-45%); opacity: 0; }
+  20% { opacity: .65; }
+  80% { opacity: .65; }
+  100% { transform: translateX(45%); opacity: 0; }
+}
+:root.reduce-motion[data-theme="gold"] .hero::before,
+:root.reduce-motion[data-theme="gold"] .wp-button--primary::before { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="gold"] .hero::before,
+  :root[data-theme="gold"] .wp-button--primary::before { animation: none; }
+}
+@media print {
+  :root[data-theme="gold"] .hero,
+  :root[data-theme="gold"] .wp-button--primary { background: #fff; color: #29261f; box-shadow: none; }
+}
+@media (max-width: 767px) {
+  /* Narzędzia wyglądu są pod treścią: nie zasłaniają formularza ani komunikatów. */
+  .appearance-tools { position: static; padding: 16px 20px calc(5.5rem + env(safe-area-inset-bottom)); }
+  .appearance-panel { position: fixed; right: 16px; bottom: calc(5.5rem + env(safe-area-inset-bottom)); z-index: 25; }
+}
+@media (max-width: 400px) {
+  .shell-header { padding-inline: 12px; gap: 4px; }
+  .shell-header .shell-brand { white-space: nowrap; font-size: 1.125rem; gap: 4px; }
+  .shell-header .shell-brand svg { width: 20px; height: 20px; flex: none; }
+}

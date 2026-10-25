@@ -1,0 +1,284 @@
+/*
+ * Motyw Romantyczny (domyślny): kość słoniowa, pudrowy róż, miedź, szeryfowe nagłówki.
+ * Kolory semantyczne pochodzą z tokenów (design/tokens → romantic / romanticDark); tu tylko
+ * dekoracja i kształt. Wszystko ograniczone do motywu — pozostałe motywy wyglądają jak dotąd.
+ */
+:root[data-theme="romantic"] {
+  /* Dekoracyjne (tła, ornamenty) — nigdy kolor tekstu. */
+  --rm-blush: #efd9d3;
+  --rm-blush-soft: #f7ebe7;
+  --rm-glow: #f3e3dc;
+  --rm-hairline: #e6d8ce;
+  --rm-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="romantic"] {
+    --rm-blush: #4a3532;
+    --rm-blush-soft: #3a2b29;
+    --rm-glow: #2c2120;
+    --rm-hairline: #43363383;
+  }
+}
+
+/* Tło: ciepła poświata w rogu, bez obrazka (lekko i bez ruchu). */
+:root[data-theme="romantic"] body {
+  background:
+    radial-gradient(60rem 40rem at -10% -10%, var(--rm-glow), transparent 60%),
+    radial-gradient(50rem 30rem at 110% 0%, var(--rm-blush-soft), transparent 55%),
+    var(--wp-background);
+  background-attachment: fixed;
+}
+
+/* Typografia: nagłówki szeryfowe, lżejsze i większe; treść bez zmian (DM Sans).
+   :where() — niska waga selektora, więc własne style ekranów (np. powitanie) wygrywają. */
+:where(:root[data-theme="romantic"]) h1 {
+  font-family: var(--wp-font-heading);
+  font-weight: 400;
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+:where(:root[data-theme="romantic"]) h2 {
+  font-family: var(--wp-font-heading);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+:root[data-theme="romantic"] .overline {
+  color: var(--wp-text-gold);
+  letter-spacing: 0.16em;
+  font-weight: 600;
+}
+
+/* Nagłówek aplikacji: przejrzysty krem, cienka linia zamiast cienia. */
+:root[data-theme="romantic"] .shell-header {
+  background: color-mix(in srgb, var(--wp-background) 86%, transparent);
+  backdrop-filter: saturate(1.2) blur(10px);
+  box-shadow: none;
+  border-bottom-color: var(--rm-hairline);
+}
+
+:root[data-theme="romantic"] .shell-brand {
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Karty: większe zaokrąglenie, cienka linia i miękki cień (z tokenów). */
+:root[data-theme="romantic"] .wp-card {
+  border-color: var(--rm-hairline);
+}
+
+:root[data-theme="romantic"] .link-card {
+  transition:
+    transform 180ms var(--rm-ease),
+    box-shadow 180ms var(--rm-ease);
+}
+
+:root[data-theme="romantic"] .link-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px #3427210d, 0 16px 36px #3427211a;
+}
+
+/* Przyciski: główny w miedzi z delikatnym połyskiem, drugorzędny pudrowy. */
+:root[data-theme="romantic"] .wp-button--primary:not([data-disabled]) {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--wp-action-primary) 88%, white), var(--wp-action-primary));
+  box-shadow: 0 1px 0 #ffffff33 inset, 0 6px 16px #8a52482e;
+}
+
+:root[data-theme="romantic"] .wp-button--secondary:not([data-disabled]) {
+  background: var(--rm-blush-soft);
+  border-color: var(--rm-blush);
+}
+
+:root[data-theme="romantic"] .wp-button--secondary[data-hovered]:not([data-disabled]) {
+  background: var(--rm-blush);
+}
+
+/* Dolny pasek (telefon): krem z rozmyciem, aktywna zakładka w pudrowej pigułce. */
+:root[data-theme="romantic"] .wshell__nav {
+  background: color-mix(in srgb, var(--wp-surface) 90%, transparent);
+  backdrop-filter: saturate(1.2) blur(12px);
+  border-top-color: var(--rm-hairline);
+  box-shadow: 0 -8px 24px #3427210d;
+}
+
+:root[data-theme="romantic"] .wshell__tab[aria-current="page"] .wshell__icon {
+  background: var(--rm-blush);
+}
+
+/* Tablet i komputer: pasek boczny jak w makiecie — krem, aktywna pozycja w pigułce. */
+@media (min-width: 768px) {
+  :root[data-theme="romantic"] .wshell__nav {
+    background: color-mix(in srgb, var(--wp-surface) 70%, transparent);
+    border-right-color: var(--rm-hairline);
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 1100px) {
+  :root[data-theme="romantic"] .wshell.wshell {
+    grid-template-columns: 15rem minmax(0, 1fr);
+  }
+
+  :root[data-theme="romantic"] .wshell .wshell__tab {
+    font-size: 0.9375rem;
+    color: var(--wp-text-primary);
+  }
+
+  :root[data-theme="romantic"] .wshell .wshell__tab[aria-current="page"] {
+    background: var(--rm-blush);
+    color: var(--wp-text-primary);
+  }
+
+  :root[data-theme="romantic"] .wshell .wshell__tab[aria-current="page"] .wshell__icon {
+    background: transparent;
+  }
+
+  /* Zdjęcie pary na dole paska (dekoracja; na niskich ekranach znika). */
+  :root[data-theme="romantic"] .wshell__nav::after {
+    content: "";
+    display: block;
+    margin-top: auto;
+    min-height: 10rem;
+    flex: 1 1 auto;
+    max-height: 16rem;
+    border-radius: 16px;
+    background:
+      linear-gradient(to bottom, transparent 55%, color-mix(in srgb, var(--wp-surface) 75%, transparent)),
+      url("/media/zdjecia/para-plener.webp") center 30% / cover no-repeat;
+    opacity: 0.95;
+  }
+
+  :root[data-theme="romantic"] .wshell .wshell__nav {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1100px) and (max-height: 760px) {
+  :root[data-theme="romantic"] .wshell__nav::after {
+    display: none;
+  }
+}
+
+/* Dziś: odliczanie jako jasna karta ze zdjęciem stołu (zdjęcie wtapia się w pudrowe tło). */
+:root[data-theme="romantic"] .today-hero {
+  position: relative;
+  overflow: hidden;
+  min-height: 18rem;
+  padding: clamp(24px, 4vw, 48px);
+  border: 1px solid var(--rm-hairline);
+  border-radius: 26px;
+  background: linear-gradient(100deg, var(--rm-blush-soft) 0%, var(--rm-blush-soft) 40%, var(--wp-surface) 75%);
+  color: var(--wp-text-primary);
+  box-shadow: var(--wp-shadow-card);
+}
+
+:root[data-theme="romantic"] .today-hero::after {
+  display: none;
+}
+
+:root[data-theme="romantic"] .today-hero > :not(.today-hero__photo) {
+  position: relative;
+  z-index: 1;
+  max-width: 24rem;
+}
+
+:root[data-theme="romantic"] .today-hero .hero__overline {
+  color: var(--wp-text-gold);
+  opacity: 1;
+}
+
+:root[data-theme="romantic"] .today-hero .hero__value {
+  color: var(--wp-action-primary);
+  font-weight: 400;
+}
+
+:root[data-theme="romantic"] .today-hero__photo {
+  display: block;
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 64%;
+  z-index: 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+}
+
+:root[data-theme="romantic"] .today-hero__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 40% 50%;
+  animation: rm-photo-in 1200ms var(--rm-ease) both;
+}
+
+@keyframes rm-photo-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}
+
+/* Telefon: zdjęcie pod tekstem, wtapia się od góry. */
+@media (max-width: 767px) {
+  :root[data-theme="romantic"] .today-hero {
+    padding-bottom: 0;
+  }
+
+  :root[data-theme="romantic"] .today-hero__photo {
+    position: relative;
+    order: 99;
+    width: auto;
+    height: 11rem;
+    margin: var(--wp-space-2) calc(-1 * clamp(24px, 4vw, 48px)) 0;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%);
+    mask-image: linear-gradient(to bottom, transparent 0%, #000 45%);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="romantic"] .today-hero__photo img {
+    filter: brightness(0.78) saturate(0.9);
+  }
+}
+
+/* Kafelki: pudrowe ikony i pierścienie w kolorach makiety (dekoracja; liczby są w tekście). */
+:root[data-theme="romantic"] .today-stat__icon {
+  background: var(--rm-blush-soft);
+}
+
+:root[data-theme="romantic"] .ring__track {
+  stroke: var(--rm-blush-soft);
+}
+
+:root[data-theme="romantic"] .today-stat--tasks { --ring-color: #b28c66; }
+:root[data-theme="romantic"] .today-stat--budget { --ring-color: #7d8f7f; }
+:root[data-theme="romantic"] .today-stat--guests { --ring-color: #c99088; }
+:root[data-theme="romantic"] .today-stat--vendors { --ring-color: #a47e58; }
+
+/* Ograniczenie ruchu: bez uniesienia kart. */
+:root.reduce-motion[data-theme="romantic"] .link-card:hover {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-theme="romantic"] .link-card:hover {
+    transform: none;
+  }
+  :root[data-theme="romantic"] .today-hero__photo img {
+    animation: none;
+  }
+}
+
+:root.reduce-motion[data-theme="romantic"] .today-hero__photo img {
+  animation: none;
+}
+
+@media print {
+  :root[data-theme="romantic"] body {
+    background: #fff;
+  }
+}

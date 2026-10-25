@@ -224,7 +224,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .print-accented {
+  :root:not([data-theme="light"]):not([data-theme="gold"]) .print-accented {
     --print-accent: var(--guest-accent-dark);
   }
 }
@@ -247,7 +247,7 @@
 @media print {
   .print-accented,
   :root[data-theme="dark"] .print-accented,
-  :root:not([data-theme="light"]) .print-accented {
+  :root:not([data-theme="light"]):not([data-theme="gold"]) .print-accented {
     --print-accent: var(--guest-accent-light);
   }
 }

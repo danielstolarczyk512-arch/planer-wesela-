@@ -29,7 +29,8 @@ def kebab(name: str) -> str:
 
 
 def theme_block(selector: str, theme: str, t: dict, m: dict) -> list[str]:
-    lines = [f"{selector} {{", f"  color-scheme: {theme};"]
+    scheme = "dark" if theme in ("dark", "romanticDark") else "light"
+    lines = [f"{selector} {{", f"  color-scheme: {scheme};"]
     for name, token in t["color"][theme].items():
         lines.append(f"  --wp-{kebab(name)}: {token['$value']};")
     for role, token in t["font"][theme].items():
@@ -92,13 +93,23 @@ def main() -> None:
         "  --wp-motion-sheet-translate: 100%;",
         "}",
     ]
-    out += theme_block(':root, :root[data-theme="light"]', "light", t, m)
+    # Domyślny motyw Romantyczny (bez zapisanego wyboru) podąża za trybem ciemnym systemu;
+    # „Systemowy” to klasyczny jasny/ciemny wg systemu, pozostałe — stały wybór.
+    out += theme_block(':root, :root[data-theme="romantic"]', "romantic", t, m)
+    romantic_dark = ':root:not([data-theme]), :root[data-theme="romantic"]'
     out += [
         "@media (prefers-color-scheme: dark) {",
-        *("  " + line for line in theme_block(':root:not([data-theme="light"])', "dark", t, m)),
+        *("  " + line for line in theme_block(romantic_dark, "romanticDark", t, m)),
+        "}",
+    ]
+    out += theme_block(':root[data-theme="light"], :root[data-theme="system"]', "light", t, m)
+    out += [
+        "@media (prefers-color-scheme: dark) {",
+        *("  " + line for line in theme_block(':root[data-theme="system"]', "dark", t, m)),
         "}",
     ]
     out += theme_block(':root[data-theme="dark"]', "dark", t, m)
+    out += theme_block(':root[data-theme="gold"]', "gold", t, m)
     cap = m["reducedMotion"]["opacityMaxDuration"]
     reduced = [
         "  --wp-reduce: 1;",

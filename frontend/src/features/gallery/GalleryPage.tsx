@@ -8,7 +8,7 @@ import { Segmented } from "../../components/Segmented";
 import { Card, EmptyState, Notice, Skeleton, StatusChip } from "../../components/Surface";
 import { useToast } from "../../components/Toast";
 import { formatMoney, plural } from "../../lib/format";
-import { setTheme, usePreferences, type ThemeMode } from "../../lib/preferences";
+import { setTheme, THEME_OPTIONS, usePreferences, type ThemeMode } from "../../lib/preferences";
 import "./gallery.css";
 
 /** Katalog komponentów (tylko w trybie deweloperskim). Dane fikcyjne. */
@@ -30,11 +30,7 @@ export function GalleryPage() {
       <Segmented<ThemeMode>
         label="Motyw"
         value={prefs.theme}
-        options={[
-          { value: "system", label: "Systemowy" },
-          { value: "light", label: "Jasny" },
-          { value: "dark", label: "Ciemny" },
-        ]}
+        options={THEME_OPTIONS}
         onChange={setTheme}
       />
 

@@ -1,5 +1,6 @@
+import { useEffect, useRef } from "react";
 import { Printer } from "lucide-react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 
 import { useWedding, useWeddingId } from "./data";
 
@@ -11,8 +12,16 @@ interface Section {
 /** Podzakładki działu (np. Budżet: wydatki i usługodawcy). Każda ma własny adres. */
 export function SectionNav({ label, sections }: { label: string; sections: Section[] }) {
   const id = useWeddingId();
+  const { pathname } = useLocation();
+  const nav = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const active = nav.current?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!nav.current || !active) return;
+    // Przewijamy wyłącznie pasek, nie cały ekran i jego pozycję czytania.
+    nav.current.scrollLeft = Math.max(0, active.offsetLeft - nav.current.offsetLeft - 16);
+  }, [pathname]);
   return (
-    <nav className="subnav" aria-label={label}>
+    <nav ref={nav} className="subnav" aria-label={label}>
       {sections.map((s) => (
         <NavLink key={s.to} to={`/w/${id}/${s.to}`} end viewTransition className="subnav__link">
           {s.label}

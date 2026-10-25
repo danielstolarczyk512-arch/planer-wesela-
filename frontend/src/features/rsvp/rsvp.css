@@ -131,7 +131,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .guest-themed {
+  :root:not([data-theme="light"]):not([data-theme="gold"]) .guest-themed {
     --guest-accent: var(--guest-accent-dark, var(--wp-action-primary));
   }
 }

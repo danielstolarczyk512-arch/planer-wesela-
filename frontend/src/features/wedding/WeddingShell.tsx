@@ -4,6 +4,7 @@ import { Link, Navigate, Outlet, ScrollRestoration, useLocation } from "react-ro
 
 import { userMessage } from "../../api/errors";
 import { Notice, Skeleton } from "../../components/Surface";
+import { motionReduced } from "../../lib/preferences";
 import { rememberWedding } from "./lastWedding";
 import { useWedding, useWeddingId } from "./data";
 import "./wedding.css";
@@ -75,7 +76,7 @@ export function WeddingShell() {
                 // Ponowne dotknięcie aktywnej zakładki: przewinięcie na górę (bez utraty danych).
                 if (location.pathname === href) {
                   e.preventDefault();
-                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  window.scrollTo({ top: 0, behavior: motionReduced() ? "instant" : "smooth" });
                 }
               }}
             >

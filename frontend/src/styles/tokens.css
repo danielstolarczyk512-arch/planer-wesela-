@@ -55,7 +55,87 @@
   --wp-motion-dialog-scale: 0.98;
   --wp-motion-sheet-translate: 100%;
 }
-:root, :root[data-theme="light"] {
+:root, :root[data-theme="romantic"] {
+  color-scheme: light;
+  --wp-background: #FBF8F4;
+  --wp-surface: #FFFFFF;
+  --wp-surface-raised: #FFFFFF;
+  --wp-text-primary: #342721;
+  --wp-text-secondary: #6B5850;
+  --wp-text-disabled: #8F7E75;
+  --wp-action-primary: #8A5248;
+  --wp-text-on-primary: #FFFFFF;
+  --wp-action-danger: #9B2638;
+  --wp-text-on-danger: #FFFFFF;
+  --wp-accent-surface: #F4EDE6;
+  --wp-selected-surface: #F5E6E1;
+  --wp-selected-border: #8A5248;
+  --wp-separator: #EADFD6;
+  --wp-control-border: #9A8378;
+  --wp-focus-ring: #8A5248;
+  --wp-gold-decorative: #A47E58;
+  --wp-text-gold: #7E5D3B;
+  --wp-success-text: #3D5C45;
+  --wp-success-background: #ECF2EA;
+  --wp-warning-text: #76521E;
+  --wp-warning-background: #F9EFDC;
+  --wp-error-text: #9B2638;
+  --wp-error-background: #FBEBEC;
+  --wp-info-text: #8A5248;
+  --wp-info-background: #F5E6E1;
+  --wp-neutral-text: #6B5850;
+  --wp-neutral-background: #F3ECE6;
+  --wp-scrim: #34272166;
+  --wp-skeleton: #F1E8E0;
+  --wp-font-heading: "Bodoni Moda Variable", "Bodoni Moda", Georgia, serif;
+  --wp-font-body: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+  --wp-radius-card: 20px;
+  --wp-radius-button: 14px;
+  --wp-shadow-card: 0 1px 2px #3427210A, 0 10px 30px #3427210F;
+  --wp-shadow-sheet: 0 -10px 40px #3427211F;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]), :root[data-theme="romantic"] {
+    color-scheme: dark;
+    --wp-background: #1D1716;
+    --wp-surface: #272020;
+    --wp-surface-raised: #302827;
+    --wp-text-primary: #F7EFE9;
+    --wp-text-secondary: #CDBCB2;
+    --wp-text-disabled: #91827B;
+    --wp-action-primary: #E8B9AE;
+    --wp-text-on-primary: #2B1C18;
+    --wp-action-danger: #FFB4BC;
+    --wp-text-on-danger: #3A1219;
+    --wp-accent-surface: #312725;
+    --wp-selected-surface: #3A2D2B;
+    --wp-selected-border: #E8B9AE;
+    --wp-separator: #3E3331;
+    --wp-control-border: #A08D85;
+    --wp-focus-ring: #E8B9AE;
+    --wp-gold-decorative: #C9A47C;
+    --wp-text-gold: #DDBC93;
+    --wp-success-text: #A9D3B4;
+    --wp-success-background: #1E2E24;
+    --wp-warning-text: #F1CB8A;
+    --wp-warning-background: #33291A;
+    --wp-error-text: #FFB4BC;
+    --wp-error-background: #3A1A1E;
+    --wp-info-text: #E8B9AE;
+    --wp-info-background: #312725;
+    --wp-neutral-text: #CDBCB2;
+    --wp-neutral-background: #2E2725;
+    --wp-scrim: #000000A6;
+    --wp-skeleton: #352B29;
+    --wp-font-heading: "Bodoni Moda Variable", "Bodoni Moda", Georgia, serif;
+    --wp-font-body: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+    --wp-radius-card: 20px;
+    --wp-radius-button: 14px;
+    --wp-shadow-card: none;
+    --wp-shadow-sheet: 0 -8px 32px #00000066;
+  }
+}
+:root[data-theme="light"], :root[data-theme="system"] {
   color-scheme: light;
   --wp-background: #FAF7F2;
   --wp-surface: #FFFFFF;
@@ -87,15 +167,15 @@
   --wp-neutral-background: #F1ECE6;
   --wp-scrim: #24212466;
   --wp-skeleton: #EFE9E2;
-  --wp-font-heading: Lora, Georgia, serif;
-  --wp-font-body: "DM Sans", system-ui, sans-serif;
+  --wp-font-heading: "Lora Variable", Lora, Georgia, serif;
+  --wp-font-body: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
   --wp-radius-card: 16px;
   --wp-radius-button: 12px;
   --wp-shadow-card: 0 1px 2px #2421240F, 0 4px 16px #24212408;
   --wp-shadow-sheet: 0 -8px 32px #2421241F;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root[data-theme="system"] {
     color-scheme: dark;
     --wp-background: #19191C;
     --wp-surface: #242428;
@@ -127,8 +207,8 @@
     --wp-neutral-background: #2E2B30;
     --wp-scrim: #000000A3;
     --wp-skeleton: #2E2B30;
-    --wp-font-heading: "Bodoni Moda", Didot, Georgia, serif;
-    --wp-font-body: Inter, system-ui, sans-serif;
+    --wp-font-heading: "Bodoni Moda Variable", "Bodoni Moda", Didot, Georgia, serif;
+    --wp-font-body: "Inter Variable", Inter, system-ui, sans-serif;
     --wp-radius-card: 12px;
     --wp-radius-button: 10px;
     --wp-shadow-card: none;
@@ -167,12 +247,51 @@
   --wp-neutral-background: #2E2B30;
   --wp-scrim: #000000A3;
   --wp-skeleton: #2E2B30;
-  --wp-font-heading: "Bodoni Moda", Didot, Georgia, serif;
-  --wp-font-body: Inter, system-ui, sans-serif;
+  --wp-font-heading: "Bodoni Moda Variable", "Bodoni Moda", Didot, Georgia, serif;
+  --wp-font-body: "Inter Variable", Inter, system-ui, sans-serif;
   --wp-radius-card: 12px;
   --wp-radius-button: 10px;
   --wp-shadow-card: none;
   --wp-shadow-sheet: 0 -8px 32px #00000066;
+}
+:root[data-theme="gold"] {
+  color-scheme: light;
+  --wp-background: #FCFBF8;
+  --wp-surface: #FFFFFF;
+  --wp-surface-raised: #FFFFFF;
+  --wp-text-primary: #29261F;
+  --wp-text-secondary: #6D6557;
+  --wp-text-disabled: #8E858A;
+  --wp-action-primary: #796025;
+  --wp-text-on-primary: #FFFFFF;
+  --wp-action-danger: #9B2638;
+  --wp-text-on-danger: #FFFFFF;
+  --wp-accent-surface: #F5EEDC;
+  --wp-selected-surface: #F5EEDC;
+  --wp-selected-border: #796025;
+  --wp-separator: #E8E1D3;
+  --wp-control-border: #938365;
+  --wp-focus-ring: #796025;
+  --wp-gold-decorative: #A78949;
+  --wp-text-gold: #796025;
+  --wp-success-text: #315944;
+  --wp-success-background: #EAF2EB;
+  --wp-warning-text: #78551E;
+  --wp-warning-background: #FAF0DA;
+  --wp-error-text: #9B2638;
+  --wp-error-background: #FCECEF;
+  --wp-info-text: #796025;
+  --wp-info-background: #F5EEDC;
+  --wp-neutral-text: #6F656B;
+  --wp-neutral-background: #F1ECE6;
+  --wp-scrim: #24212466;
+  --wp-skeleton: #EFE9E2;
+  --wp-font-heading: "Lora Variable", Lora, Georgia, serif;
+  --wp-font-body: "DM Sans Variable", "DM Sans", system-ui, sans-serif;
+  --wp-radius-card: 16px;
+  --wp-radius-button: 12px;
+  --wp-shadow-card: 0 1px 2px #2421240F, 0 4px 16px #24212408;
+  --wp-shadow-sheet: 0 -8px 32px #2421241F;
 }
 /* Ograniczenie ruchu (system albo ustawienie aplikacji): bez przesunięć i skalowania,
    wyłącznie przenikania do 100 ms. Komponenty używają tych zmiennych. */

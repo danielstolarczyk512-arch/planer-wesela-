@@ -1,7 +1,16 @@
 import { useSyncExternalStore } from "react";
 
 /** Preferencje wyglądu na urządzeniu (nie są danymi osobowymi wrażliwymi). */
-export type ThemeMode = "system" | "light" | "dark";
+export type ThemeMode = "romantic" | "system" | "light" | "dark" | "gold";
+
+/** Style do wyboru (ustawienia, panel wyglądu). Romantyczny jest domyślny i podąża za trybem ciemnym systemu. */
+export const THEME_OPTIONS: { value: ThemeMode; label: string }[] = [
+  { value: "romantic", label: "Romantyczny" },
+  { value: "system", label: "Systemowy" },
+  { value: "light", label: "Ciepły beż" },
+  { value: "dark", label: "Ciemna elegancja" },
+  { value: "gold", label: "Biel i złoto" },
+];
 
 interface Preferences {
   theme: ThemeMode;
@@ -11,11 +20,11 @@ interface Preferences {
 const listeners = new Set<() => void>();
 
 function read(): Preferences {
-  let theme: ThemeMode = "system";
+  let theme: ThemeMode = "romantic";
   let reduceMotion = false;
   try {
     const t = localStorage.getItem("wp.theme");
-    if (t === "light" || t === "dark") theme = t;
+    if (t === "system" || t === "light" || t === "dark" || t === "gold") theme = t;
     reduceMotion = localStorage.getItem("wp.reduceMotion") === "1";
   } catch {
     // tryb prywatny: domyślne
@@ -35,7 +44,7 @@ function apply(p: Preferences) {
 function save(p: Preferences) {
   current = p;
   try {
-    if (p.theme === "system") localStorage.removeItem("wp.theme");
+    if (p.theme === "romantic") localStorage.removeItem("wp.theme");
     else localStorage.setItem("wp.theme", p.theme);
     if (p.reduceMotion) localStorage.setItem("wp.reduceMotion", "1");
     else localStorage.removeItem("wp.reduceMotion");

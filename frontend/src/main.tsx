@@ -10,6 +10,10 @@ import "./lib/preferences";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
+import { AppearanceTools } from "./components/AppearanceTools";
+import "./styles/refinement.css";
+import "./styles/romantic.css";
+
 import { App } from "./app/App";
 
 const root = document.getElementById("root");
@@ -18,6 +22,7 @@ if (!root) throw new Error("Brak elementu #root");
 createRoot(root).render(
   <StrictMode>
     <App />
+    <AppearanceTools />
   </StrictMode>,
 );
 

@@ -146,6 +146,9 @@ export function GuestsView() {
               Import z pliku
             </Button>
           )}
+          <details className="action-menu">
+            <summary>Więcej działań</summary>
+            <div className="action-menu__items">
           <PrintLink kind="goscie">Drukuj listę</PrintLink>
           {canWrite && <PrintLink kind="qr">Karty z kodem QR</PrintLink>}
           {canWrite && (
@@ -161,6 +164,8 @@ export function GuestsView() {
           <Link to={`/w/${id}/strona-goscia`} viewTransition className="wp-button wp-button--text">
             Strona gościa
           </Link>
+            </div>
+          </details>
         </div>
       </div>
 

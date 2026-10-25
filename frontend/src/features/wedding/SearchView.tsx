@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Input, Label, SearchField } from "react-aria-components";
+import { Button as AriaButton, Input, Label, SearchField } from "react-aria-components";
 import { Link, useSearchParams } from "react-router";
 
 import { api, unwrap } from "../../api/client";
@@ -54,29 +54,33 @@ export function SearchView() {
     queryKey: ["wedding", id, "search", q],
     queryFn: ({ signal }) => unwrap(api.GET("/api/v1/weddings/{wedding_id}/search", { params: { path: { wedding_id: id }, query: { q } }, signal })),
     enabled: q.length >= 2,
-    placeholderData: (previous) => previous,
   });
   useEffect(() => {
     setParams(q ? { q } : {}, { replace: true });
   }, [q, setParams]);
-  const hits = q.length >= 2 ? (result.data?.results ?? []) : [];
+  const waiting = q !== query.trim();
+  const hits = !waiting && q.length >= 2 ? (result.data?.results ?? []) : [];
 
   return (
     <main className="page enter-tab" aria-labelledby="search-h">
       <h1 id="search-h">Szukaj</h1>
       <SearchField className="wp-field" value={query} onChange={setQuery} autoFocus>
         <Label className="wp-field__label">Zadania, goście, usługodawcy, wydatki</Label>
-        <Input className="wp-field__input" placeholder="np. kwiaty, Kowalscy, zespół" />
+        <div className="search-control">
+          <Input className="wp-field__input" placeholder="np. kwiaty, Kowalscy, zespół" />
+          {query && <AriaButton className="search-clear" aria-label="Wyczyść wyszukiwanie">Wyczyść</AriaButton>}
+        </div>
       </SearchField>
-      {result.isError && (
+      {query.trim().length < 2 && <p className="text-secondary">Wpiszcie co najmniej 2 znaki, aby wyszukać w całym weselu.</p>}
+      {!waiting && q.length >= 2 && result.isError && (
         <Notice tone="error" live>
           {userMessage(result.error)}
         </Notice>
       )}
-      {q.length >= 2 && result.isPending && <Skeleton lines={3} />}
-      {q.length >= 2 && result.data && hits.length === 0 && <EmptyState title="Nic nie znaleźliśmy">Spróbujcie krótszego fragmentu nazwy.</EmptyState>}
+      {query.trim().length >= 2 && (waiting || result.isPending) && <Skeleton lines={3} />}
+      {!waiting && q.length >= 2 && result.data && hits.length === 0 && <EmptyState title="Nic nie znaleźliśmy">Spróbujcie krótszego fragmentu nazwy.</EmptyState>}
       <p className="visually-hidden" aria-live="polite">
-        {q.length >= 2 && result.data ? `Wyniki: ${hits.length}` : ""}
+        {!waiting && q.length >= 2 && result.data ? `Wyniki: ${hits.length}` : ""}
       </p>
       {GROUPS.map((g) => {
         const list = hits.filter((h) => h.kind === g.kind);

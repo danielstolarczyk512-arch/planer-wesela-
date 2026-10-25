@@ -2,13 +2,7 @@ import { Checkbox } from "../../components/Field";
 import { AccountSection } from "./AccountSection";
 import { Segmented } from "../../components/Segmented";
 import { Card } from "../../components/Surface";
-import { setReduceMotion, setTheme, usePreferences, type ThemeMode } from "../../lib/preferences";
-
-const THEMES: { value: ThemeMode; label: string }[] = [
-  { value: "system", label: "Systemowy" },
-  { value: "light", label: "Jasny" },
-  { value: "dark", label: "Ciemny" },
-];
+import { setReduceMotion, setTheme, THEME_OPTIONS, usePreferences } from "../../lib/preferences";
 
 export function SettingsPage() {
   const prefs = usePreferences();
@@ -19,7 +13,7 @@ export function SettingsPage() {
       <h2>Wygląd</h2>
       <Card>
         <div style={{ display: "grid", gap: "var(--wp-space-4)" }}>
-          <Segmented label="Motyw" value={prefs.theme} options={THEMES} onChange={setTheme} />
+          <Segmented label="Motyw" value={prefs.theme} options={THEME_OPTIONS} onChange={setTheme} />
           <p className="text-secondary">
             Systemowy: jasny w dzień, ciemny wieczorem, zgodnie z ustawieniem telefonu.
           </p>

@@ -1,4 +1,4 @@
-import { ChevronRight, Clock, PartyPopper } from "lucide-react";
+import { ChevronRight, Clock, HeartHandshake, ListChecks, PartyPopper, Users, Wallet, type LucideIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button as AriaButton } from "react-aria-components";
@@ -10,10 +10,11 @@ import { Button } from "../../components/Button";
 import { Card, Notice, Skeleton, StatusChip } from "../../components/Surface";
 import { daysUntil, formatDate, formatMoney, plural, todayInWarsaw } from "../../lib/format";
 import { EditTaskSheet } from "./EditTaskSheet";
-import { EXPECTED_RATE, percent, WORST_RATE } from "./indexationRates";
+import { percent, useIndexation } from "./indexationRates";
 import { CatchUpNotice } from "./PlanAssist";
 import { isOpen, TaskRow, topLevel, useToggleTask } from "./tasks";
 import { AttentionCard } from "./AttentionCard";
+import { useVendors } from "./vendors";
 import {
   keys,
   useCanWrite,
@@ -124,6 +125,72 @@ export function nextPayment(payments: Payment[] | undefined): Payment | null {
   return open[0] ?? null;
 }
 
+/** Powitanie zależne od pory dnia (czas polski). */
+export function greeting(now: Date = new Date()): string {
+  const hour = Number(new Intl.DateTimeFormat("pl-PL", { hour: "numeric", hourCycle: "h23", timeZone: "Europe/Warsaw" }).format(now));
+  return hour >= 5 && hour < 18 ? "Dzień dobry" : "Dobry wieczór";
+}
+
+/** Udział 0…1 (ułamek pierścienia); brak mianownika = brak danych. */
+export function share(part: number, whole: number): number | null {
+  if (!(whole > 0)) return null;
+  return Math.min(1, Math.max(0, part / whole));
+}
+
+/** Pierścień postępu: dekoracja obok liczb (liczby są w tekście karty). */
+function Ring({ value }: { value: number | null }) {
+  const r = 26;
+  const c = 2 * Math.PI * r;
+  return (
+    <span className="ring" aria-hidden="true">
+      <svg viewBox="0 0 64 64" width="64" height="64">
+        <circle className="ring__track" cx="32" cy="32" r={r} />
+        {value !== null && value > 0 && (
+          <circle className="ring__value" cx="32" cy="32" r={r} strokeDasharray={`${c * value} ${c}`} transform="rotate(-90 32 32)" />
+        )}
+      </svg>
+      <span className="ring__label num">{value === null ? "—" : `${Math.round(value * 100)}%`}</span>
+    </span>
+  );
+}
+
+function StatCard({
+  icon: Icon,
+  title,
+  tone,
+  value,
+  children,
+  to,
+  linkLabel,
+}: {
+  icon: LucideIcon;
+  title: string;
+  tone: string;
+  value: number | null;
+  children: React.ReactNode;
+  to: string;
+  linkLabel: string;
+}) {
+  return (
+    <Card className={`today-stat today-stat--${tone}`}>
+      <h2 className="today-stat__title">
+        <span className="today-stat__icon" aria-hidden="true">
+          <Icon size={18} strokeWidth={1.75} />
+        </span>
+        {title}
+      </h2>
+      <div className="today-stat__body">
+        <Ring value={value} />
+        <div className="today-stat__numbers">{children}</div>
+      </div>
+      <Link to={to} viewTransition className="today-stat__link">
+        {linkLabel}
+        <ChevronRight aria-hidden size={16} />
+      </Link>
+    </Card>
+  );
+}
+
 export function TodayView() {
   const id = useWeddingId();
   const wedding = useWedding(id);
@@ -131,6 +198,7 @@ export function TodayView() {
   const tasks = useTasks(id);
   const members = useMembers(id);
   const payments = usePayments(id);
+  const vendors = useVendors(id);
   const canWrite = useCanWrite(id);
   const { toggle, error } = useToggleTask(id);
   const [editing, setEditing] = useState<Task | null>(null);
@@ -177,11 +245,18 @@ export function TodayView() {
 
   return (
     <main className="page enter-tab" aria-labelledby="today-h">
-      <div>
+      <header className="today-head">
+        <p className="overline">{greeting()}</p>
         <h1 id="today-h">{wedding.data?.name}</h1>
-      </div>
+        <p className="text-secondary">Wszystko, co ważne, w jednym miejscu.</p>
+      </header>
 
-      <section className="hero" aria-label="Odliczanie do ślubu">
+      <section className="hero today-hero" aria-label="Odliczanie do ślubu">
+        {/* Zdjęcie tylko w motywie Romantycznym (dekoracja, bez treści). */}
+        <picture className="today-hero__photo" aria-hidden="true">
+          <source media="(max-width: 767px)" srcSet="/media/zdjecia/stol-z-rozami-800.webp" />
+          <img src="/media/zdjecia/stol-z-rozami.webp" alt="" width={1325} height={515} decoding="async" />
+        </picture>
         <p className="overline hero__overline">{c.overline}</p>
         <p className="hero__count" aria-live="polite">
           <span className="hero__value num">{c.value}</span>
@@ -213,6 +288,56 @@ export function TodayView() {
           <ChevronRight aria-hidden size={20} />
         </Link>
       )}
+      <div className="today-stats">
+        <StatCard
+          icon={ListChecks}
+          title="Zadania"
+          tone="tasks"
+          value={share(s.tasks.done, s.tasks.total)}
+          to={`/w/${id}/plan`}
+          linkLabel="Zobacz zadania"
+        >
+          <span className="today-stat__value num">
+            {s.tasks.done} z {s.tasks.total}
+          </span>
+          <span className="text-secondary">{plural(s.tasks.total, { one: "zadania wykonano", few: "zadań wykonano", many: "zadań wykonano", other: "zadania wykonano" })}</span>
+        </StatCard>
+        <StatCard
+          icon={Wallet}
+          title="Budżet"
+          tone="budget"
+          value={share(Number(s.budget.estimated_total.amount), Number(s.budget.total_budget?.amount ?? 0))}
+          to={`/w/${id}/budzet`}
+          linkLabel="Zobacz budżet"
+        >
+          <span className="text-secondary">Przewidywany koszt</span>
+          <span className="today-stat__value num">{formatMoney(s.budget.estimated_total)}</span>
+          {s.budget.total_budget && Number(s.budget.total_budget.amount) > 0 && (
+            <span className="text-secondary num">z {formatMoney(s.budget.total_budget)} budżetu</span>
+          )}
+          {s.budget.over_budget && <StatusChip tone="error">Ponad budżet</StatusChip>}
+          <IndexationHint weddingId={id} />
+        </StatCard>
+        <StatCard
+          icon={Users}
+          title="Goście"
+          tone="guests"
+          value={share(s.guests.confirmed, s.guests.invited)}
+          to={`/w/${id}/goscie`}
+          linkLabel="Zarządzaj gośćmi"
+        >
+          <span className="text-secondary">Potwierdzeni goście</span>
+          <span className="today-stat__value num">
+            {s.guests.confirmed} z {s.guests.invited}
+          </span>
+          <span className="text-secondary">
+            {plural(s.guests.invited, { one: "zaproszonej osoby", few: "zaproszonych", many: "zaproszonych", other: "zaproszonych" })}
+          </span>
+          <ForecastHint weddingId={id} invited={s.guests.invited} />
+        </StatCard>
+        <VendorsStat weddingId={id} vendors={vendors.data} />
+      </div>
+
       {canWrite && <CatchUpNotice weddingId={id} overdue={s.tasks.overdue} />}
 
       <AttentionCard weddingId={id} />
@@ -246,23 +371,6 @@ export function TodayView() {
         </Card>
       </section>
 
-      <div className="stat-grid">
-        <Card className="stat">
-          <span className="text-secondary">Przewidywany koszt</span>
-          <span className="stat__value">{formatMoney(s.budget.estimated_total)}</span>
-          {s.budget.over_budget && <StatusChip tone="error">Ponad budżet</StatusChip>}
-          <IndexationHint weddingId={id} />
-        </Card>
-        <Card className="stat">
-          <span className="text-secondary">Potwierdzeni goście</span>
-          <span className="stat__value">{s.guests.confirmed}</span>
-          <span className="text-secondary num">
-            z {s.guests.invited} {plural(s.guests.invited, { one: "zaproszonej osoby", few: "zaproszonych", many: "zaproszonych", other: "zaproszonych" })}
-          </span>
-          <ForecastHint weddingId={id} invited={s.guests.invited} />
-        </Card>
-      </div>
-
       {pay && (
         // Bez aria-label: nazwą linku jest widoczny tekst (WCAG 2.5.3, sterowanie głosem).
         <Link to={`/w/${id}/budzet#platnosci`} viewTransition className="wp-card link-card">
@@ -293,23 +401,32 @@ export function TodayView() {
   );
 }
 
-/** Koszt z podwyżkami cen z umów (najgorszy wariant); te same założenia co na ekranie Budżet. */
+/** Usługodawcy: zarezerwowani spośród branych pod uwagę (bez odrzuconych). */
+function VendorsStat({ weddingId, vendors }: { weddingId: string; vendors: { status: string }[] | undefined }) {
+  const active = (vendors ?? []).filter((v) => v.status !== "rejected");
+  const booked = active.filter((v) => v.status === "booked").length;
+  return (
+    <StatCard
+      icon={HeartHandshake}
+      title="Usługodawcy"
+      tone="vendors"
+      value={vendors ? share(booked, active.length) : null}
+      to={`/w/${weddingId}/uslugodawcy`}
+      linkLabel="Zobacz usługodawców"
+    >
+      <span className="today-stat__value num">{vendors ? `${booked} z ${active.length}` : "—"}</span>
+      <span className="text-secondary">zarezerwowanych</span>
+    </StatCard>
+  );
+}
+
+/** Koszt z podwyżkami cen z umów (najgorszy wariant); założenia zapisane na weselu, jak w Budżecie. */
 function IndexationHint({ weddingId }: { weddingId: string }) {
-  const data = useQuery({
-    queryKey: [...keys.budget(weddingId), "indexation", EXPECTED_RATE, WORST_RATE],
-    queryFn: ({ signal }) =>
-      unwrap(
-        api.GET("/api/v1/weddings/{wedding_id}/budget/indexation", {
-          params: { path: { wedding_id: weddingId }, query: { expected_rate: Number(EXPECTED_RATE), worst_rate: Number(WORST_RATE) } },
-          signal,
-        }),
-      ),
-  });
-  const o = data.data;
+  const o = useIndexation(weddingId).data;
   if (!o || o.items.length === 0 || Number(o.worst_total.amount) <= Number(o.today_total.amount)) return null;
   return (
     <Link to={`/w/${weddingId}/budzet#podwyzki`} className="text-secondary num">
-      z podwyżkami cen do {formatMoney(o.worst_total)} (przy inflacji {percent(WORST_RATE)} rocznie, jak w Budżecie)
+      z podwyżkami cen do {formatMoney(o.worst_total)} (przy inflacji {percent(String(o.worst_rate))} rocznie, jak w Budżecie)
     </Link>
   );
 }

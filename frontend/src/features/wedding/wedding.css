@@ -134,6 +134,186 @@
   outline-offset: 2px;
 }
 
+/* --- Dziś: powitanie, kafelki z pierścieniami --- */
+.today-head {
+  display: grid;
+  gap: var(--wp-space-1);
+}
+
+.today-head > p {
+  margin: 0;
+}
+
+/* Zdjęcie w odliczaniu pokazuje tylko motyw Romantyczny (romantic.css). */
+.today-hero__photo {
+  display: none;
+}
+
+.today-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--wp-space-4);
+}
+
+.today-stat {
+  display: grid;
+  gap: var(--wp-space-3);
+  align-content: start;
+}
+
+.today-stat__title {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-2);
+  margin: 0;
+  font: 600 var(--wp-type-body) var(--wp-font-body);
+}
+
+.today-stat__icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10px;
+  background: var(--wp-accent-surface);
+  color: var(--wp-action-primary);
+}
+
+.today-stat__body {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-4);
+}
+
+.today-stat__numbers {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.today-stat__value {
+  font-family: var(--wp-font-heading);
+  font-size: 1.625rem;
+  line-height: 1.15;
+}
+
+.today-stat__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wp-space-1);
+  justify-self: start;
+  min-height: 44px;
+  color: var(--wp-text-gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.today-stat__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Telefon: dwie kolumny, pierścień nad liczbami, mniejsze liczby (bez poziomego przewijania od 320 px). */
+@media (max-width: 559px) {
+  .today-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--wp-space-3);
+  }
+
+  .today-stat {
+    padding: var(--wp-space-3);
+  }
+
+  .today-stat__body {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--wp-space-2);
+  }
+
+  .today-stat__value {
+    font-size: 1.25rem;
+    overflow-wrap: anywhere;
+  }
+
+  .today-stat > * {
+    min-width: 0;
+  }
+
+  .today-stat__title {
+    font-size: 0.9375rem;
+  }
+
+  /* Długie słowa („zarezerwowanych”) łamią się zamiast wychodzić poza kafelek przy 320 px. */
+  .today-stat__title,
+  .today-stat__numbers,
+  .today-stat__link {
+    overflow-wrap: anywhere;
+  }
+
+  .today-stat .ring {
+    width: 48px;
+    height: 48px;
+  }
+
+  .today-stat .ring__label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Pierścień postępu: stroke-dasharray z danych; kolor zależny od kafelka. */
+.ring {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+}
+
+.ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ring__track,
+.ring__value {
+  fill: none;
+  stroke-width: 6;
+}
+
+.ring__track {
+  stroke: var(--wp-accent-surface);
+}
+
+.ring__value {
+  stroke: var(--ring-color, var(--wp-action-primary));
+  stroke-linecap: round;
+  animation: ring-draw 900ms var(--wp-ease-standard) both;
+}
+
+.ring__label {
+  font: 600 var(--wp-type-secondary) var(--wp-font-body);
+  color: var(--wp-text-primary);
+}
+
+@keyframes ring-draw {
+  from {
+    stroke-dasharray: 0 999;
+  }
+}
+
+.reduce-motion .ring__value {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring__value {
+    animation: none;
+  }
+}
+
 /* --- wspólne elementy widoków --- */
 .view-head {
   display: flex;
