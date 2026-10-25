@@ -8,7 +8,7 @@ from app.core.db import Base, IdMixin, TimestampMixin, utcnow
 
 GLOBAL_ROLES = ("user", "moderator", "admin")
 USER_STATUSES = ("active", "locked", "pending_deletion", "deleted")
-TOKEN_PURPOSES = ("verify_email", "reset_password")
+TOKEN_PURPOSES = ("verify_email", "reset_password", "verify_code")
 CONSENT_TYPES = ("terms", "privacy", "marketing", "ai_external_processing")
 USER_MANAGED_CONSENTS = ("marketing", "ai_external_processing")
 

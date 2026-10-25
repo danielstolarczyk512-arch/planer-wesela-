@@ -39,7 +39,7 @@ interface Row {
 }
 
 const newRow = (over: Partial<Row> = {}): Row => ({
-  key: crypto.randomUUID(),
+  key: newIdempotencyKey(),
   label: "",
   kind: "per_guest",
   amount: null,

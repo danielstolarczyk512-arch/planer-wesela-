@@ -17,6 +17,7 @@ import { useToast } from "../../components/Toast";
 import { daysUntil, plural } from "../../lib/format";
 import { EditTaskSheet } from "./EditTaskSheet";
 import { CatchUpNotice, TemplateSyncNotice } from "./PlanAssist";
+import { WeddingProgressBar } from "./WeddingProgressBar";
 import { PLAN_SECTIONS, PrintLink, SectionNav } from "./SectionNav";
 import { isOpen, monthLabel, subtaskProgress, TaskRow, topLevel, useToggleTask } from "./tasks";
 import { keys, memberName, useCanWrite, useMembers, useTasks, useWeddingId, type Task } from "./data";
@@ -42,7 +43,7 @@ export function PlanView() {
   const tasks = useTasks(id);
   const members = useMembers(id);
   const canWrite = useCanWrite(id);
-  const { toggle, error } = useToggleTask(id);
+  const { toggle, error, pendingId } = useToggleTask(id);
   const [params, setParams] = useSearchParams();
   const segment = (params.get("widok") as Segment) || "teraz";
   const person = params.get("osoba") ?? "";
@@ -128,16 +129,7 @@ export function PlanView() {
                 {plural(active, { one: "zadania gotowe", few: "zadań gotowe", many: "zadań gotowe", other: "zadań gotowe" })}
               </span>
             </div>
-            <div
-              className="meter__track"
-              role="progressbar"
-              aria-valuemin={0}
-              aria-valuemax={active}
-              aria-valuenow={done}
-              aria-label="Ukończone zadania"
-            >
-              <div className="meter__fill" style={{ width: `${active ? (done / active) * 100 : 0}%` }} />
-            </div>
+            <WeddingProgressBar completed={done} total={active} settled={pendingId === undefined} />
           </div>
 
           {canWrite && <TemplateSyncNotice weddingId={id} canWrite={canWrite} />}

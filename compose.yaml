@@ -9,8 +9,14 @@ x-app: &app
   env_file: .env
   environment: &app-env
     WP_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-wedding}:${POSTGRES_PASSWORD:-wedding}@db:5432/${POSTGRES_DB:-wedding}
-    WP_SMTP_HOST: mailpit
-    WP_SMTP_PORT: "1025"
+    # Domyślnie poczta trafia do Mailpit (podgląd :8025). Prawdziwa wysyłka (np. Gmail):
+    # WP_SMTP_HOST_DOCKER, WP_SMTP_PORT_DOCKER, WP_SMTP_STARTTLS_DOCKER, WP_SMTP_USER_DOCKER,
+    # WP_SMTP_PASSWORD_DOCKER w .env — zob. docs/poczta-gmail.md.
+    WP_SMTP_HOST: ${WP_SMTP_HOST_DOCKER:-mailpit}
+    WP_SMTP_PORT: ${WP_SMTP_PORT_DOCKER:-1025}
+    WP_SMTP_STARTTLS: ${WP_SMTP_STARTTLS_DOCKER:-false}
+    WP_SMTP_USER: ${WP_SMTP_USER_DOCKER:-}
+    WP_SMTP_PASSWORD: ${WP_SMTP_PASSWORD_DOCKER:-}
     # Ollama działa na laptopie (GPU); kontenery łączą się z nią przez bramę hosta.
     WP_OLLAMA_URL: ${WP_OLLAMA_URL_DOCKER:-http://host.docker.internal:11434}
     # Skanowanie plików (ClamAV, osobny kontener): `docker compose --profile scan up -d`

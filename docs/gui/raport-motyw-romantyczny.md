@@ -76,6 +76,21 @@ w nagłówku każdego ekranu („Pieniądze”, „Przygotowania”, „Goście 
 - Kafelki „Wpłacono / Do zapłaty”: pudrowo-złota kreska akcentu.
 - Ograniczenie ruchu wyłącza napełnianie mierników, „pyknięcie” i uniesienia.
 
+## Etap 4 — plan stołów, usługodawcy, oferty
+
+- **Ocena przeciągania w planie stołów:** gości przenosi się dotknięciem żetonu i wyborem stołu,
+  stoły na planie sali — przeciąganiem albo przyciskami (W lewo/W prawo/…/Obróć). To jest dostępne
+  z klawiatury i czytnika ekranu, więc zgodnie z pakietem („oceń, nie przepisuj w ciemno”)
+  mechanizm został bez zmian. Przeciąganie gości między stołami byłoby osobną funkcją do decyzji.
+- Karty stołów: nazwa szeryfem, pudrowa poświata u góry; goście jako pudrowe żetony.
+- Plan sali: kremowa podłoga z miedzianym obrysem, stoły pudrowe, stół pary ze złotym obrysem,
+  parkiet w delikatnym złocie. **Naprawa dla wszystkich motywów:** nazwy stołów mają obwódkę w kolorze
+  tła — czytelne także, gdy wychodzą poza mały stół (np. „Para Młoda”).
+- Usługodawcy: monogram (pierwsza litera nazwy) w pudrowym kółku — zamiast zdjęć, których nie mamy;
+  bez zmyślonych ocen.
+- Oferty: kwoty pozycji szeryfem, sumy w porównaniu w miedzi; link „Porównaj z innymi” bez podkreślenia.
+- Podgląd na tymczasowym weselu w środowisku E2E (skrypt zakłada dane fikcyjne i usuwa wesele w `finally`).
+
 ## Powitanie i strona tytułowa
 
 - 8 nagrań w kolumnach (5 nowych z Pexels: tort, taniec, panna młoda, pocałunek, bukiet), bez powtórzeń.

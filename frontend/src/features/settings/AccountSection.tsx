@@ -69,7 +69,17 @@ export function AccountSection() {
 
   const resend = useMutation({
     mutationFn: () => unwrap(api.POST("/api/v1/me/verify-email/resend")),
-    onSuccess: () => toast("Wysłaliśmy nowy link potwierdzający"),
+    onSuccess: () => toast("Wysłaliśmy nowy kod i link potwierdzający"),
+  });
+
+  const [code, setCode] = useState("");
+  const verifyCode = useMutation({
+    mutationFn: () => unwrap(api.POST("/api/v1/me/verify-email/code", { body: { code: code.trim() } })),
+    onSuccess: async () => {
+      setCode("");
+      await queryClient.invalidateQueries({ queryKey: ["me"] });
+      toast("Adres e-mail potwierdzony");
+    },
   });
 
   if (!me.data) return null;
@@ -93,13 +103,37 @@ export function AccountSection() {
           </div>
           {!m.email_verified && (
             <>
+              <Form
+                className="form-stack"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  verifyCode.mutate();
+                }}
+              >
+                <TextField
+                  label="Kod z e-maila (6 cyfr)"
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  maxLength={6}
+                  value={code}
+                  onChange={(v) => setCode(v.replace(/\D/g, ""))}
+                />
+                {verifyCode.isError && (
+                  <Notice tone="error" live>
+                    {userMessage(verifyCode.error)}
+                  </Notice>
+                )}
+                <Button type="submit" pending={verifyCode.isPending} isDisabled={code.length !== 6}>
+                  Potwierdź kodem
+                </Button>
+              </Form>
               {resend.isError && (
                 <Notice tone="error" live>
                   {userMessage(resend.error)}
                 </Notice>
               )}
               <Button variant="secondary" pending={resend.isPending} isDisabled={resend.isSuccess} onPress={() => resend.mutate()}>
-                {resend.isSuccess ? "Link wysłany — sprawdź skrzynkę" : "Wyślij ponownie link potwierdzający"}
+                {resend.isSuccess ? "Wysłano — sprawdź skrzynkę" : "Wyślij ponownie kod i link"}
               </Button>
             </>
           )}

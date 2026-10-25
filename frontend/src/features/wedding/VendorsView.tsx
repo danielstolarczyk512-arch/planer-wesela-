@@ -115,6 +115,10 @@ export function VendorsView() {
                 return (
                   <li key={v.id}>
                     <Link to={`/w/${id}/uslugodawcy/${v.id}`} viewTransition className="row link-card">
+                      {/* Monogram zamiast zdjęcia (nie mamy zdjęć usługodawców); nazwa jest obok. */}
+                      <span className="vendor-mono" aria-hidden="true">
+                        {v.name.trim().charAt(0).toLocaleUpperCase("pl-PL")}
+                      </span>
                       <span className="row__body">
                         <span className="row__title">{v.name}</span>
                         <span className="text-secondary">

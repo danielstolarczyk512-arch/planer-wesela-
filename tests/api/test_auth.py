@@ -312,3 +312,43 @@ def test_resend_verification(client):
     assert client.post(f"{API}/me/verify-email/resend", headers=h).status_code == 204
     token = token_from_last_email("ania@example.com")
     assert client.post(f"{API}/auth/verify-email", json={"token": token}).status_code == 204
+
+
+def _code_from_last_email(email: str) -> str:
+    import re
+
+    match = re.search(r"Kod potwierdzający: (\d{6})", last_email_to(email)["body"])
+    assert match, "E-mail nie zawiera kodu"
+    return match.group(1)
+
+
+def test_verify_email_with_code(client):
+    register(client, "ania@example.com", verify=False)
+    h = bearer(login(client, "ania@example.com"))
+    code = _code_from_last_email("ania@example.com")
+    wrong = "000000" if code != "000000" else "111111"
+    r = client.post(f"{API}/me/verify-email/code", headers=h, json={"code": wrong})
+    assert r.status_code == 422
+    assert client.get(f"{API}/me", headers=h).json()["email_verified"] is False
+    assert (
+        client.post(f"{API}/me/verify-email/code", headers=h, json={"code": code}).status_code
+        == 204
+    )
+    assert client.get(f"{API}/me", headers=h).json()["email_verified"] is True
+
+
+def test_verify_code_is_per_account_and_limited(client):
+    register(client, "ania@example.com", verify=False)
+    register(client, "ola@example.com", verify=False)
+    ania = bearer(login(client, "ania@example.com"))
+    ola_code = _code_from_last_email("ola@example.com")
+    # Kod innej osoby nie potwierdza cudzego konta.
+    r = client.post(f"{API}/me/verify-email/code", headers=ania, json={"code": ola_code})
+    assert r.status_code == 422
+    # Twardy limit prób (6 cyfr).
+    codes = [f"{n:06d}" for n in range(1, 8)]
+    statuses = [
+        client.post(f"{API}/me/verify-email/code", headers=ania, json={"code": c}).status_code
+        for c in codes
+    ]
+    assert 429 in statuses

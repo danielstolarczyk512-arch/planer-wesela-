@@ -1,0 +1,237 @@
+/* Pasek postępu planu: różowy tor, biała wykonana część, ikona nad granicą. */
+.wpb {
+  --wpb-pink: #f4c9d2;
+  --wpb-pink-edge: #e3a3b3;
+  --wpb-dur: 700ms;
+  display: grid;
+  gap: var(--wp-space-2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .wpb {
+    --wpb-pink: color-mix(in srgb, #e8a1b3 38%, var(--wp-surface));
+    --wpb-pink-edge: color-mix(in srgb, #e8a1b3 60%, var(--wp-surface));
+  }
+}
+
+:root[data-theme="light"] .wpb,
+:root[data-theme="gold"] .wpb {
+  --wpb-pink: #f4c9d2;
+  --wpb-pink-edge: #e3a3b3;
+}
+
+:root[data-theme="dark"] .wpb {
+  --wpb-pink: color-mix(in srgb, #e8a1b3 38%, var(--wp-surface));
+  --wpb-pink-edge: color-mix(in srgb, #e8a1b3 60%, var(--wp-surface));
+}
+
+/* Boczne marginesy: lewy na pierścionek przy 0%, prawy na parę młodą (meta); górny na ikonę, dolny na procent. */
+.wpb__rail {
+  position: relative;
+  margin: 3.5rem 3.75rem 2rem 2rem;
+}
+
+.wpb__track {
+  height: 1.125rem;
+  border-radius: 999px;
+  background: var(--wpb-pink);
+  box-shadow: inset 0 1px 2px #5a2d3a24;
+  overflow: hidden;
+}
+
+.wpb__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--wpb-pink-edge), 0 1px 3px #5a2d3a33;
+  transition: width var(--wpb-dur) cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* Zero szerokości, środek na granicy wypełnienia; ikona nad torem, procent pod nim. */
+.wpb__marker {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 0;
+  transition: left var(--wpb-dur) cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+
+.wpb__icon {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  margin-bottom: -0.25rem;
+  transform: translateX(-50%);
+}
+
+.wpb__icon img,
+.wpb__couple img {
+  display: block;
+  max-width: none;
+  height: 3rem;
+  width: auto;
+}
+
+.wpb__percent {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  transform: translateX(-50%);
+  margin-top: 0.25rem;
+  font: 600 var(--wp-type-secondary) var(--wp-font-body, inherit);
+  color: var(--wp-action-primary);
+  white-space: nowrap;
+}
+
+.wpb__goal {
+  position: absolute;
+  left: calc(100% + 1.75rem);
+  bottom: -0.25rem;
+  width: 0;
+}
+
+.wpb__couple {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  translate: -50% 0;
+  transform-origin: 50% 100%;
+  opacity: 0.8;
+  transition: opacity var(--wpb-dur) ease-out;
+}
+
+.wpb__couple--on {
+  opacity: 1;
+}
+
+.wpb__icon--pop {
+  animation: wpb-pop 520ms cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
+}
+
+@keyframes wpb-pop {
+  0% {
+    transform: scale(0.85);
+  }
+  55% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.wpb__finale {
+  margin: 0;
+  min-height: 0;
+  text-align: center;
+  font: 500 var(--wp-type-body) var(--wp-font-heading, inherit);
+  color: var(--wp-action-primary);
+}
+
+.wpb__finale:empty {
+  display: none;
+}
+
+.wpb__burst {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.wpb__bit {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  opacity: 0;
+  animation: wpb-fly 1400ms ease-out both;
+}
+
+.wpb__bit--pink {
+  background: #f29ab0;
+}
+
+.wpb__bit--gold {
+  background: #e3a857;
+}
+
+.wpb__bit--heart {
+  background: #e0607f;
+  border-radius: 0;
+  transform: rotate(-45deg);
+  width: 9px;
+  height: 9px;
+}
+
+.wpb__bit--heart::before,
+.wpb__bit--heart::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: inherit;
+}
+
+.wpb__bit--heart::before {
+  top: -4.5px;
+  left: 0;
+}
+
+.wpb__bit--heart::after {
+  left: 4.5px;
+  top: 0;
+}
+
+@keyframes wpb-fly {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+    scale: 0.4;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: var(--dx) calc(var(--dy) + 24px);
+    scale: 1;
+    rotate: 200deg;
+  }
+}
+
+/* Ograniczenie ruchu: od razu właściwa pozycja i stan końcowy, bez konfetti i „pop”. */
+.reduce-motion .wpb__fill,
+.reduce-motion .wpb__marker {
+  transition: none;
+}
+
+.reduce-motion .wpb__icon--pop,
+.reduce-motion .wpb__burst {
+  animation: none;
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wpb__fill,
+  .wpb__marker {
+    transition: none;
+  }
+  .wpb__icon--pop {
+    animation: none;
+  }
+  .wpb__burst {
+    display: none;
+  }
+}
+
+@media print {
+  .wpb__burst {
+    display: none;
+  }
+}

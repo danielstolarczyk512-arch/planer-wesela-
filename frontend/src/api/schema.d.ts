@@ -149,6 +149,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/verify-email/code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Potwierdzenie adresu e-mail 6-cyfrowym kodem z wiadomości */
+        post: operations["verify_email_code_api_v1_me_verify_email_code_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/me": {
         parameters: {
             query?: never;
@@ -10417,6 +10434,11 @@ export interface components {
             /** Crew Meals */
             crew_meals?: number | null;
         };
+        /** VerifyCodeIn */
+        VerifyCodeIn: {
+            /** Code */
+            code: string;
+        };
         /** VersionOut */
         VersionOut: {
             /**
@@ -11323,6 +11345,42 @@ export interface operations {
             };
             /** @description Błąd walidacji */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    verify_email_code_api_v1_me_verify_email_code_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerifyCodeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Przekroczony limit żądań (nagłówek Retry-After) */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };

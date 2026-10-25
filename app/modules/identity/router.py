@@ -31,6 +31,7 @@ from app.modules.identity.schemas import (
     SessionOut,
     TokenIn,
     TokenPairOut,
+    VerifyCodeIn,
 )
 from app.modules.identity.service import IssuedTokens, Principal
 
@@ -129,6 +130,16 @@ def register(body: RegisterIn, request: Request, db: DbSession) -> AcceptedOut:
 )
 def verify_email(body: TokenIn, request: Request, db: DbSession) -> None:
     service.verify_email(db, token=body.token, ip=ip_prefix(request))
+
+
+@me_router.post(
+    "/verify-email/code",
+    status_code=204,
+    responses={422: _ERR[422], 429: _ERR[429]},
+    summary="Potwierdzenie adresu e-mail 6-cyfrowym kodem z wiadomości",
+)
+def verify_email_code(body: VerifyCodeIn, principal: CurrentPrincipal, db: DbSession) -> None:
+    service.verify_email_code(db, principal, code=body.code)
 
 
 @auth_router.post(

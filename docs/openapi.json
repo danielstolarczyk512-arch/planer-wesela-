@@ -322,6 +322,41 @@
         }
       }
     },
+    "/api/v1/me/verify-email/code": {
+      "post": {
+        "tags": [
+          "konto"
+        ],
+        "summary": "Potwierdzenie adresu e-mail 6-cyfrowym kodem z wiadomości",
+        "operationId": "verify_email_code_api_v1_me_verify_email_code_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyCodeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Błąd walidacji"
+          },
+          "429": {
+            "description": "Przekroczony limit żądań (nagłówek Retry-After)"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/me": {
       "get": {
         "tags": [
@@ -38329,6 +38364,20 @@
         },
         "type": "object",
         "title": "VendorUpdate"
+      },
+      "VerifyCodeIn": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^\\d{6}$",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "VerifyCodeIn"
       },
       "VersionOut": {
         "properties": {

@@ -1,5 +1,6 @@
 """Logika kont: rejestracja, logowanie, sesje, hasła, zgody, usuwanie konta."""
 
+import secrets
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from typing import Any
@@ -59,6 +60,9 @@ class IssuedTokens:
     expires_in: int
 
 
+VERIFY_CODE_TTL_MINUTES = 30
+
+
 def _ensure_password_ok(password: str, email: str) -> None:
     problems = password_problems(password, email)
     if problems:
@@ -97,11 +101,35 @@ def _consume_one_time_token(db: Session, token: str, purpose: str) -> OneTimeTok
     return ott
 
 
+def _issue_verification_code(db: Session, user: User) -> str:
+    """6 cyfr w tej samej wiadomości co link; hash wiąże kod z kontem, nowy kod unieważnia stary."""
+    now = utcnow()
+    for old in db.scalars(
+        select(OneTimeToken).where(
+            OneTimeToken.user_id == user.id,
+            OneTimeToken.purpose == "verify_code",
+            OneTimeToken.used_at.is_(None),
+        )
+    ):
+        old.used_at = now
+    code = f"{secrets.randbelow(10**6):06d}"
+    db.add(
+        OneTimeToken(
+            user_id=user.id,
+            purpose="verify_code",
+            token_hash=hash_token(f"{user.id}:{code}"),
+            expires_at=now + timedelta(minutes=VERIFY_CODE_TTL_MINUTES),
+        )
+    )
+    return code
+
+
 def _queue_verification_email(db: Session, user: User) -> None:
     settings = get_settings()
     token = _issue_one_time_token(
         db, user, "verify_email", timedelta(hours=settings.email_verification_ttl_hours)
     )
+    code = _issue_verification_code(db, user)
     queue_mail(
         db,
         user.email,
@@ -109,7 +137,9 @@ def _queue_verification_email(db: Session, user: User) -> None:
             "Potwierdź adres e-mail",
             heading="Potwierdź adres e-mail",
             paragraphs=[
-                "Cześć! Potwierdź adres e-mail, żeby dokończyć zakładanie konta w Nasz dzień."
+                "Cześć! Potwierdź adres e-mail, żeby dokończyć zakładanie konta w Nasz dzień.",
+                f"Kod potwierdzający: {code} (ważny {VERIFY_CODE_TTL_MINUTES} minut). "
+                "Wpisz go w aplikacji albo użyj przycisku poniżej.",
             ],
             action=("Potwierdź adres", f"{settings.public_app_url}/potwierdz-email?token={token}"),
             note=f"Link jest ważny {settings.email_verification_ttl_hours} h. "
@@ -181,6 +211,37 @@ def verify_email(db: Session, *, token: str, ip: str) -> None:
             entity_id=user.id,
             action="verify_email",
         )
+    db.commit()
+
+
+def verify_email_code(db: Session, principal: Principal, *, code: str) -> None:
+    user = principal.user
+    # Licznik rośnie także przy poprawnym kodzie: 6 cyfr wymaga twardego limitu prób.
+    ratelimit.hit(db, ratelimit.key_for("verify_code", str(user.id)), 5, timedelta(minutes=15))
+    db.commit()
+    if user.email_verified_at is not None:
+        return
+    ott = db.scalars(
+        select(OneTimeToken)
+        .where(
+            OneTimeToken.user_id == user.id,
+            OneTimeToken.purpose == "verify_code",
+            OneTimeToken.token_hash == hash_token(f"{user.id}:{code}"),
+        )
+        .with_for_update()
+    ).first()
+    if ott is None or ott.used_at is not None or ott.expires_at <= utcnow():
+        raise Unprocessable("Kod jest nieprawidłowy lub wygasł.", code="auth.invalid_token")
+    ott.used_at = utcnow()
+    user.email_verified_at = utcnow()
+    audit.record(
+        db,
+        actor_type="user",
+        actor_id=user.id,
+        entity_type="user",
+        entity_id=user.id,
+        action="verify_email",
+    )
     db.commit()
 
 

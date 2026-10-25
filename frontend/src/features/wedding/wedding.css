@@ -719,6 +719,18 @@ span.person-chip {
 
 
 /* --- Usługodawcy i oferty --- */
+.vendor-mono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--wp-accent-surface);
+  color: var(--wp-action-primary);
+  font: 400 1.125rem/1 var(--wp-font-heading);
+}
+
 .prewrap {
   white-space: pre-wrap;
 }
@@ -1047,6 +1059,11 @@ span.person-chip {
   text-anchor: middle;
   dominant-baseline: middle;
   pointer-events: none;
+  /* Obwódka w kolorze tła: nazwa czytelna także, gdy wychodzi poza mały stół. */
+  paint-order: stroke;
+  stroke: var(--wp-surface);
+  stroke-width: 0.12px;
+  stroke-linejoin: round;
 }
 
 .room-controls .chips {

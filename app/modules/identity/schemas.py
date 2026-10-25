@@ -59,6 +59,10 @@ class TokenIn(BaseModel):
     token: Token
 
 
+class VerifyCodeIn(BaseModel):
+    code: str = Field(pattern=r"^\d{6}$")
+
+
 class ForgotPasswordIn(BaseModel):
     email: NormalizedEmail
 
