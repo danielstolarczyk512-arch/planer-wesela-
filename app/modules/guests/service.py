@@ -7,12 +7,11 @@ from datetime import date, datetime, time, timedelta
 from typing import Any
 from uuid import UUID
 
-import segno
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import StaleDataError
 
-from app.core import clock, crypto, mail_templates, ratelimit
+from app.core import clock, crypto, mail_templates, qr, ratelimit
 from app.core.config import get_settings
 from app.core.db import utcnow
 from app.core.email import queue_mail
@@ -570,7 +569,7 @@ def create_rsvp_link(
 
 def qr_svg(url: str) -> str:
     """Kod QR z adresem RSVP (segno, BSD) — czarny na białym, do druku na zaproszeniu."""
-    return segno.make(url, error="m").svg_inline(scale=4, border=2, dark="#000", light="#fff")
+    return qr.qr_svg(url, scale=4)
 
 
 def rsvp_qr(

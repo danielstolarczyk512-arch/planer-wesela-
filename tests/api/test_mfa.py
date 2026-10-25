@@ -22,6 +22,7 @@ def _enable(client, tokens) -> tuple[pyotp.TOTP, list[str]]:
     body = setup.json()
     assert body["otpauth_uri"].startswith("otpauth://totp/")
     assert body["qr_svg"].lstrip().startswith("<svg")
+    assert 'xmlns="http://www.w3.org/2000/svg"' in body["qr_svg"]
     totp = pyotp.TOTP(body["secret"])
     r = client.post(f"{API}/me/mfa/enable", json={"code": totp.now()}, headers=bearer(tokens))
     assert r.status_code == 200, r.text

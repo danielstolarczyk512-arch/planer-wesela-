@@ -15,7 +15,6 @@ from uuid import UUID
 
 import jwt
 import pyotp
-import segno
 from sqlalchemy import delete, select, update
 from sqlalchemy.orm import Session
 
@@ -24,6 +23,7 @@ from app.core.config import get_settings
 from app.core.db import utcnow
 from app.core.email import queue_mail
 from app.core.errors import Conflict, RateLimited, Unauthorized, Unprocessable
+from app.core.qr import qr_svg
 from app.core.security import hash_token, verify_password
 from app.modules.audit import service as audit
 from app.modules.identity.models import MfaRecoveryCode, User, UserMfa
@@ -154,7 +154,7 @@ def start_setup(db: Session, user: User, *, password: str) -> SetupData:
     db.commit()
     uri = pyotp.TOTP(secret).provisioning_uri(name=user.email, issuer_name=ISSUER)
     # SVG bez stylów inline (CSP): czarne moduły na białym tle, czytelne w obu motywach.
-    qr = segno.make(uri, error="m").svg_inline(scale=5, border=2, dark="#000", light="#fff")
+    qr = qr_svg(uri, scale=5)
     return SetupData(secret=secret, otpauth_uri=uri, qr_svg=qr)
 
 

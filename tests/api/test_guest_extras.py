@@ -4,6 +4,7 @@ import re
 
 from sqlalchemy import select
 
+from app.core.qr import qr_svg
 from app.jobs.queue import Job
 from tests.api.test_guests import setup_household
 from tests.api.test_schedule import add, at
@@ -92,17 +93,15 @@ def test_gift_note_and_thanks(client, alice, wedding):
 
 
 def test_rsvp_qr_cards_and_link_qr(client, alice, wedding):
-    import segno
-
     w = f"{API}/weddings/{wedding['id']}"
     _, _, _, linked, *_ = setup_household(client, alice, wedding)
     client.post(f"{w}/households", headers=alice, json={"name": "Państwo Zając"})
 
     link = client.post(f"{w}/households/{linked['id']}/rsvp-link", headers=alice).json()
-    expected = segno.make(link["url"], error="m").svg_inline(
-        scale=4, border=2, dark="#000", light="#fff"
-    )
+    expected = qr_svg(link["url"], scale=4)
     assert link["qr_svg"] == expected  # kod QR koduje dokładnie adres z tokenem
+    # Wstawiany jako <img src="data:image/svg+xml…"> — bez xmlns przeglądarka go nie wyrenderuje.
+    assert 'xmlns="http://www.w3.org/2000/svg"' in link["qr_svg"]
     old_token = link["token"]
 
     # Podgląd: rodzina z aktywnym linkiem pominięta, bez tworzenia linków.
@@ -116,6 +115,7 @@ def test_rsvp_qr_cards_and_link_qr(client, alice, wedding):
     r = client.post(f"{w}/rsvp-qr", headers=alice, json={"dry_run": False})
     card = r.json()["cards"][0]
     assert card["qr_svg"].startswith("<svg")
+    assert 'xmlns="http://www.w3.org/2000/svg"' in card["qr_svg"]
     new_token = card["url"].rsplit("/", 1)[1]
     assert client.get(f"{API}/rsvp/{new_token}").json()["household_name"] == "Państwo Zając"
     assert client.get(f"{API}/rsvp/{old_token}").status_code == 200  # nietknięty
