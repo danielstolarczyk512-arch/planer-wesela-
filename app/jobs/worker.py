@@ -1,6 +1,10 @@
 """Proces worker: zadania z kolejki + okresowe utrzymanie (retencja, sprzątanie).
 
 Uruchomienie: python -m app.jobs.worker
+
+Tory (WP_WORKER_LANE): `all` — wszystkie zadania i utrzymanie (dev, jedyny worker);
+`fast` — tylko szybkie zadania (e-maile), bez utrzymania. W produkcji działają oba: OCR, AI
+i automat stołów (minuty) nie wstrzymują wtedy resetu hasła ani linków RSVP.
 """
 
 import signal
@@ -55,6 +59,15 @@ HANDLERS: dict[str, Handler] = {
     ai.EXTRACT_JOB: ai.run_offer_extraction,
     seating.AUTO_JOB: seating.run_auto_job,
 }
+
+
+# Zadania, które obsługuje tor `fast`: krótkie i pilne dla użytkownika.
+FAST_JOBS = frozenset({SEND_EMAIL_JOB})
+
+
+def lane_types(lane: str) -> frozenset[str] | None:
+    """Typy zadań toru; None = wszystkie."""
+    return FAST_JOBS if lane == "fast" else None
 
 
 def _backoff(attempts: int) -> timedelta:
@@ -127,10 +140,12 @@ def run_job(job_id: UUID, handlers: dict[str, Handler] | None = None) -> None:
             )
 
 
-def run_once(handlers: dict[str, Handler] | None = None) -> bool:
-    """Wykonuje jedno zadanie. Zwraca False, gdy kolejka jest pusta."""
+def run_once(
+    handlers: dict[str, Handler] | None = None, types: frozenset[str] | None = None
+) -> bool:
+    """Wykonuje jedno zadanie (z typów toru). Zwraca False, gdy kolejka jest pusta."""
     with get_sessionmaker()() as db:
-        job = claim_next(db)
+        job = claim_next(db, types)
         job_id = job.id if job else None
     if job_id is None:
         return False
@@ -197,17 +212,21 @@ def main() -> None:
 
     signal.signal(signal.SIGTERM, _stop)
     signal.signal(signal.SIGINT, _stop)
-    log.info("worker_started")
+    types = lane_types(settings.worker_lane)
+    log.info("worker_started", lane=settings.worker_lane)
     last_maintenance = 0.0
     while not stopping:
-        if time.monotonic() - last_maintenance > MAINTENANCE_INTERVAL.total_seconds():
+        if (
+            settings.worker_lane == "all"
+            and time.monotonic() - last_maintenance > MAINTENANCE_INTERVAL.total_seconds()
+        ):
             try:
                 run_maintenance()
             except Exception:
                 log.exception("maintenance_failed")
             last_maintenance = time.monotonic()
         try:
-            worked = run_once()
+            worked = run_once(types=types)
         except Exception:
             log.exception("worker_loop_error")
             worked = False

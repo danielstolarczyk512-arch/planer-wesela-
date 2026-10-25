@@ -8,6 +8,7 @@ from app.modules.aftercare.models import AfterCheck, Deliverable
 from app.modules.ai.models import AiRun
 from app.modules.audit.models import AuditLog, SecurityEvent
 from app.modules.budget.models import (
+    BudgetAssumptions,
     BudgetCategory,
     BudgetItem,
     Funder,
@@ -73,6 +74,7 @@ __all__ = [
     "AuditLog",
     "AuthSession",
     "Base",
+    "BudgetAssumptions",
     "BudgetCategory",
     "BudgetItem",
     "CalendarFeedToken",

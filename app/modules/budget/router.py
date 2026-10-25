@@ -26,6 +26,8 @@ from app.modules.budget.schemas import (
     GuestCost,
     GuestCostSource,
     HistoryEntry,
+    IndexationAssumptions,
+    IndexationAssumptionsIn,
     IndexationItem,
     IndexationOverview,
     ItemCreate,
@@ -593,8 +595,10 @@ def budget_indexation(
     wedding_id: UUID,
     principal: CurrentPrincipal,
     db: DbSession,
-    expected_rate: Annotated[float, Query(ge=0, le=0.5)] = indexation.DEFAULT_EXPECTED,
-    worst_rate: Annotated[float, Query(ge=0, le=0.5)] = indexation.DEFAULT_WORST,
+    expected_rate: Annotated[
+        float | None, Query(ge=0, le=0.5, description="Bez parametru — założenie zapisane")
+    ] = None,
+    worst_rate: Annotated[float | None, Query(ge=0, le=0.5)] = None,
 ) -> IndexationOverview:
     o = indexation.overview(
         db, principal, wedding_id, expected_rate=expected_rate, worst_rate=worst_rate
@@ -602,6 +606,11 @@ def budget_indexation(
     return IndexationOverview(
         expected_rate=o["expected_rate"],
         worst_rate=o["worst_rate"],
+        assumptions=IndexationAssumptions(
+            expected_rate=o["saved_expected_rate"],
+            worst_rate=o["saved_worst_rate"],
+            saved=o["assumptions_saved"],
+        ),
         wedding_day=o["wedding_day"],
         approximate=o["approximate"],
         today_total=Money(amount=o["today_total"]),
@@ -610,6 +619,24 @@ def budget_indexation(
         items=[_index_item(r) for r in o["items"]],
         reviews_soon=[_index_item(r) for r in o["reviews_soon"]],
     )
+
+
+@router.put(
+    f"{W}/budget/indexation/assumptions",
+    responses=_WRITE,
+    summary="Zapisanie założeń inflacji dla strażnika waloryzacji (wspólne dla Budżetu i Dziś)",
+)
+def save_indexation_assumptions(
+    wedding_id: UUID, body: IndexationAssumptionsIn, principal: CurrentPrincipal, db: DbSession
+) -> IndexationAssumptions:
+    expected, worst, saved = indexation.save_assumptions(
+        db,
+        principal,
+        wedding_id,
+        expected_rate=body.expected_rate,
+        worst_rate=body.worst_rate,
+    )
+    return IndexationAssumptions(expected_rate=expected, worst_rate=worst, saved=saved)
 
 
 @router.post(

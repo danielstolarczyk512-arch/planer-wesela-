@@ -34,10 +34,10 @@ Punkty wymagające decyzji właściciela są na końcu — nie zostały ruszone.
 4. **Nazwa „Dzień” → „Dzień ślubu”** i inne zmiany nawigacji — audyt zaleca najpierw test z parami.
 5. Strategia (cena 199 zł / 24 mies., pilotaż 8–12 par, katalog firm, AI) — decyzje biznesowe.
 
-## Otwarte technicznie (do zrobienia bez decyzji)
+## Otwarte technicznie — zrobione 23.10 (raport `raport-audyt-otwarte-techniczne.md`)
 
-- 4.3: rewizja programu w `ShiftIn` (podgląd przesunięcia jako blokada wersji).
-- Zapisywanie założeń waloryzacji na weselu.
-- Rozdzielenie wykonawców szybkich e-maili od OCR/AI.
-- `_prod_guards`: kontrola HTTPS publicznego URL, SMTP i jawnego `ai_enabled`.
-- CI jako obowiązkowa bramka PR.
+- ✅ 4.3: rewizja programu w `ShiftIn` (podgląd przesunięcia jako blokada wersji).
+- ✅ Zapisywanie założeń waloryzacji na weselu.
+- ✅ Rozdzielenie wykonawców szybkich e-maili od OCR/AI (`worker-fast`).
+- ✅ `_prod_guards`: kontrola HTTPS publicznego URL, SMTP i jawnego `ai_enabled`.
+- ✅ CI (`.github/workflows/ci.yml`); obowiązkowa bramka wymaga reguły gałęzi w ustawieniach GitHuba (właściciel).

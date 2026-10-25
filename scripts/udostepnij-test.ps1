@@ -44,7 +44,7 @@ try {
         if ($_.StartsWith("WP_PUBLIC_APP_URL=")) { "WP_PUBLIC_APP_URL=$url" } else { $_ }
     }
     [IO.File]::WriteAllLines($envFile, [string[]]$lines, $utf8)
-    & docker @compose up -d --force-recreate api worker | Out-Null
+    & docker @compose up -d --force-recreate api worker worker-fast | Out-Null
 
     Write-Host ""
     Write-Host "Gotowe. Wyslij koledze ten adres:  $url"

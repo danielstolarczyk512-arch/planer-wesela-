@@ -173,3 +173,23 @@ class FunderContribution(IdMixin, TimestampMixin, Base):
         CheckConstraint("amount > 0", name="amount_positive"),
         CheckConstraint("status IN ('confirmed', 'reported')", name="status"),
     )
+
+
+class BudgetAssumptions(TimestampMixin, Base):
+    """Założenia pary dla strażnika waloryzacji (inflacja roczna: prognoza i najgorszy przypadek).
+
+    Wspólne dla wszystkich urządzeń i ekranów (Budżet, Dziś). Brak wiersza = wartości domyślne.
+    """
+
+    __tablename__ = "budget_assumptions"
+
+    wedding_id: Mapped[UUID] = mapped_column(
+        ForeignKey("weddings.id", ondelete="CASCADE"), primary_key=True
+    )
+    expected_rate: Mapped[Decimal] = mapped_column(Numeric(4, 3))
+    worst_rate: Mapped[Decimal] = mapped_column(Numeric(4, 3))
+
+    __table_args__ = (
+        CheckConstraint("expected_rate >= 0 AND expected_rate <= 0.5", name="expected_rate"),
+        CheckConstraint("worst_rate >= 0 AND worst_rate <= 0.5", name="worst_rate"),
+    )

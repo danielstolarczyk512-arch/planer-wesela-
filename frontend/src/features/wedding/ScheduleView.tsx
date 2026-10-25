@@ -14,7 +14,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button as AriaButton, Form } from "react-aria-components";
 
 import { api, newIdempotencyKey, unwrap } from "../../api/client";
-import { userMessage } from "../../api/errors";
+import { ApiError, userMessage } from "../../api/errors";
 import type { components } from "../../api/schema";
 import { Button } from "../../components/Button";
 import { DateField, TimeField } from "../../components/DateField";
@@ -314,6 +314,8 @@ function ItemSheet({
           onClose={onClose}
         />
       )}
+      {/* Poza formularzem (klucz z wersją): komunikat o konflikcie przesunięcia przetrwa odświeżenie punktu. */}
+      {isOpen && item && <ShiftSection key={item.id} weddingId={weddingId} item={item} onDone={onClose} />}
     </Sheet>
   );
 }
@@ -483,7 +485,6 @@ function ItemForm({
           </Button>
         )}
       </Form>
-      {item && <ShiftSection weddingId={weddingId} item={item} onDone={onClose} />}
       {item && (
         <ConfirmDialog title="Usunąć punkt programu?" isOpen={confirmDelete} onOpenChange={setConfirmDelete}>
           <p>„{item.title}” zniknie z harmonogramu. Pozostałe punkty zostaną na swoich godzinach.</p>
@@ -662,14 +663,34 @@ function QueueSection({
   const path = { params: { path: { wedding_id: weddingId } } };
 
   const send = useCallback(
-    async (q: QueuedShift) => {
+    async (q: QueuedShift, revision?: string) => {
       await unwrap(
         api.POST("/api/v1/weddings/{wedding_id}/schedule/shift", {
           ...path,
-          body: { from_item_id: q.from_item_id, minutes: q.minutes, dry_run: false },
+          body: { from_item_id: q.from_item_id, minutes: q.minutes, dry_run: false, revision },
         }),
       );
       return removeShift(weddingId, q.id);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [weddingId],
+  );
+
+  const previewRevision = useCallback(
+    async (q: QueuedShift) => {
+      try {
+        const r = await unwrap(
+          api.POST("/api/v1/weddings/{wedding_id}/schedule/shift", {
+            ...path,
+            body: { from_item_id: q.from_item_id, minutes: q.minutes, dry_run: true },
+          }),
+        );
+        return r.revision;
+      } catch (e) {
+        // Usunięty punkt: rozstrzygnie sprawdzenie programu (konflikt do decyzji).
+        if (e instanceof ApiError && e.status === 404) return undefined;
+        throw e;
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [weddingId],
@@ -681,15 +702,27 @@ function QueueSection({
     setError(null);
     let left = readQueue(weddingId);
     let sent = 0;
+    let retries = 0;
     try {
       while (left.length) {
         const q = left[0]!;
+        // Rewizja przed sprawdzeniem: jeśli ktoś zmieni program między sprawdzeniem a wysyłką,
+        // serwer odrzuci przesunięcie (409) i sprawdzimy jeszcze raz.
+        const revision = await previewRevision(q);
         const server = await unwrap(api.GET("/api/v1/weddings/{wedding_id}/schedule", path));
         if (!canSendSafely(q, server)) {
           setConflict({ shift: q, serverStart: server.find((i) => i.id === q.from_item_id)?.starts_at ?? null });
           break;
         }
-        left = await send(q);
+        try {
+          left = await send(q, revision);
+        } catch (e) {
+          if (e instanceof ApiError && e.code === "conflict.version_mismatch" && retries < 3) {
+            retries += 1;
+            continue;
+          }
+          throw e;
+        }
         sent += 1;
       }
     } catch (e) {
@@ -703,7 +736,7 @@ function QueueSection({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [weddingId, send, onChange, queryClient, toast]);
+  }, [weddingId, send, previewRevision, onChange, queryClient, toast]);
 
   // Powrót sieci (albo rozwiązany konflikt): jedna próba wysyłki. Po błędzie nie ponawiamy w pętli —
   // „Spróbuj ponownie” albo kolejna zmiana sieci. Najnowsza funkcja w refie, efekt zależy tylko od stanu.
@@ -783,12 +816,13 @@ function ShiftSection({ weddingId, item, onDone }: { weddingId: string; item: Sc
   const [error, setError] = useState<string | null>(null);
 
   const run = useMutation({
-    mutationFn: async ({ minutes, dryRun }: { minutes: number; dryRun: boolean }) => ({
+    mutationFn: async ({ minutes, dryRun, revision }: { minutes: number; dryRun: boolean; revision?: string }) => ({
       minutes,
       ...(await unwrap(
         api.POST("/api/v1/weddings/{wedding_id}/schedule/shift", {
           params: { path: { wedding_id: weddingId } },
-          body: { from_item_id: item.id, minutes, dry_run: dryRun },
+          // Zatwierdzenie odsyła rewizję z podglądu: zmiana programu w międzyczasie → 409.
+          body: { from_item_id: item.id, minutes, dry_run: dryRun, revision },
         }),
       )),
     }),
@@ -865,7 +899,7 @@ function ShiftSection({ weddingId, item, onDone }: { weddingId: string; item: Sc
               <Button variant="secondary" onPress={() => setPreview(null)}>
                 Anuluj
               </Button>
-              <Button pending={run.isPending} onPress={() => run.mutate({ minutes: preview.minutes, dryRun: false })}>
+              <Button pending={run.isPending} onPress={() => run.mutate({ minutes: preview.minutes, dryRun: false, revision: preview.revision })}>
                 Przesuń
               </Button>
             </div>

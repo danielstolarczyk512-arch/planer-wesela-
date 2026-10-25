@@ -1,0 +1,106 @@
+# Bramka jakości dla każdego pusha i pull requesta (audyt 2026-10-23: „CI jako obowiązkowa bramka PR”).
+# Te same polecenia co lokalnie (CLAUDE.md, „Weryfikacja”); E2E (Playwright, 8 profili) zostaje lokalne —
+# wymaga pełnego środowiska Docker z danymi demo (`task web:ci`).
+# Wymaganie zielonego CI przed scaleniem: GitHub → Settings → Branches → reguła dla `main`
+# (Require status checks: „backend”, „frontend”, „sekrety”).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    services:
+      # Baza tylko dla testów w CI (dane i hasło jak w compose dev — nie są sekretem).
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: wedding
+          POSTGRES_PASSWORD: wedding  # gitleaks:allow - baza testowa CI
+          POSTGRES_DB: wedding_test
+        ports: ["5433:5432"]
+        options: >-
+          --health-cmd "pg_isready -U wedding -d wedding_test"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tesseract (testy OCR, jak w obrazie Dockera)
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends tesseract-ocr tesseract-ocr-pol
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --frozen
+      - name: Ruff (lint i format)
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - run: uv run mypy app
+      - name: Bandit
+        run: uv run bandit -q -r app -c pyproject.toml
+      - name: Licencje (blokada AGPL/SSPL, ADR-0006)
+        run: >-
+          uv run pip-licenses --from=mixed
+          --fail-on="GNU Affero General Public License v3;GNU Affero General Public License v3 or later (AGPLv3+);Server Side Public License;SSPL"
+      - name: Testy
+        run: uv run pytest -q -p no:cacheprovider
+      - name: OpenAPI zgodne z kodem (docs/openapi.json)
+        run: |
+          uv run python -m scripts.export_openapi
+          git diff --exit-code docs/openapi.json
+      - name: Znane podatności w zależnościach
+        run: uv run pip-audit
+
+  frontend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Typy API zgodne ze specyfikacją
+        run: |
+          npm run api:types
+          git diff --exit-code src/api/schema.d.ts
+      - run: npx tsc -b --noEmit
+      - run: npx eslint src e2e
+      - run: npx vitest run
+      - run: npm run licenses
+      - run: npm run build
+      - name: Budżet startu (≤ 170 KB gzip)
+        run: npm run budget
+      - run: npm audit --omit=dev --audit-level=high
+
+  sekrety:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read  # lista commitów PR do skanu
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: "false"

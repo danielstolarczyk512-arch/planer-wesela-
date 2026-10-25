@@ -125,3 +125,25 @@ def test_long_job_keeps_its_lock(monkeypatch):
     assert seen[1] > seen[0]
     with get_sessionmaker()() as db:
         assert db.scalars(select(Job)).one().status == "succeeded"
+
+
+def test_fast_lane_takes_only_emails():
+    """Audyt 2026-10-23: osobny worker e-maili — długi OCR/AI nie wstrzymuje resetu hasła."""
+    from app.core.email import SEND_EMAIL_JOB
+
+    done: list[str] = []
+    handlers = {
+        "ocr": lambda _db, _p: done.append("ocr"),
+        SEND_EMAIL_JOB: lambda _db, _p: done.append("email"),
+    }
+    with get_sessionmaker()() as db:
+        enqueue(db, "ocr", {}, run_after=utcnow() - timedelta(minutes=5))  # starsze w kolejce
+        enqueue(db, SEND_EMAIL_JOB, {})
+        db.commit()
+    fast = worker.lane_types("fast")
+    assert worker.run_once(handlers, fast)
+    assert done == ["email"]
+    assert not worker.run_once(handlers, fast)  # OCR czeka na worker „all”
+    assert worker.lane_types("all") is None
+    assert worker.run_once(handlers, worker.lane_types("all"))
+    assert done == ["email", "ocr"]

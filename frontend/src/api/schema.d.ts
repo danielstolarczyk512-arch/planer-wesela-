@@ -1265,6 +1265,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/weddings/{wedding_id}/budget/indexation/assumptions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Zapisanie założeń inflacji dla strażnika waloryzacji (wspólne dla Budżetu i Dziś) */
+        put: operations["save_indexation_assumptions_api_v1_weddings__wedding_id__budget_indexation_assumptions_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/weddings/{wedding_id}/funders/{funder_id}/contributions/{contribution_id}/confirm": {
         parameters: {
             query?: never;
@@ -6103,6 +6120,31 @@ export interface components {
             /** Message */
             message: string;
         };
+        /** IndexationAssumptions */
+        IndexationAssumptions: {
+            /** Expected Rate */
+            expected_rate: number;
+            /** Worst Rate */
+            worst_rate: number;
+            /**
+             * Saved
+             * @description Czy para zapisała własne założenia (inaczej domyślne)
+             */
+            saved: boolean;
+        };
+        /** IndexationAssumptionsIn */
+        IndexationAssumptionsIn: {
+            /**
+             * Expected Rate
+             * @description Prognozowana inflacja roczna
+             */
+            expected_rate: number;
+            /**
+             * Worst Rate
+             * @description Inflacja roczna w najgorszym przypadku
+             */
+            worst_rate: number;
+        };
         /** IndexationItem */
         IndexationItem: {
             /**
@@ -6135,10 +6177,15 @@ export interface components {
         };
         /** IndexationOverview */
         IndexationOverview: {
-            /** Expected Rate */
+            /**
+             * Expected Rate
+             * @description Stopa użyta w wyliczeniu (podana albo zapisana)
+             */
             expected_rate: number;
             /** Worst Rate */
             worst_rate: number;
+            /** @description Założenia zapisane na weselu */
+            assumptions: components["schemas"]["IndexationAssumptions"];
             /** Wedding Day */
             wedding_day: string | null;
             /** Approximate */
@@ -8453,11 +8500,21 @@ export interface components {
              * @default true
              */
             dry_run: boolean;
+            /**
+             * Revision
+             * @description Rewizja programu z podglądu; inna niż obecna → 409 conflict.version_mismatch
+             */
+            revision?: string | null;
         };
         /** ShiftOut */
         ShiftOut: {
             /** Dry Run */
             dry_run: boolean;
+            /**
+             * Revision
+             * @description Rewizja programu (po zapisie — nowa)
+             */
+            revision: string;
             /** Changes */
             changes: components["schemas"]["ShiftChange"][];
             /** Conflicts After */
@@ -14557,8 +14614,9 @@ export interface operations {
     budget_indexation_api_v1_weddings__wedding_id__budget_indexation_get: {
         parameters: {
             query?: {
-                expected_rate?: number;
-                worst_rate?: number;
+                /** @description Bez parametru — założenie zapisane */
+                expected_rate?: number | null;
+                worst_rate?: number | null;
             };
             header?: never;
             path: {
@@ -14599,6 +14657,67 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
                 };
+            };
+        };
+    };
+    save_indexation_assumptions_api_v1_weddings__wedding_id__budget_indexation_assumptions_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IndexationAssumptionsIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IndexationAssumptions"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

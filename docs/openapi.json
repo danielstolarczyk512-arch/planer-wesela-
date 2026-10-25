@@ -5843,22 +5843,36 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "number",
-              "maximum": 0.5,
-              "minimum": 0,
-              "default": 0.05,
+              "anyOf": [
+                {
+                  "type": "number",
+                  "maximum": 0.5,
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Bez parametru — założenie zapisane",
               "title": "Expected Rate"
-            }
+            },
+            "description": "Bez parametru — założenie zapisane"
           },
           {
             "name": "worst_rate",
             "in": "query",
             "required": false,
             "schema": {
-              "type": "number",
-              "maximum": 0.5,
-              "minimum": 0,
-              "default": 0.1,
+              "anyOf": [
+                {
+                  "type": "number",
+                  "maximum": 0.5,
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Worst Rate"
             }
           }
@@ -5889,6 +5903,69 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/weddings/{wedding_id}/budget/indexation/assumptions": {
+      "put": {
+        "tags": [
+          "budżet"
+        ],
+        "summary": "Zapisanie założeń inflacji dla strażnika waloryzacji (wspólne dla Budżetu i Dziś)",
+        "operationId": "save_indexation_assumptions_api_v1_weddings__wedding_id__budget_indexation_assumptions_put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "wedding_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Wedding Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IndexationAssumptionsIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IndexationAssumptions"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Brak uwierzytelnienia"
+          },
+          "404": {
+            "description": "Nie znaleziono lub brak dostępu"
+          },
+          "403": {
+            "description": "Rola tylko do odczytu"
+          },
+          "409": {
+            "description": "Konflikt"
+          },
+          "422": {
+            "description": "Błąd walidacji"
           }
         }
       }
@@ -25065,6 +25142,54 @@
         ],
         "title": "ImportRowError"
       },
+      "IndexationAssumptions": {
+        "properties": {
+          "expected_rate": {
+            "type": "number",
+            "title": "Expected Rate"
+          },
+          "worst_rate": {
+            "type": "number",
+            "title": "Worst Rate"
+          },
+          "saved": {
+            "type": "boolean",
+            "title": "Saved",
+            "description": "Czy para zapisała własne założenia (inaczej domyślne)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "expected_rate",
+          "worst_rate",
+          "saved"
+        ],
+        "title": "IndexationAssumptions"
+      },
+      "IndexationAssumptionsIn": {
+        "properties": {
+          "expected_rate": {
+            "type": "number",
+            "maximum": 0.5,
+            "minimum": 0.0,
+            "title": "Expected Rate",
+            "description": "Prognozowana inflacja roczna"
+          },
+          "worst_rate": {
+            "type": "number",
+            "maximum": 0.5,
+            "minimum": 0.0,
+            "title": "Worst Rate",
+            "description": "Inflacja roczna w najgorszym przypadku"
+          }
+        },
+        "type": "object",
+        "required": [
+          "expected_rate",
+          "worst_rate"
+        ],
+        "title": "IndexationAssumptionsIn"
+      },
       "IndexationItem": {
         "properties": {
           "item_id": {
@@ -25163,11 +25288,16 @@
         "properties": {
           "expected_rate": {
             "type": "number",
-            "title": "Expected Rate"
+            "title": "Expected Rate",
+            "description": "Stopa użyta w wyliczeniu (podana albo zapisana)"
           },
           "worst_rate": {
             "type": "number",
             "title": "Worst Rate"
+          },
+          "assumptions": {
+            "$ref": "#/components/schemas/IndexationAssumptions",
+            "description": "Założenia zapisane na weselu"
           },
           "wedding_day": {
             "anyOf": [
@@ -25217,6 +25347,7 @@
         "required": [
           "expected_rate",
           "worst_rate",
+          "assumptions",
           "wedding_day",
           "approximate",
           "today_total",
@@ -31452,6 +31583,19 @@
             "type": "boolean",
             "title": "Dry Run",
             "default": true
+          },
+          "revision": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revision",
+            "description": "Rewizja programu z podglądu; inna niż obecna → 409 conflict.version_mismatch"
           }
         },
         "type": "object",
@@ -31466,6 +31610,11 @@
           "dry_run": {
             "type": "boolean",
             "title": "Dry Run"
+          },
+          "revision": {
+            "type": "string",
+            "title": "Revision",
+            "description": "Rewizja programu (po zapisie — nowa)"
           },
           "changes": {
             "items": {
@@ -31485,6 +31634,7 @@
         "type": "object",
         "required": [
           "dry_run",
+          "revision",
           "changes",
           "conflicts_after"
         ],

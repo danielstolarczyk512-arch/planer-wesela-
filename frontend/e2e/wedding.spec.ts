@@ -339,6 +339,22 @@ test("Harmonogram dnia: typowy program, przesunięcie, nowy punkt", async ({ pag
     await confirm.getByRole("button", { name: "Przesuń" }).click();
     await expect(page.getByText(/^Przesunięto \d+ punkt/)).toBeVisible();
 
+    // Nieaktualny podgląd: ktoś zmienia program między podglądem a zatwierdzeniem → nic się nie przesuwa.
+    await page.getByRole("button", { name: /Krojenie tortu/ }).click();
+    await item.getByRole("button", { name: "+15 min" }).click();
+    await expect(confirm.getByText("Krojenie tortu")).toBeVisible();
+    const schedule = await (await request.get(`/api/v1/weddings/${weddingId}/schedule`, { headers: auth })).json();
+    const cake = schedule.find((i: { title: string }) => i.title === "Krojenie tortu");
+    const patched = await request.patch(`/api/v1/weddings/${weddingId}/schedule/${cake.id}`, {
+      headers: { ...auth, "If-Match": `"${cake.version}"` },
+      data: { location: "Sala główna" },
+    });
+    expect(patched.ok()).toBeTruthy();
+    await confirm.getByRole("button", { name: "Przesuń" }).click();
+    await expect(item.getByText(/Ktoś zmienił te dane w międzyczasie/)).toBeVisible();
+    await item.getByRole("button", { name: "Zamknij" }).click();
+    await expect(item).toHaveCount(0);
+
     await page.getByRole("button", { name: "Dodaj punkt" }).click();
     const add = page.getByRole("dialog", { name: "Nowy punkt programu" });
     await add.getByLabel("Co się dzieje?").fill("Pokaz fajerwerków");
@@ -1173,6 +1189,8 @@ test("Goście: lista do Excela (CSV) bez uwag dietetycznych i z nimi", async ({ 
   test.skip(!["390-light", "1280-dark"].includes(test.info().project.name), "jeden telefon, jeden komputer");
   await openDemoWedding(page);
   await tab(page, "Goście").click();
+  // Rzadsze działania są w rozwijanym menu „Więcej działań”.
+  await page.getByText("Więcej działań", { exact: true }).click();
   await page.getByRole("button", { name: "Pobierz do Excela (CSV)" }).click();
   const dialog = page.getByRole("alertdialog", { name: "Lista gości do Excela" }).or(page.getByRole("dialog", { name: "Lista gości do Excela" }));
   await expectAccessible(page);
@@ -1551,9 +1569,13 @@ test("Budżet: podwyżka ceny w umowie i trzy warianty kosztu", async ({ page, r
     await expect(page.getByText(/z limitem 5%/)).toBeVisible();
     await expectAccessible(page);
     await expectNoHorizontalScroll(page);
+    // Założenia zapisują się na weselu: Dziś liczy tak samo jak Budżet.
+    await page.getByText("Założenia", { exact: true }).click();
+    await page.getByRole("radiogroup", { name: "Najgorszy przypadek: inflacja rocznie" }).getByText("15%").click();
+    await expect(page.getByText("Zapisano założenia", { exact: false })).toBeVisible();
     // Ekran Dziś: kafelek kosztu podpowiada najgorszy wariant i prowadzi do podwyżek w budżecie.
     await page.goto(`/w/${weddingId}`);
-    await page.getByRole("link", { name: /z podwyżkami cen do 42\s000\szł/ }).click();
+    await page.getByRole("link", { name: /z podwyżkami cen do 42\s000\szł.*15% rocznie/ }).click();
     await expect(page.getByRole("heading", { name: "Podwyżki cen w umowach" })).toBeVisible();
   } finally {
     await request.delete(`/api/v1/weddings/${weddingId}`, { headers: auth });

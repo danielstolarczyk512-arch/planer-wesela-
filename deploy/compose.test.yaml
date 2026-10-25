@@ -13,6 +13,7 @@ services:
   migrate: *test-env
   api: *test-env
   worker: *test-env
+  worker-fast: *test-env
 
   # Bez dostawcy SMTP e-maile (weryfikacja adresu, reset hasła, linki RSVP) trafiają do Mailpit.
   # Podgląd tylko z laptopa: http://127.0.0.1:8026 — linki można przekazać testerom ręcznie.

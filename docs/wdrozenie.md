@@ -10,6 +10,7 @@ internet ──443──▶ Caddy (TLS, nagłówki, limit treści)
                     ▼
                   api (uvicorn, WEB_CONCURRENCY procesów) ──┐
                   worker (kolejka, utrzymanie, OCR, AI) ────┤ sieć backend (bez internetu)
+                  worker-fast (tylko e-maile) ──────────────┤
                                                              ▼
                                                    PostgreSQL 17 (wolumen)
 worker ──sieć scan──▶ clamav (clamd, skan plików przed pobraniem/odczytem; sygnatury z internetu)
@@ -21,6 +22,12 @@ AI: wyłączone na start albo Ollama na serwerze z GPU / dostawca z umową powie
 - Na zewnątrz otwarte są tylko porty 80 i 443 (Caddy). Baza nie ma portu i nie ma dostępu do internetu.
 - Kontenery aplikacji działają z systemem plików tylko do odczytu (`read_only`, `/tmp` w pamięci), bez uprawnień jądra (`cap_drop: ALL`) i bez eskalacji (`no-new-privileges`), jako użytkownik bez uprawnień administratora.
 - `WP_ENV=prod` blokuje start z przykładowym sekretem JWT i z włączoną dokumentacją API, a `scripts/seed.py` nie zadziała.
+  Od 2026-10-23 także bez: `WP_PUBLIC_APP_URL` z `https://`, jawnie ustawionego `WP_SMTP_HOST`
+  (zdalny serwer SMTP wymaga `WP_SMTP_STARTTLS=true`; bez szyfrowania tylko `localhost` i `mailpit`
+  w sieci Dockera), jawnie ustawionego `WP_AI_ENABLED` i z dublerem testowym jako `WP_AI_PROVIDER`.
+- **Dwa workery:** `worker` (wszystkie zadania i utrzymanie) oraz `worker-fast` (`WP_WORKER_LANE=fast`,
+  tylko e-maile). Długi OCR lub AI (do 10 min) nie wstrzymuje resetu hasła, weryfikacji adresu
+  ani linków RSVP. W dev wystarcza jeden worker (`WP_WORKER_LANE=all`, domyślnie).
 - **Skanowanie plików (ClamAV):** każdy wgrany plik czeka w stanie „sprawdzanie” (bez pobierania
   i odczytu tekstu), aż worker sprawdzi go w `clamd`. Zainfekowany: wersja oznaczona „zablokowany”,
   plik usunięty z magazynu, wpis w audycie. Skaner niedostępny: zadanie ponawiane (do ok. 2 dób),
@@ -68,7 +75,7 @@ curl -fsS https://twojadomena.pl/health/ready
 
 Aplikacja webowa (`frontend/dist`) i API działają pod jedną domeną (Caddy: `/api/*` → API, reszta → aplikacja), bo ciasteczko sesji ma `SameSite=Strict`. Przy każdej aktualizacji frontendu najpierw buduj `dist`, potem restart Caddy nie jest potrzebny (pliki są montowane).
 
-Kolejność startu wymusza compose: baza → migracje (`migrate`) → api i worker → Caddy.
+Kolejność startu wymusza compose: baza → migracje (`migrate`) → api, worker i worker-fast → Caddy.
 
 **Kubełek S3:** prywatny (blokada publicznego dostępu), szyfrowanie po stronie serwera, wersjonowanie obiektów albo kopia do drugiego kubełka, klucz dostępu z uprawnieniami tylko do tego kubełka.
 

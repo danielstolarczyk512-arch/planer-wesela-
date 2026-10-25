@@ -4,6 +4,7 @@ Przepływ przez prawdziwą kolejkę i worker; skaner zastąpiony dublerem (wynik
 Test z prawdziwym clamd (plik EICAR) — tylko gdy WP_TEST_CLAMAV_HOST wskazuje działający skaner.
 """
 
+import base64
 import os
 
 import pytest
@@ -140,6 +141,51 @@ def test_production_requires_scanner(monkeypatch):
     monkeypatch.setenv("WP_JWT_SECRET", "p" * 48)
     monkeypatch.delenv("WP_CLAMAV_HOST", raising=False)
     with pytest.raises(ValidationError, match="WP_CLAMAV_HOST"):
+        Settings()
+
+
+@pytest.mark.parametrize(
+    ("env", "message"),
+    [
+        ({"WP_PUBLIC_APP_URL": "http://naszdzien.pl"}, "https://"),
+        ({"WP_SMTP_HOST": ""}, "WP_SMTP_HOST"),
+        ({"WP_SMTP_HOST": "smtp.example.com", "WP_SMTP_STARTTLS": "false"}, "STARTTLS"),
+        ({"WP_AI_ENABLED": None}, "WP_AI_ENABLED"),
+        ({"WP_AI_ENABLED": "true", "WP_AI_PROVIDER": "fake"}, "dublerem"),
+    ],
+)
+def test_production_guards_url_mail_ai(monkeypatch, tmp_path, env, message):
+    from pydantic import ValidationError
+
+    from app.core.config import Settings
+
+    monkeypatch.chdir(tmp_path)  # bez lokalnego .env
+    good = {
+        "WP_ENV": "prod",
+        "WP_EXPOSE_DOCS": "false",
+        "WP_JWT_SECRET": "p" * 48,
+        "WP_DATA_ENCRYPTION_KEY": base64.b64encode(os.urandom(32)).decode(),
+        "WP_CLAMAV_HOST": "clamav",
+        "WP_PUBLIC_APP_URL": "https://naszdzien.pl",
+        "WP_SMTP_HOST": "smtp.example.com",
+        "WP_SMTP_STARTTLS": "true",
+        "WP_AI_ENABLED": "false",
+        "WP_AI_PROVIDER": "ollama",
+    }
+    for key, value in good.items():
+        monkeypatch.setenv(key, value)
+    assert Settings().env == "prod"  # poprawna konfiguracja przechodzi
+    monkeypatch.setenv("WP_SMTP_HOST", "mailpit")
+    monkeypatch.setenv("WP_SMTP_STARTTLS", "false")
+    assert Settings().smtp_host == "mailpit"  # serwer testowy z Mailpit w sieci Dockera
+    for key, value in good.items():
+        monkeypatch.setenv(key, value)
+    for key, value in env.items():
+        if value is None:
+            monkeypatch.delenv(key, raising=False)
+        else:
+            monkeypatch.setenv(key, value)
+    with pytest.raises(ValidationError, match=message):
         Settings()
 
 

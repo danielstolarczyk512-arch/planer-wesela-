@@ -1,9 +1,17 @@
-/**
- * Domyślne założenia podwyżek cen z umów: wspólne dla karty w Budżecie i podpowiedzi na Dziś,
- * żeby oba ekrany liczyły ten sam wariant (audyt 2026-10-23, 4.4).
- */
-export const EXPECTED_RATE = "0.05";
-export const WORST_RATE = "0.10";
+import { useQuery } from "@tanstack/react-query";
 
-/** „10%” z „0.10”. */
+import { api, unwrap } from "../../api/client";
+import { keys } from "./data";
+
+/** „10%” z „0.10” (stopy waloryzacji; zapisane założenia zwraca API razem z wyliczeniem). */
 export const percent = (rate: string) => `${Math.round(Number(rate) * 100)}%`;
+
+/** Wyliczenie wg założeń zapisanych na weselu (wspólne z ekranem Dziś). */
+export function useIndexation(weddingId: string) {
+  return useQuery({
+    queryKey: [...keys.budget(weddingId), "indexation"],
+    queryFn: ({ signal }) =>
+      unwrap(api.GET("/api/v1/weddings/{wedding_id}/budget/indexation", { params: { path: { wedding_id: weddingId } }, signal })),
+    placeholderData: (previous) => previous,
+  });
+}

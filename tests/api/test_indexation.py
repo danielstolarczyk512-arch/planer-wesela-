@@ -6,6 +6,7 @@ from decimal import Decimal
 from app.core import clock
 from app.modules.budget.indexation import growth, increases, years_between
 from tests.api.test_offers import pln
+from tests.api.test_workspace import invite_and_accept
 
 API = "/api/v1"
 
@@ -104,3 +105,39 @@ def test_overview_three_variants_and_reviews(client, alice, monkeypatch):
     zero = client.get(f"{url}/budget/indexation?expected_rate=0&worst_rate=0", headers=alice)
     assert zero.json()["expected_total"] == pln("66000.00")
     assert client.get(f"{url}/budget/indexation?worst_rate=2", headers=alice).status_code == 422
+
+
+def test_assumptions_saved_on_wedding(client, alice, bob):
+    w = client.post(
+        f"{API}/weddings",
+        headers=alice,
+        json={"name": "W", "ceremony_type": "civil", "wedding_date": "2028-07-01"},
+    ).json()
+    url = f"{API}/weddings/{w['id']}/budget/indexation"
+    first = client.get(url, headers=alice).json()
+    assert first["assumptions"] == {"expected_rate": 0.05, "worst_rate": 0.1, "saved": False}
+    assert (first["expected_rate"], first["worst_rate"]) == (0.05, 0.1)
+
+    r = client.put(
+        f"{url}/assumptions", headers=alice, json={"expected_rate": 0.07, "worst_rate": 0.15}
+    )
+    assert r.status_code == 200, r.text
+    assert r.json() == {"expected_rate": 0.07, "worst_rate": 0.15, "saved": True}
+    # Bez parametrów liczymy wg zapisanych; parametry to podgląd innego wariantu bez zapisu.
+    saved = client.get(url, headers=alice).json()
+    assert (saved["expected_rate"], saved["worst_rate"]) == (0.07, 0.15)
+    peek = client.get(f"{url}?expected_rate=0.03", headers=alice).json()
+    assert (peek["expected_rate"], peek["worst_rate"]) == (0.03, 0.15)
+    assert peek["assumptions"]["expected_rate"] == 0.07
+
+    bad = client.put(
+        f"{url}/assumptions", headers=alice, json={"expected_rate": 0.7, "worst_rate": 0.1}
+    )
+    assert bad.status_code == 422
+    # Osoba z podglądem widzi założenia, ale ich nie zmienia.
+    invite_and_accept(client, alice, bob, w, "bob@example.com", "viewer")
+    assert client.get(url, headers=bob).json()["assumptions"]["saved"] is True
+    denied = client.put(
+        f"{url}/assumptions", headers=bob, json={"expected_rate": 0.03, "worst_rate": 0.08}
+    )
+    assert denied.status_code == 403

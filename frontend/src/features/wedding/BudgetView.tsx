@@ -151,7 +151,7 @@ export function BudgetView() {
         </Card>
       </div>
 
-      <IndexationCard weddingId={id} />
+      <IndexationCard weddingId={id} canWrite={canWrite} />
       <CashflowCard weddingId={id} />
       <GuestCostCard weddingId={id} />
 

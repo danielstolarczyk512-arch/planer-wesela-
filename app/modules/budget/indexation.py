@@ -6,7 +6,9 @@ wg wskaźnika inflacji GUS” albo „wg cennika z roku wesela”. Liczymy trzy 
 - prognoza: niezapłacona część pozycji z klauzulą rośnie o założoną inflację roczną
   przez lata od ustalenia ceny do ślubu; przy limicie — nie więcej niż limit;
 - najgorszy przypadek: wyższa założona inflacja albo pełny limit.
-Stopy to założenia pary (domyślnie 5% i 10% rocznie), nie dane GUS. Zapłacone kwoty są stałe.
+Stopy to założenia pary (domyślnie 5% i 10% rocznie), nie dane GUS — zapisane na weselu
+(`budget_assumptions`), żeby Budżet, Dziś i każde urządzenie liczyły to samo.
+Zapłacone kwoty są stałe.
 """
 
 from datetime import date, timedelta
@@ -18,8 +20,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core import clock
+from app.modules.audit import service as audit
 from app.modules.budget import service as budget
-from app.modules.budget.models import BudgetItem
+from app.modules.budget.models import BudgetAssumptions, BudgetItem
 from app.modules.identity.service import Principal
 from app.modules.workspace.models import Wedding
 from app.modules.workspace.permissions import Action, authorize
@@ -59,15 +62,55 @@ def increases(
     return expected.quantize(CENT, ROUND_HALF_UP), worst.quantize(CENT, ROUND_HALF_UP)
 
 
+def assumptions(db: Session, wedding_id: UUID) -> tuple[float, float, bool]:
+    """Zapisane stopy (prognoza, najgorszy przypadek) albo domyślne; na końcu: czy zapisane."""
+    row = db.get(BudgetAssumptions, wedding_id)
+    if row is None:
+        return DEFAULT_EXPECTED, DEFAULT_WORST, False
+    return float(row.expected_rate), float(row.worst_rate), True
+
+
+def save_assumptions(
+    db: Session,
+    principal: Principal,
+    wedding_id: UUID,
+    *,
+    expected_rate: float,
+    worst_rate: float,
+) -> tuple[float, float, bool]:
+    authorize(db, principal.user.id, wedding_id, Action.WRITE)
+    row = db.get(BudgetAssumptions, wedding_id)
+    if row is None:
+        row = BudgetAssumptions(wedding_id=wedding_id)
+        db.add(row)
+    row.expected_rate = Decimal(str(expected_rate))
+    row.worst_rate = Decimal(str(worst_rate))
+    audit.record(
+        db,
+        actor_type="user",
+        actor_id=principal.user.id,
+        entity_type="budget_assumptions",
+        entity_id=wedding_id,
+        wedding_id=wedding_id,
+        action="update",
+    )
+    db.commit()
+    return assumptions(db, wedding_id)
+
+
 def overview(
     db: Session,
     principal: Principal,
     wedding_id: UUID,
     *,
-    expected_rate: float = DEFAULT_EXPECTED,
-    worst_rate: float = DEFAULT_WORST,
+    expected_rate: float | None = None,
+    worst_rate: float | None = None,
 ) -> dict[str, Any]:
+    """Podane stopy (np. podgląd innego wariantu) mają pierwszeństwo przed zapisanymi."""
     authorize(db, principal.user.id, wedding_id, Action.READ)
+    saved_expected, saved_worst, saved = assumptions(db, wedding_id)
+    expected_rate = saved_expected if expected_rate is None else expected_rate
+    worst_rate = saved_worst if worst_rate is None else worst_rate
     wedding = db.get_one(Wedding, wedding_id)
     day = wedding.wedding_date or wedding.planned_month
     counts = budget.guest_counts(db, wedding)
@@ -114,6 +157,9 @@ def overview(
     return {
         "expected_rate": expected_rate,
         "worst_rate": worst_rate,
+        "saved_expected_rate": saved_expected,
+        "saved_worst_rate": saved_worst,
+        "assumptions_saved": saved,
         "wedding_day": day,
         "approximate": wedding.wedding_date is None and day is not None,
         "today_total": today_total,

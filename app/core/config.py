@@ -8,6 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Znacznik wartości przykładowej (nie sekret).
 _DEV_SECRET_MARKER = "change-me"  # noqa: S105  # nosec B105
+# Serwery SMTP, z którymi połączenie nie opuszcza maszyny ani sieci Dockera (bez STARTTLS w prod).
+_LOCAL_SMTP_HOSTS = frozenset({"localhost", "127.0.0.1", "::1", "mailpit"})
 
 
 class Settings(BaseSettings):
@@ -85,6 +87,9 @@ class Settings(BaseSettings):
     # "fake" i "fake_external" to dublery do testów (bez sieci). Zewnętrzny dostawca: później.
     ai_enabled: bool = True
     ai_provider: Literal["ollama", "fake", "fake_external"] = "ollama"
+    # Tor workera (app/jobs/worker.py): "all" — wszystkie zadania i utrzymanie; "fast" — tylko
+    # e-maile (w produkcji osobny kontener, żeby OCR/AI nie wstrzymywały wysyłki).
+    worker_lane: Literal["all", "fast"] = "all"
     ollama_url: str = "http://localhost:11434"
     ollama_model: str = "qwen2.5:7b-instruct"
     ai_timeout_seconds: int = 600
@@ -120,7 +125,27 @@ class Settings(BaseSettings):
                 raise ValueError("W produkcji ustaw WP_EXPOSE_DOCS=false")
             if not self.clamav_host:
                 raise ValueError("W produkcji ustaw WP_CLAMAV_HOST (skanowanie plików, ClamAV)")
+            self._prod_url_mail_ai()
         return self
+
+    def _prod_url_mail_ai(self) -> None:
+        # Linki w e-mailach i kodach QR prowadzą do GUI: bez HTTPS ciasteczko sesji (Secure)
+        # nie działa, a tokeny w linkach szłyby otwartym tekstem.
+        if not self.public_app_url.startswith("https://"):
+            raise ValueError("W produkcji WP_PUBLIC_APP_URL musi zaczynać się od https://")
+        if "smtp_host" not in self.model_fields_set or not self.smtp_host:
+            raise ValueError("W produkcji ustaw WP_SMTP_HOST (wysyłka e-maili)")
+        # Bez szyfrowania tylko do serwera pocztowego na tej samej maszynie lub w sieci Dockera
+        # (przekaźnik, Mailpit na serwerze testowym) — e-maile zawierają linki z tokenami.
+        if not self.smtp_starttls and self.smtp_host not in _LOCAL_SMTP_HOSTS:
+            raise ValueError(
+                "W produkcji zdalny serwer SMTP wymaga szyfrowania: ustaw WP_SMTP_STARTTLS=true"
+            )
+        # AI przetwarza umowy i oferty: decyzja o włączeniu ma być świadoma (hosting, DPA).
+        if "ai_enabled" not in self.model_fields_set:
+            raise ValueError("W produkcji ustaw jawnie WP_AI_ENABLED (true albo false)")
+        if self.ai_enabled and self.ai_provider != "ollama":
+            raise ValueError("W produkcji WP_AI_PROVIDER nie może być dublerem testowym")
 
 
 @lru_cache

@@ -173,16 +173,22 @@ def get_conflicts(
     summary="Przesunięcie programu od wskazanego punktu o N minut (dry_run)",
 )
 def shift(wedding_id: UUID, body: ShiftIn, principal: CurrentPrincipal, db: DbSession) -> ShiftOut:
-    changes, after = service.shift(
+    changes, after, revision = service.shift(
         db,
         principal,
         wedding_id,
         from_item_id=body.from_item_id,
         minutes=body.minutes,
         dry_run=body.dry_run,
+        expected_revision=body.revision,
     )
     return ShiftOut.model_validate(
-        {"dry_run": body.dry_run, "changes": changes, "conflicts_after": conflicts_out(after)}
+        {
+            "dry_run": body.dry_run,
+            "revision": revision,
+            "changes": changes,
+            "conflicts_after": conflicts_out(after),
+        }
     )
 
 

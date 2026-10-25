@@ -171,6 +171,7 @@ CASES = [
     ("POST", f"{W}/invitation-delivery/plan", {"household_ids": [FAKE]}),
     ("POST", f"{W}/invitation-delivery/delivered", {"household_ids": [FAKE]}),
     ("GET", f"{W}/budget/indexation", None),
+    ("PUT", f"{W}/budget/indexation/assumptions", {"expected_rate": 0.05, "worst_rate": 0.1}),
     ("GET", f"{W}/ceremony-documents", None),
     ("PUT", f"{W}/ceremony-documents/{{x}}", {}),
     ("GET", f"{W}/funders", None),

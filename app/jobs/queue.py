@@ -1,5 +1,6 @@
 """Kolejka zadań w tabeli PostgreSQL (ADR-0003): SELECT ... FOR UPDATE SKIP LOCKED."""
 
+from collections.abc import Collection
 from datetime import datetime, timedelta
 from typing import Any
 from uuid import UUID
@@ -66,14 +67,14 @@ def enqueue(
     return job
 
 
-def claim_next(db: Session) -> Job | None:
+def claim_next(db: Session, types: Collection[str] | None = None) -> Job | None:
+    """Pobiera najstarsze gotowe zadanie; `types` zawęża do wskazanych typów (tor workera)."""
     now = utcnow()
+    query = select(Job).where(Job.status == "queued", Job.run_after <= now)
+    if types is not None:
+        query = query.where(Job.type.in_(types))
     job = db.scalars(
-        select(Job)
-        .where(Job.status == "queued", Job.run_after <= now)
-        .order_by(Job.run_after)
-        .limit(1)
-        .with_for_update(skip_locked=True)
+        query.order_by(Job.run_after).limit(1).with_for_update(skip_locked=True)
     ).first()
     if job is None:
         return None

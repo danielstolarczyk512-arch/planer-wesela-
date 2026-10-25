@@ -91,6 +91,11 @@ class ShiftIn(BaseModel):
     from_item_id: UUID = Field(description="Przesuwamy ten punkt i wszystkie późniejsze")
     minutes: int = Field(ge=-600, le=600, description="Ujemne = wcześniej")
     dry_run: bool = True
+    revision: str | None = Field(
+        default=None,
+        max_length=64,
+        description="Rewizja programu z podglądu; inna niż obecna → 409 conflict.version_mismatch",
+    )
 
     @model_validator(mode="after")
     def _non_zero(self) -> Self:
@@ -108,6 +113,7 @@ class ShiftChange(BaseModel):
 
 class ShiftOut(BaseModel):
     dry_run: bool
+    revision: str = Field(description="Rewizja programu (po zapisie — nowa)")
     changes: list[ShiftChange]
     conflicts_after: list[ConflictOut]
 

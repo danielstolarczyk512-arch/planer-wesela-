@@ -1,5 +1,6 @@
 """Harmonogram dnia ślubu: punkty programu, zależności, konflikty, przesunięcia, szablon."""
 
+import hashlib
 from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import Any
@@ -84,6 +85,16 @@ def dependencies(db: Session, item_ids: list[UUID]) -> dict[UUID, list[UUID]]:
         ):
             out[d.item_id].append(d.depends_on_item_id)
     return out
+
+
+def revision(items: list[ScheduleItem]) -> str:
+    """Skrót stanu programu: zmienia się przy każdej edycji, dodaniu i usunięciu punktu.
+
+    Podgląd przesunięcia zwraca go, a zatwierdzenie odsyła — jeśli ktoś w międzyczasie zmienił
+    program, przesunięcie nie zapisze się na podstawie nieaktualnego podglądu.
+    """
+    state = "|".join(sorted(f"{i.id}:{i.version}" for i in items))
+    return hashlib.sha256(state.encode()).hexdigest()[:20]
 
 
 def items_of(db: Session, wedding_id: UUID) -> list[ScheduleItem]:
@@ -274,11 +285,19 @@ def shift(
     from_item_id: UUID,
     minutes: int,
     dry_run: bool,
-) -> tuple[list[dict[str, Any]], list[engine.Conflict]]:
-    """Przesuwa wskazany punkt i wszystkie późniejsze (np. ceremonia się opóźniła)."""
+    expected_revision: str | None = None,
+) -> tuple[list[dict[str, Any]], list[engine.Conflict], str]:
+    """Przesuwa wskazany punkt i wszystkie późniejsze (np. ceremonia się opóźniła).
+
+    `expected_revision` (z podglądu) blokuje zapis, gdy program zmienił się od podglądu.
+    """
     authorize(db, principal.user.id, wedding_id, Action.DAY_RUN)
     anchor = _get(db, wedding_id, from_item_id)
     items = items_of(db, wedding_id)
+    if expected_revision is not None and expected_revision != revision(items):
+        raise Conflict(
+            "Program zmienił się od podglądu przesunięcia.", code="conflict.version_mismatch"
+        )
     new_starts = engine.shifted(engine_items(db, items), anchor.starts_at, minutes)
     changes = [
         {
@@ -308,7 +327,7 @@ def shift(
         except StaleDataError as exc:
             db.rollback()
             raise _conflict() from exc
-    return changes, after
+    return changes, after, revision(items)
 
 
 def apply_template(

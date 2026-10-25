@@ -157,6 +157,40 @@ def test_civil_template_shorter_ceremony(client, alice):
     assert date.fromisoformat(ceremony["starts_at"][:10]) == date.fromisoformat(day)
 
 
+def test_shift_with_stale_preview_is_rejected(client, alice, wedding):
+    b = add(client, alice, wedding, title="Ceremonia", starts_at=at("15:00"), duration_minutes=60)
+    c = add(client, alice, wedding, title="Obiad", starts_at=at("17:00"), duration_minutes=60)
+    body = {"from_item_id": b["id"], "minutes": 20}
+    preview = client.post(f"{url(wedding)}/shift", headers=alice, json=body).json()
+    # Ktoś w międzyczasie zmienia program (inny telefon).
+    r = client.patch(
+        f"{url(wedding)}/{c['id']}",
+        headers={**alice, "If-Match": '"1"'},
+        json={"starts_at": at("17:30")},
+    )
+    assert r.status_code == 200
+    stale = client.post(
+        f"{url(wedding)}/shift",
+        headers=alice,
+        json={**body, "dry_run": False, "revision": preview["revision"]},
+    )
+    assert stale.status_code == 409
+    assert stale.json()["code"] == "conflict.version_mismatch"
+    assert dt(client.get(f"{url(wedding)}/{b['id']}", headers=alice).json()["starts_at"]) == dt(
+        at("15:00")
+    )
+    # Nowy podgląd ma nową rewizję i zapis przechodzi; rewizja po zapisie znów jest inna.
+    fresh = client.post(f"{url(wedding)}/shift", headers=alice, json=body).json()
+    assert fresh["revision"] != preview["revision"]
+    done = client.post(
+        f"{url(wedding)}/shift",
+        headers=alice,
+        json={**body, "dry_run": False, "revision": fresh["revision"]},
+    )
+    assert done.status_code == 200
+    assert done.json()["revision"] != fresh["revision"]
+
+
 def test_times_in_warsaw_and_export(client, alice, wedding):
     a = add(
         client,

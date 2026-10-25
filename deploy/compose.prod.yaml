@@ -76,6 +76,19 @@ services:
     depends_on:
       migrate: { condition: service_completed_successfully }
 
+  # Osobny worker e-maili: długi OCR/AI (do 10 min) w workerze powyżej nie wstrzymuje
+  # resetu hasła, weryfikacji adresu ani linków RSVP. Bez plików i bez dostępu do ClamAV.
+  worker-fast:
+    <<: *app
+    environment:
+      <<: *app-env
+      WP_WORKER_LANE: fast
+    command: ["python", "-m", "app.jobs.worker"]
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
   clamav:
     # ClamAV (GPL) jako osobny proces; aplikacja rozmawia z clamd przez TCP (ADR-0006).
     # Bez publikowanych portów. Potrzebuje internetu do aktualizacji sygnatur (freshclam)

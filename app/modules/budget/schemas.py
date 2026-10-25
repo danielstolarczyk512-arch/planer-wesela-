@@ -357,9 +357,21 @@ class IndexationItem(BaseModel):
     worst_increase: Money
 
 
-class IndexationOverview(BaseModel):
+class IndexationAssumptionsIn(BaseModel):
+    expected_rate: float = Field(ge=0, le=0.5, description="Prognozowana inflacja roczna")
+    worst_rate: float = Field(ge=0, le=0.5, description="Inflacja roczna w najgorszym przypadku")
+
+
+class IndexationAssumptions(BaseModel):
     expected_rate: float
     worst_rate: float
+    saved: bool = Field(description="Czy para zapisała własne założenia (inaczej domyślne)")
+
+
+class IndexationOverview(BaseModel):
+    expected_rate: float = Field(description="Stopa użyta w wyliczeniu (podana albo zapisana)")
+    worst_rate: float
+    assumptions: IndexationAssumptions = Field(description="Założenia zapisane na weselu")
     wedding_day: date | None
     approximate: bool
     today_total: Money = Field(description="Szacowany koszt wesela dziś")
