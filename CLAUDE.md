@@ -63,10 +63,11 @@ odpowiadaj, komentuj kod i pisz dokumentację **po polsku**.
 ## Weryfikacja
 
 - Backend: `uv run ruff check app tests scripts`, `uv run mypy app`, `uv run pytest -q`
-  (ostatnio **1133 passed**, 6 skipped — OCR i Ollama tylko w Dockerze/na żądanie).
+  (ostatnio **1152 passed**, 6 skipped — OCR i Ollama tylko w Dockerze/na żądanie).
 - Typy API po zmianach backendu: `task web:types` (docs/openapi.json → frontend/src/api/schema.d.ts).
+- CI (GitHub Actions, `.github/workflows/ci.yml`) uruchamia to samo poza E2E przy każdym pushu do `main` i PR.
 - Frontend (w `frontend/`): `npx tsc -b --noEmit`, `npx eslint src e2e`, `npx vitest run`
-  (ostatnio 139 testów), `npx playwright test` (8 profili: 320/390/768/1280 × jasny/ciemny; axe),
+  (ostatnio 141 testów), `npx playwright test` (8 profili: 320/390/768/1280 × jasny/ciemny; axe),
   `E2E_PROD=1 npx playwright test` (build produkcyjny z CSP), `node scripts/check-budget.mjs`
   (start ≤ 170 KB gzip, ostatnio ~142 KB), `node scripts/check-licenses.mjs`.
 
@@ -167,7 +168,12 @@ działa do 7 dni po weselu niezależnie od terminu RSVP; replay `Idempotency-Key
 czyszczony przy wylogowaniu/zmianie konta; redakcja tokenów w logach Caddy i bez access logu uvicorna; linki pomocnika
 (30 dni) i usługodawcy (7 dni) wygasają po weselu; worker AI ponawia kontrolę uprawnień; heartbeat blokady zadań;
 walidator AI (NaN, ilość bez dowodu). Z audytu czekają na decyzję: A6 (oferta → raty), koszt oferty przy zmianie gości, S4.
-Ostatnia migracja: `a1d4c7e9b2f0`.
+**Otwarte punkty techniczne z audytu — zrobione 23.10** (raport `docs/gui/raport-audyt-otwarte-techniczne.md`):
+rewizja programu przy przesunięciu (409 przy nieaktualnym podglądzie, także w kolejce offline), założenia
+waloryzacji zapisane na weselu (`budget_assumptions`, `PUT /budget/indexation/assumptions`), osobny worker e-maili
+(`WP_WORKER_LANE=fast`, usługa `worker-fast` w compose prod), nowe kontrole `WP_ENV=prod` (https, SMTP, jawne
+`WP_AI_ENABLED`), CI w `.github/workflows/ci.yml` (backend, frontend, gitleaks; E2E nadal lokalnie).
+Ostatnia migracja: `b7e2f4a9c1d3`.
 **Test dla znajomych (23.10):** projekt Dockera `naszdzien-test` (konfiguracja prod na laptopie, Caddy
 `127.0.0.1:8090`, Mailpit `127.0.0.1:8026`, własna baza; `deploy/compose.test.yaml`, sekrety w `deploy/.env.test`),
 udostępnianie szybkim tunelem Cloudflare: `scripts/udostepnij-test.ps1`, instrukcja `docs/test-dla-znajomych.md`.
@@ -175,6 +181,15 @@ udostępnianie szybkim tunelem Cloudflare: `scripts/udostepnij-test.ps1`, instru
 **Serwer testowy 24/7 (23.10, przygotowany, czeka na konta właściciela):** Oracle Cloud Always Free (ARM) + DuckDNS —
 `deploy/oracle/instaluj.sh`, `deploy/oracle/aktualizuj.sh`, `deploy/compose.oracle.yaml` (ClamAV `clamav-debian` — obraz
 Alpine nie ma ARM), instrukcja `docs/oracle-cloud.md`. Obraz aplikacji arm64 zbudowany i sprawdzony lokalnie (emulacja).
+
+**Strona tytułowa, powitanie i motyw Romantyczny (25.10):** `/` bez logowania = strona tytułowa
+(`features/home/LandingPage.tsx`: słowa zapalane przy przewijaniu + 8 nagrań z Pexels), `/powitanie`
+po każdym logowaniu (`lib/welcome.ts`). Pakiet właściciela „Nasz_Dzien_Premium_UI_2026” — etapy 0–2
+zrobione (raport `docs/gui/raport-motyw-romantyczny.md`): domyślny motyw `romantic`/`romanticDark`
+(tokeny + `styles/romantic.css`), nowy ekran Dziś (zdjęcie w odliczaniu, 4 kafelki z pierścieniami).
+Naprawione nazwy krojów („… Variable”). Media i źródła: `frontend/public/media/ZRODLA.md`.
+**Następne: etap 3 (Budżet, Plan, Goście) po akceptacji właściciela.** Python na Windowsie zapisuje
+CRLF — w skryptach używaj `write_bytes`/`newline="\n"`.
 
 ## Następne kroki (kolejność uzgodniona z właścicielem)
 
