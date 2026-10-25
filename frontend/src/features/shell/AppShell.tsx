@@ -1,5 +1,5 @@
 import { LogOut, Search, Settings } from "lucide-react";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link, Navigate, Outlet, useLocation, useMatch, useNavigate } from "react-router";
 
 import { logout, restoreSession, useSessionStatus } from "../../api/auth";
@@ -9,6 +9,9 @@ import { Notice, Skeleton } from "../../components/Surface";
 import { listWeddingCopies } from "../../lib/dayCopy";
 import { todayInWarsaw } from "../../lib/format";
 import "./shell.css";
+
+// Strona tytułowa tylko dla niezalogowanych — osobny fragment kodu (budżet JS).
+const LandingPage = lazy(async () => ({ default: (await import("../home/LandingPage")).LandingPage }));
 
 /** Trasy wymagające zalogowania. Podczas przywracania sesji z ciasteczka: szkielet. */
 export function RequireAuth() {
@@ -25,6 +28,14 @@ export function RequireAuth() {
   if (status === "signed-out") {
     // Powrót z zachowaniem parametrów (np. token zaproszenia z e-maila).
     const target = location.pathname + location.search;
+    // Adres główny bez logowania pokazuje stronę tytułową (przewijany nagłówek) zamiast formularza.
+    if (target === "/") {
+      return (
+        <Suspense fallback={<main className="page" aria-busy="true" />}>
+          <LandingPage />
+        </Suspense>
+      );
+    }
     const back = target === "/" ? "" : `?powrot=${encodeURIComponent(target)}`;
     return <Navigate to={`/logowanie${back}`} replace />;
   }
@@ -66,6 +77,18 @@ export function AppShell() {
   const navigate = useNavigate();
   const wedding = useMatch("/w/:weddingId/*");
   const [leaving, setLeaving] = useState(false);
+  useEffect(() => {
+    if (!wedding?.params.weddingId) return;
+    const search = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k" && !e.altKey) {
+        e.preventDefault();
+        navigate(`/w/${wedding.params.weddingId}/szukaj`);
+      }
+    };
+    window.addEventListener("keydown", search);
+    return () => window.removeEventListener("keydown", search);
+  }, [navigate, wedding?.params.weddingId]);
+
   return (
     <>
       <a href="#tresc" className="skip-link">
@@ -81,7 +104,7 @@ export function AppShell() {
         </Link>
         <nav aria-label="Konto" className="shell-actions">
           {wedding && (
-            <Link to={`/w/${wedding.params.weddingId}/szukaj`} className="shell-icon-link" aria-label="Szukaj w weselu">
+            <Link to={`/w/${wedding.params.weddingId}/szukaj`} className="shell-icon-link" aria-label="Szukaj w weselu" title="Szukaj (Ctrl+K / ⌘K)" aria-keyshortcuts="Control+k Meta+k">
               <Search aria-hidden size={22} strokeWidth={1.75} />
             </Link>
           )}

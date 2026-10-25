@@ -7,6 +7,7 @@ import { ApiError, userMessage } from "../../api/errors";
 import { Button } from "../../components/Button";
 import { PasswordField, TextField } from "../../components/Field";
 import { Notice } from "../../components/Surface";
+import { markWelcome } from "../../lib/welcome";
 import "./auth.css";
 
 type Errors = Partial<Record<"email" | "password", string>>;
@@ -29,6 +30,13 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const returnTo = safeReturnPath(params.get("powrot"));
+  // Po wpisaniu hasła: powitanie z przewijanym efektem (a link z e-maila itp. — prosto do celu).
+  const afterLogin = returnTo === "/" ? "/powitanie" : returnTo;
+  const signedInNow = () => {
+    setJustSignedIn(true);
+    if (afterLogin === "/powitanie") markWelcome();
+  };
+  const [justSignedIn, setJustSignedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Errors>({});
@@ -45,12 +53,15 @@ export function LoginPage() {
     return () => window.clearTimeout(t);
   }, [waitSeconds]);
 
-  if (status === "signed-in") return <Navigate to={returnTo} replace />;
+  if (status === "signed-in") return <Navigate to={justSignedIn ? afterLogin : returnTo} replace />;
   if (mfaToken) {
     return (
       <MfaStep
         mfaToken={mfaToken}
-        onDone={() => navigate(returnTo, { replace: true })}
+        onDone={() => {
+          signedInNow();
+          navigate(afterLogin, { replace: true });
+        }}
         onRestart={(message) => {
           setMfaToken(null);
           setFormError(message);
@@ -73,6 +84,7 @@ export function LoginPage() {
     setFormError(null);
     setPending(true);
     try {
+      signedInNow();
       const challenge = await login(trimmed, password);
       if (challenge) {
         // Weryfikacja dwuetapowa: hasło poprawne, teraz kod z aplikacji.
@@ -80,7 +92,7 @@ export function LoginPage() {
         setMfaToken(challenge.mfaToken);
         return;
       }
-      navigate(returnTo, { replace: true });
+      navigate(afterLogin, { replace: true });
     } catch (e) {
       setPassword("");
       if (e instanceof ApiError && e.status === 401) {

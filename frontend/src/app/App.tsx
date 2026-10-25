@@ -104,6 +104,11 @@ const router = createBrowserRouter([
         element: <RequireAuth />,
         children: [
           {
+            // Powitanie po każdym logowaniu: pełny ekran z przewijanym wideo (bez paska aplikacji).
+            path: "/powitanie",
+            ...lazyPage(async () => ({ Component: (await import("../features/home/LandingPage")).WelcomePage })),
+          },
+          {
             element: <AppShell />,
             children: [
               {
