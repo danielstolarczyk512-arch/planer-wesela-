@@ -132,6 +132,7 @@ export function GuestsView() {
       <SectionNav label="Goście" sections={GUEST_SECTIONS} />
       <div className="view-head">
         <div>
+          <p className="overline view-head__overline">Goście i RSVP</p>
           <h1 id="guests-h">Goście</h1>
           <p className="text-secondary">Wszyscy bliscy. Wszystkie odpowiedzi.</p>
         </div>

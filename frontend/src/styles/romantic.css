@@ -259,14 +259,167 @@
 :root[data-theme="romantic"] .today-stat--guests { --ring-color: #c99088; }
 :root[data-theme="romantic"] .today-stat--vendors { --ring-color: #a47e58; }
 
+/* --- Etap 3: Budżet, Plan, Goście — wspólne elementy narzędzi --- */
+
+/* Podzakładki jako jeden przełącznik w pudrowej pigułce; aktywna — biała z cieniem. */
+:root[data-theme="romantic"] .subnav {
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--rm-hairline);
+  border-radius: 999px;
+  background: var(--rm-blush-soft);
+  width: fit-content;
+  max-width: 100%;
+}
+
+:root[data-theme="romantic"] .subnav__link {
+  border: 0;
+  min-height: 40px;
+  padding: 0 var(--wp-space-4);
+  color: var(--wp-text-secondary);
+  transition:
+    background-color 180ms var(--rm-ease),
+    color 180ms var(--rm-ease),
+    box-shadow 180ms var(--rm-ease);
+}
+
+:root[data-theme="romantic"] .subnav__link:hover {
+  color: var(--wp-text-primary);
+}
+
+:root[data-theme="romantic"] .subnav__link[aria-current="page"] {
+  background: var(--wp-surface);
+  color: var(--wp-text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 2px #3427210f, 0 4px 12px #3427210f;
+}
+
+/* Nagłówki sekcji: szeryf, większy oddech. */
+:root[data-theme="romantic"] .section-head h2 {
+  font-family: var(--wp-font-heading);
+  font-weight: 400;
+  font-size: 1.5rem;
+}
+
+/* Wiersze list: łagodne podświetlenie pod palcem/kursorem. */
+:root[data-theme="romantic"] .wp-card .row-list > li {
+  transition: background-color 160ms var(--rm-ease);
+}
+
+:root[data-theme="romantic"] .wp-card .row-list > li:hover {
+  background: color-mix(in srgb, var(--rm-blush-soft) 70%, transparent);
+}
+
+:root[data-theme="romantic"] .row-list > li + li {
+  border-top-color: var(--rm-hairline);
+}
+
+/* Pola wyboru: okrągłe, miedziane po zaznaczeniu, krótkie „pyknięcie” znacznika. */
+:root[data-theme="romantic"] .wp-checkbox__box {
+  border-radius: 999px;
+}
+
+:root[data-theme="romantic"] .wp-checkbox[data-selected] .wp-checkbox__box {
+  animation: rm-check-pop 260ms var(--rm-ease);
+}
+
+@keyframes rm-check-pop {
+  40% {
+    transform: scale(1.18);
+  }
+}
+
+/* Kwoty: szeryf w miedzi. */
+:root[data-theme="romantic"] .amount-lg {
+  font-family: var(--wp-font-heading);
+  font-weight: 400;
+  color: var(--wp-action-primary);
+}
+
+:root[data-theme="romantic"] .stat__value {
+  font-family: var(--wp-font-heading);
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+/* Mierniki: grubsze, z miedzianym gradientem i łagodnym napełnieniem przy wejściu. */
+:root[data-theme="romantic"] .meter__track {
+  height: 0.625rem;
+  background: var(--rm-blush-soft);
+}
+
+:root[data-theme="romantic"] .meter__fill:not(.meter__fill--over) {
+  background: linear-gradient(90deg, var(--wp-gold-decorative), var(--wp-action-primary));
+}
+
+:root[data-theme="romantic"] .meter__fill {
+  transform-origin: left center;
+  animation: rm-meter-in 900ms var(--rm-ease) both;
+}
+
+@keyframes rm-meter-in {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* Goście: karty rodzin z miękkim podświetleniem i lekkim uniesieniem. */
+:root[data-theme="romantic"] .household {
+  transition:
+    transform 180ms var(--rm-ease),
+    box-shadow 180ms var(--rm-ease);
+}
+
+:root[data-theme="romantic"] .household:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px #3427210d, 0 12px 28px #34272114;
+}
+
+:root[data-theme="romantic"] .household__trigger:hover {
+  background: color-mix(in srgb, var(--rm-blush-soft) 60%, transparent);
+}
+
+:root[data-theme="romantic"] .household__name {
+  font-family: var(--wp-font-heading);
+  font-weight: 500;
+  font-size: 1.125rem;
+}
+
+/* Kafelki statystyk w narzędziach: pudrowa kreska akcentu u góry. */
+:root[data-theme="romantic"] .stat-grid > .wp-card.stat {
+  position: relative;
+  overflow: hidden;
+}
+
+:root[data-theme="romantic"] .stat-grid > .wp-card.stat::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--rm-blush), var(--wp-gold-decorative));
+  opacity: 0.8;
+}
+
 /* Ograniczenie ruchu: bez uniesienia kart. */
-:root.reduce-motion[data-theme="romantic"] .link-card:hover {
+:root.reduce-motion[data-theme="romantic"] .link-card:hover,
+:root.reduce-motion[data-theme="romantic"] .household:hover {
   transform: none;
 }
 
+:root.reduce-motion[data-theme="romantic"] .meter__fill,
+:root.reduce-motion[data-theme="romantic"] .wp-checkbox[data-selected] .wp-checkbox__box {
+  animation: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  :root[data-theme="romantic"] .link-card:hover {
+  :root[data-theme="romantic"] .link-card:hover,
+  :root[data-theme="romantic"] .household:hover {
     transform: none;
+  }
+  :root[data-theme="romantic"] .meter__fill,
+  :root[data-theme="romantic"] .wp-checkbox[data-selected] .wp-checkbox__box {
+    animation: none;
   }
   :root[data-theme="romantic"] .today-hero__photo img {
     animation: none;

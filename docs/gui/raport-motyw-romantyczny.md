@@ -60,6 +60,22 @@ usługodawcy, strona gościa) — po akceptacji właściciela, zgodnie z ustalon
 - Kafelka „Inspiracje” z makiety **nie dodano** — aplikacja nie ma modułu inspiracji (etap C5);
   przycisk prowadziłby donikąd.
 
+## Etap 3 — Budżet, Plan, Goście
+
+Bez zmian danych i logiki; style w `styles/romantic.css` (tylko motyw Romantyczny) + nadtytuł
+w nagłówku każdego ekranu („Pieniądze”, „Przygotowania”, „Goście i RSVP”).
+
+- Podzakładki jako jeden przełącznik w pudrowej pigułce (aktywna — biała z cieniem); na telefonie
+  przewijane w poziomie jak dotąd.
+- Nagłówki sekcji (np. miesiące w Planie, „Zaproszenia”) szeryfem; kwoty i liczby statystyk szeryfem,
+  kwoty w miedzi.
+- Mierniki (limit budżetu, postęp zadań): grubsze, miedziany gradient, łagodne napełnienie przy wejściu.
+- Zadania: okrągłe pola wyboru z krótkim „pyknięciem” po zaznaczeniu; wiersze list podświetlają się
+  pod kursorem.
+- Goście: karty rodzin z nazwą szeryfem, miękkim podświetleniem i uniesieniem.
+- Kafelki „Wpłacono / Do zapłaty”: pudrowo-złota kreska akcentu.
+- Ograniczenie ruchu wyłącza napełnianie mierników, „pyknięcie” i uniesienia.
+
 ## Powitanie i strona tytułowa
 
 - 8 nagrań w kolumnach (5 nowych z Pexels: tort, taniec, panna młoda, pocałunek, bukiet), bez powtórzeń.

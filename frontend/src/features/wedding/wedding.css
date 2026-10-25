@@ -327,6 +327,10 @@
   margin-top: var(--wp-space-1);
 }
 
+.view-head .view-head__overline {
+  margin: 0 0 var(--wp-space-1);
+}
+
 .section-head {
   display: flex;
   align-items: center;

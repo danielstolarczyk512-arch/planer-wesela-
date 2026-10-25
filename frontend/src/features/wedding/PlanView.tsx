@@ -99,6 +99,7 @@ export function PlanView() {
       <SectionNav label="Plan" sections={PLAN_SECTIONS} />
       <div className="view-head">
         <div>
+          <p className="overline view-head__overline">Przygotowania</p>
           <h1 id="plan-h">Plan przygotowań</h1>
           <p className="text-secondary">Jedno zadanie po drugim.</p>
           <PrintLink kind="zadania">Drukuj listę zadań</PrintLink>

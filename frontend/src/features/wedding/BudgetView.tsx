@@ -95,6 +95,7 @@ export function BudgetView() {
       <SectionNav label="Budżet" sections={MONEY_SECTIONS} />
       <div className="view-head">
         <div>
+          <p className="overline view-head__overline">Pieniądze</p>
           <h1 id="budget-h">Budżet</h1>
           <p className="text-secondary">Każda kwota na swoim miejscu.</p>
           <div className="seating-actions">
