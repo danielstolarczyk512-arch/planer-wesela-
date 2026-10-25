@@ -988,7 +988,7 @@ test("Układ sali: przesuwanie stołu, parkiet, numery miejsc, wydruk planu sali
     // Klawiaturowa alternatywa przeciągania: wybór stołu i przyciski.
     await page.getByRole("button", { name: /Przesuń stół/ }).click();
     await page.getByRole("option", { name: "Stół 1" }).click();
-    const position = page.getByText(/^Stół 1: [\d.]+ m od lewej/);
+    const position = page.getByText(/^Stół 1 \(.*\): [\d.]+ m od lewej/);
     const before = await position.textContent();
     await page.getByRole("group", { name: "Położenie: Stół 1" }).getByRole("button", { name: "W prawo" }).click();
     await page.getByRole("group", { name: "Położenie: Stół 1" }).getByRole("button", { name: "Obróć" }).click();

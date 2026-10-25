@@ -120,12 +120,14 @@ export function SeatingView() {
   return (
     <main className="page enter-tab" aria-labelledby="seating-h">
       <SectionNav label="Goście" sections={GUEST_SECTIONS} />
-      <div className="view-head">
+      <div className="view-head seating-head">
         <div>
           <h1 id="seating-h">Plan stołów</h1>
           {p && (
-            <p className="text-secondary num">
-              Posadzeni: {p.stats.seated} · bez miejsca: {p.stats.to_seat} · miejsc: {p.stats.seats}
+            <p className="text-secondary num seating-head__meta">
+              <span>Posadzeni: {p.stats.seated}</span>
+              <span>bez miejsca: {p.stats.to_seat}</span>
+              <span>miejsc: {p.stats.seats}</span>
             </p>
           )}
           {p && p.stats.seated > 0 && (
@@ -136,10 +138,15 @@ export function SeatingView() {
             </p>
           )}
         </div>
-        {canWrite && (p?.tables.length ?? 0) > 0 && (
-          <Button variant="secondary" icon={<Plus aria-hidden size={20} />} onPress={() => setAddingTables(true)}>
-            Dodaj stoły
-          </Button>
+        {canWrite && p && p.tables.length > 0 && (
+          <div className="seating-head__actions">
+            <Button icon={<Sparkles aria-hidden size={20} />} onPress={() => setAuto(true)}>
+              Usadź automatycznie
+            </Button>
+            <Button variant="secondary" icon={<Plus aria-hidden size={20} />} onPress={() => setAddingTables(true)}>
+              Dodaj stoły
+            </Button>
+          </div>
         )}
       </div>
 
@@ -159,21 +166,51 @@ export function SeatingView() {
         </EmptyState>
       )}
 
-      {p && p.tables.length > 0 && canWrite && (
+      {p && p.tables.length > 0 && (
+        <div className="seating-stats" role="group" aria-label="Podsumowanie planu stołów">
+          <div className="seating-stat">
+            <span className="seating-stat__icon">
+              <img src="/media/plan-stolow/stol-kwiaty.webp" alt="" width={36} height={36} loading="lazy" />
+            </span>
+            <span>
+              <span className="seating-stat__value num">{p.tables.length}</span>
+              <span className="seating-stat__label">{plural(p.tables.length, { one: "stół", few: "stoły", many: "stołów", other: "stoły" })}</span>
+            </span>
+          </div>
+          <div className="seating-stat">
+            <span className="seating-stat__icon">
+              <img src="/media/plan-stolow/goscie.webp" alt="" width={36} height={36} loading="lazy" />
+            </span>
+            <span>
+              <span className="seating-stat__value num">{Math.max(0, p.stats.seats - p.stats.seated)}</span>
+              <span className="seating-stat__label">{plural(Math.max(0, p.stats.seats - p.stats.seated), { one: "wolne miejsce", few: "wolne miejsca", many: "wolnych miejsc", other: "wolnych miejsc" })}</span>
+            </span>
+          </div>
+          <button
+            type="button"
+            className={`seating-stat seating-stat--button${p.unassigned.length > 0 ? " seating-stat--warn" : ""}`}
+            disabled={p.unassigned.length === 0}
+            onClick={() => document.getElementById("unseated-h")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          >
+            <span className="seating-stat__icon">
+              <img src="/media/plan-stolow/ostrzezenie.webp" alt="" width={36} height={36} loading="lazy" />
+            </span>
+            <span>
+              <span className="seating-stat__value num">{p.unassigned.length}</span>
+              <span className="seating-stat__label">{plural(p.unassigned.length, { one: "osoba bez przypisania", few: "osoby bez przypisania", many: "osób bez przypisania", other: "osoby bez przypisania" })}</span>
+            </span>
+          </button>
+        </div>
+      )}
+
+      {p && p.tables.length > 0 && canWrite && p.stats.seated > 0 && (
         <div className="seating-actions">
-          <Button icon={<Sparkles aria-hidden size={20} />} onPress={() => setAuto(true)}>
-            Usadź automatycznie
+          <Button variant="secondary" pending={numbers.isPending} onPress={() => numbers.mutate()}>
+            Ponumeruj miejsca
           </Button>
-          {p.stats.seated > 0 && (
-            <Button variant="secondary" pending={numbers.isPending} onPress={() => numbers.mutate()}>
-              Ponumeruj miejsca
-            </Button>
-          )}
-          {p.stats.seated > 0 && (
-            <Button variant="text" onPress={() => setClearing(true)}>
-              Wyczyść plan
-            </Button>
-          )}
+          <Button variant="text" onPress={() => setClearing(true)}>
+            Wyczyść plan
+          </Button>
         </div>
       )}
 
@@ -209,16 +246,34 @@ export function SeatingView() {
           <h2 id="tables-h">Stoły</h2>
           <div className="table-grid">
             {p.tables.map((t) => (
-              <Card key={t.id} className="seating-table" aria-label={t.name}>
-                <div className="section-head">
-                  {canWrite ? (
-                    <AriaButton className="row-edit row-edit--inline" onPress={() => setEditingTable(t.id)}>
+              <Card key={t.id} className={`seating-table${t.kind === "head" ? " seating-table--head" : ""}`} aria-label={t.name}>
+                {t.kind === "head" && (
+                  <>
+                    <img className="seating-table__corner seating-table__corner--l" src="/media/plan-stolow/naroznik.webp" alt="" loading="lazy" />
+                    <img className="seating-table__corner seating-table__corner--r" src="/media/plan-stolow/naroznik.webp" alt="" loading="lazy" />
+                  </>
+                )}
+                <div className="seating-table__top">
+                  <span className="seating-table__icon">
+                    <img
+                      src={t.kind === "head" ? "/media/plan-stolow/obraczki.webp" : "/media/plan-stolow/stol-krzesla.webp"}
+                      alt=""
+                      width={32}
+                      height={32}
+                      loading="lazy"
+                    />
+                  </span>
+                  <div className="seating-table__name">
+                    {canWrite ? (
+                      <AriaButton className="row-edit row-edit--inline" onPress={() => setEditingTable(t.id)}>
+                        <span className="row__title">{t.name}</span>
+                      </AriaButton>
+                    ) : (
                       <span className="row__title">{t.name}</span>
-                    </AriaButton>
-                  ) : (
-                    <span className="row__title">{t.name}</span>
-                  )}
+                    )}
+                  </div>
                   <StatusChip tone={t.free_seats < 0 ? "error" : t.free_seats === 0 ? "success" : "neutral"}>
+                    <img className="seating-table__guests" src="/media/plan-stolow/goscie.webp" alt="" width={16} height={16} loading="lazy" />
                     {fillLabel(t)}
                   </StatusChip>
                 </div>
@@ -252,7 +307,7 @@ export function SeatingView() {
         </section>
       )}
 
-      {p && p.tables.length > 0 && <RoomLayout weddingId={id} plan={p} canWrite={canWrite} />}
+      {p && p.tables.length > 0 && <RoomLayout weddingId={id} plan={p} canWrite={canWrite} onEditTable={setEditingTable} />}
 
       {p && p.tables.length > 0 && <RulesSection weddingId={id} people={people} canWrite={canWrite} />}
 

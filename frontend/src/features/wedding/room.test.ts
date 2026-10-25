@@ -23,6 +23,19 @@ describe("układ sali", () => {
     }
     expect(pos.get("a")!.x).not.toBe(pos.get("b")!.x);
   });
+
+  it("w sali 20 × 12 m stoły stoją wokół parkietu, z dala od ścian; para młoda na środku", () => {
+    const tables = [table({ id: "h", kind: "head", capacity: 8 }), ...Array.from({ length: 8 }, (_, i) => table({ id: `t${i}` }))];
+    const pos = defaultPositions(tables, { width_m: 20, length_m: 12 });
+    expect(pos.get("h")!.x).toBe(10);
+    for (const [id, p] of pos) {
+      expect(p.x).toBeGreaterThan(1.8);
+      expect(p.x).toBeLessThan(18.2);
+      if (id === "h") continue;
+      // środek poza parkietem (7,3–12,7 m w poziomie)
+      expect(p.x < 7.3 || p.x > 12.7).toBe(true);
+    }
+  });
 });
 
 describe("zdjęcia z iPhone'a (HEIC)", () => {

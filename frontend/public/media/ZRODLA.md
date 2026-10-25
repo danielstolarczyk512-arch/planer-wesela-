@@ -37,3 +37,9 @@ potwierdza prawo do użytku komercyjnego w regulaminie narzędzia, którym je wy
 | `bukiet.webp` | `01_WIZUALIZACJE/01_DASHBOARD_LUXURY.png` (kafelek „Romantyczna elegancja”) |
 | `para-plener.webp` | `01_WIZUALIZACJE/01_DASHBOARD_LUXURY.png` (pasek boczny) |
 | `para-zachod.webp` | `01_WIZUALIZACJE/05_LANDING_PAGE_MOODBOARD.png` (lewa część) |
+
+## Plan stołów (grafiki właściciela)
+
+Katalog `plan-stolow/`: grafiki z paczki właściciela `pakiet_grafik_plan_stolow.zip` (przycięte i zapisane jako WebP): `galazka`, `goscie`, `naroznik`, `obraczki`, `ostrzezenie`, `stol-krzesla`, `stol-kwiaty`. Wzór strony: `wzor_nowej_strony_plan_stolow.png` (nie jest w repo).
+- `stol-goscie-okragly`, `stol-goscie-kwadrat`, `stol-mlodych-okragly`, `stol-mlodych-kwadrat` — grafiki stołów od właściciela (26.10, arkusz bez napisów); nazwa nakładana w aplikacji.
+- `sala-tlo.webp` — tło planu sali od właściciela (25.10): podłoga, ściany, kwiaty i światła.

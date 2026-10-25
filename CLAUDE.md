@@ -67,9 +67,9 @@ odpowiadaj, komentuj kod i pisz dokumentację **po polsku**.
 - Typy API po zmianach backendu: `task web:types` (docs/openapi.json → frontend/src/api/schema.d.ts).
 - CI (GitHub Actions, `.github/workflows/ci.yml`) uruchamia to samo poza E2E przy każdym pushu do `main` i PR.
 - Frontend (w `frontend/`): `npx tsc -b --noEmit`, `npx eslint src e2e`, `npx vitest run`
-  (ostatnio 141 testów), `npx playwright test` (8 profili: 320/390/768/1280 × jasny/ciemny; axe),
+  (ostatnio 161 testów), `npx playwright test` (8 profili: 320/390/768/1280 × jasny/ciemny; axe),
   `E2E_PROD=1 npx playwright test` (build produkcyjny z CSP), `node scripts/check-budget.mjs`
-  (start ≤ 170 KB gzip, ostatnio ~142 KB), `node scripts/check-licenses.mjs`.
+  (start ≤ 170 KB gzip, ostatnio ~151 KB), `node scripts/check-licenses.mjs`.
 
 ## Stan (2026-10-21)
 
@@ -173,7 +173,7 @@ rewizja programu przy przesunięciu (409 przy nieaktualnym podglądzie, także w
 waloryzacji zapisane na weselu (`budget_assumptions`, `PUT /budget/indexation/assumptions`), osobny worker e-maili
 (`WP_WORKER_LANE=fast`, usługa `worker-fast` w compose prod), nowe kontrole `WP_ENV=prod` (https, SMTP, jawne
 `WP_AI_ENABLED`), CI w `.github/workflows/ci.yml` (backend, frontend, gitleaks; E2E nadal lokalnie).
-Ostatnia migracja: `e5c1a7f3b9d4` (zob. Agenci weselni).
+Ostatnia migracja: `f6d2b8a4c1e5` (kod weryfikacyjny e-mail).
 **Test dla znajomych (23.10):** projekt Dockera `naszdzien-test` (konfiguracja prod na laptopie, Caddy
 `127.0.0.1:8090`, Mailpit `127.0.0.1:8026`, własna baza; `deploy/compose.test.yaml`, sekrety w `deploy/.env.test`),
 udostępnianie szybkim tunelem Cloudflare: `scripts/udostepnij-test.ps1`, instrukcja `docs/test-dla-znajomych.md`.
@@ -199,6 +199,10 @@ Badacz **aktualizuje podane strony**, nie szuka nowych firm (nie skonfigurowano)
 fikcyjnych stronach: profil `e2e` (`docker/demo-sites`). Migracje `c3a9e5d1f7b2`, `d4b0f6e2a8c3`, `e5c1a7f3b9d4` (dev też zmigrowana, addytywnie).
 **Etap 4 czeka na decyzje właściciela** (źródło nowych adresów, nadawca/SPF/DKIM, odbiór poczty, DPA) — nie rób go sam.
 Pułapka: testy nie mogą wołać `worker.run_once()` bez `exclude` dla `send_email` (poczta trafia do Mailpit dev).
+
+**Poczta Gmail i kod weryfikacyjny (25.10):** SMTP z `.env` przez `WP_SMTP_*_DOCKER` (instrukcja `docs/poczta-gmail.md`, wymaga hasła aplikacji Google od właściciela); e-mail rejestracyjny ma link i 6-cyfrowy kod (`POST /me/verify-email/code`, limit 5 prób/15 min, kod ważny 30 min; pole w Ustawieniach → Konto).
+
+**Plan stołów wg grafik właściciela (25.10, raport `docs/gui/raport-plan-stolow-grafiki.md`):** nagłówek z akcjami, 3 kafelki statystyk, kafelki stołów z ikonami; plan sali na całą kartę z tłem `sala-tlo.webp`, stoły okrągłe/kwadratowe jako grafiki (`TABLE_ART` w `RoomLayout.tsx`, prostokątne wektorowo), nazwa stołu widoczna po najechaniu/wybraniu, domyślne ustawianie wokół parkietu (`defaultPositions`), „Kształt i wielkość stołu” pod planem. Pasek postępu wesela (`WeddingProgressBar.tsx`). Grafiki w `frontend/public/media/plan-stolow/`.
 
 ## Następne kroki (kolejność uzgodniona z właścicielem)
 

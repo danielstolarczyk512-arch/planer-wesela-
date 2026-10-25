@@ -5,7 +5,7 @@
  * Zmiany trafiają do szkicu i zapisują się przyciskiem „Zapisz układ”.
  */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, RotateCw } from "lucide-react";
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Pencil, RotateCw } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 
 import { api, unwrap } from "../../api/client";
@@ -45,40 +45,151 @@ const ITEM_SIZE: Record<ItemKind, [number, number]> = {
   other: [2, 2],
 };
 const STEP = 0.5;
+const SHAPE_LABEL: Record<string, string> = { round: "okrągły", rectangular: "prostokątny", square: "kwadratowy" };
 
 /** Promień (okrągły) albo połowa boku stołu w metrach — z liczby miejsc (ok. 60 cm na osobę). */
-export function tableSize(t: Pick<SeatingTable, "shape" | "capacity">): { w: number; h: number } {
+export function tableSize(t: Pick<SeatingTable, "shape" | "capacity"> & { kind?: string }): { w: number; h: number } {
   if (t.shape === "round") {
-    const d = Math.max(1.2, (t.capacity * 0.6) / Math.PI);
+    // Stół pary młodej jest na planie większy (miejsce na napis i wieniec).
+    const d = Math.max(t.kind === "head" ? 1.9 : 1.2, (t.capacity * 0.6) / Math.PI);
     return { w: d, h: d };
   }
   if (t.shape === "square") {
-    const side = Math.max(1, Math.ceil(t.capacity / 4) * 0.6);
+    const side = Math.max(t.kind === "head" ? 2.2 : 1.2, Math.ceil(t.capacity / 4) * 0.6);
     return { w: side, h: side };
   }
   return { w: Math.max(1.2, Math.ceil(t.capacity / 2) * 0.6), h: 0.9 };
 }
 
-/** Domyślne rozmieszczenie stołów bez pozycji: siatka w dolnej części sali, z odstępami. */
+/** Granice podłogi (bez ścian i ozdób) i parkietu na grafice tła sali — ułamki szerokości i długości. */
+const FLOOR = { x0: 0.09, x1: 0.91, y0: 0.17, y1: 0.87 };
+const DANCE = { x0: 0.366, x1: 0.633, y0: 0.355, y1: 0.723 };
+
+const round2 = (v: number) => Math.round(v * 100) / 100;
+
+/** Środki rozłożone równo na odcinku [a, b] co najmniej co `step` (pusty, gdy odcinek za krótki). */
+function spread(a: number, b: number, step: number): number[] {
+  if (b < a) return [];
+  const n = Math.floor((b - a) / step + 1e-9) + 1;
+  return n === 1 ? [(a + b) / 2] : Array.from({ length: n }, (_, i) => a + (i * (b - a)) / (n - 1));
+}
+
+/**
+ * Domyślne rozmieszczenie stołów bez pozycji: wokół parkietu (z lewej i z prawej), z dala od ścian;
+ * stół pary młodej na środku nad parkietem. Gdy sala jest za mała na takie ustawienie,
+ * pozostałe stoły trafiają do zwykłej siatki.
+ */
 export function defaultPositions(tables: SeatingTable[], room: Pick<Room, "width_m" | "length_m">): Map<string, Pos> {
   const out = new Map<string, Pos>();
   const loose = tables.filter((t) => t.pos_x == null || t.pos_y == null);
-  const cols = Math.max(1, Math.floor(room.width_m / 3.5));
-  loose.forEach((t, i) => {
-    const col = i % cols;
-    const row = Math.floor(i / cols);
+  if (loose.length === 0) return out;
+  const W = room.width_m;
+  const L = room.length_m;
+  // Promień stołu razem z krzesłami (największego z ustawianych) i odstęp między środkami.
+  const R = Math.max(...loose.map((t) => Math.max(tableSize(t).w, tableSize(t).h) / 2 + 0.35));
+  const step = 2 * R + 0.3;
+  const fx0 = W * FLOOR.x0 + R;
+  const fx1 = W * FLOOR.x1 - R;
+  const fy0 = L * FLOOR.y0 + R;
+  const fy1 = L * FLOOR.y1 - R;
+  const rows = spread(fy0, fy1, step);
+  const cols = [...spread(fx0, W * DANCE.x0 - R, step), ...spread(W * DANCE.x1 + R, fx1, step)];
+  // Najpierw rząd przy górnej i przy dolnej ścianie (symetrycznie), potem środkowe.
+  const rowOrder = rows.length > 2 ? [rows[0]!, rows[rows.length - 1]!, ...rows.slice(1, -1)] : rows;
+  const slots = rowOrder.flatMap((y) => cols.map((x) => ({ x, y })));
+  const headSlot = fy0 <= fy1 ? { x: W / 2, y: Math.max(fy0, L * DANCE.y0 - R) } : null;
+
+  const rest: SeatingTable[] = [];
+  let headUsed = false;
+  for (const t of [...loose.filter((t) => t.kind === "head"), ...loose.filter((t) => t.kind !== "head")]) {
+    let slot: { x: number; y: number } | undefined;
+    if (t.kind === "head" && headSlot && !headUsed) {
+      headUsed = true;
+      slot = headSlot;
+    } else {
+      slot = slots.shift();
+    }
+    if (slot) out.set(t.id, { x: round2(slot.x), y: round2(slot.y), rotation: 0 });
+    else rest.push(t);
+  }
+  // Za mało miejsca wokół parkietu: zwykła siatka w dolnej części sali.
+  const gridCols = Math.max(1, Math.floor(W / 3.5));
+  rest.forEach((t, i) => {
     out.set(t.id, {
-      x: Math.min(room.width_m - 1, 1.75 + col * 3.5),
-      y: Math.min(room.length_m - 1, room.length_m * 0.45 + row * 3),
+      x: Math.min(W - 1, 1.75 + (i % gridCols) * 3.5),
+      y: Math.min(L - 1, L * 0.45 + Math.floor(i / gridCols) * 3),
       rotation: 0,
     });
   });
+  // Kolejność jak na liście stołów (wydruk i testy czytają mapę po kolei).
+  return new Map(loose.map((t) => [t.id, out.get(t.id)!]));
+}
+
+/** Krzesła tuż przy stole (w metrach, względem środka; `rot` — obrót w stopniach, oparcie na zewnątrz). */
+export function chairPositions(t: Pick<SeatingTable, "shape" | "capacity"> & { kind?: string }): { x: number; y: number; rot: number }[] {
+  const { w, h } = tableSize(t);
+  const n = Math.min(Math.max(t.capacity, 0), 40);
+  const out: { x: number; y: number; rot: number }[] = [];
+  const gap = 0.1;
+  if (t.shape === "round") {
+    const r = w / 2 + gap;
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+      out.push({ x: Math.cos(a) * r, y: Math.sin(a) * r, rot: (a * 180) / Math.PI + 90 });
+    }
+    return out;
+  }
+  const sides = t.shape === "square" ? 4 : 2;
+  const per = [0, 1, 2, 3].map((i) => (i < sides ? Math.floor(n / sides) + (i < n % sides ? 1 : 0) : 0));
+  const spread = (count: number, len: number) => Array.from({ length: count }, (_, i) => ((i + 0.5) / count - 0.5) * len * 0.9);
+  spread(per[0] ?? 0, w).forEach((x) => out.push({ x, y: -h / 2 - gap, rot: 0 }));
+  spread(per[1] ?? 0, w).forEach((x) => out.push({ x, y: h / 2 + gap, rot: 180 }));
+  spread(per[2] ?? 0, h).forEach((y) => out.push({ x: -w / 2 - gap, y, rot: 270 }));
+  spread(per[3] ?? 0, h).forEach((y) => out.push({ x: w / 2 + gap, y, rot: 90 }));
   return out;
 }
 
+/**
+ * Grafiki stołów (okrągły i kwadratowy; zwykły i pary młodej) z miejscem na nazwę.
+ * cx/cy — środek blatu jako ułamek boku obrazka, body — szerokość blatu jako ułamek boku,
+ * label — przesunięcie napisu od środka blatu (w szerokościach blatu).
+ * Stoły prostokątne rysujemy wektorowo (grafika kwadratowa by się zniekształciła).
+ */
+const TABLE_ART = {
+  "regular-round": { file: "stol-goscie-okragly", cx: 0.503, cy: 0.499, body: 0.73, label: 0.36 },
+  "regular-square": { file: "stol-goscie-kwadrat", cx: 0.498, cy: 0.495, body: 0.65, label: 0.34 },
+  "head-round": { file: "stol-mlodych-okragly", cx: 0.498, cy: 0.603, body: 0.777, label: 0.13 },
+  "head-square": { file: "stol-mlodych-kwadrat", cx: 0.498, cy: 0.492, body: 0.65, label: 0.33 },
+} as const;
+
+function tableArt(t: Pick<SeatingTable, "shape" | "kind">) {
+  if (t.shape === "rectangular") return null;
+  return TABLE_ART[`${t.kind === "head" ? "head" : "regular"}-${t.shape}`];
+}
+
+/** Nazwa stołu pary młodej w dwóch wierszach („Stół pary / młodej”). */
+function headLines(name: string): string[] {
+  const words = name.split(" ");
+  if (words.length < 3) return [name];
+  const cut = Math.ceil(words.length / 2);
+  return [words.slice(0, cut).join(" "), words.slice(cut).join(" ")];
+}
+
+const MEDIA = "/media/plan-stolow";
+
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, Math.round(v * 2) / 2));
 
-export function RoomLayout({ weddingId, plan, canWrite }: { weddingId: string; plan: SeatingPlan; canWrite: boolean }) {
+export function RoomLayout({
+  weddingId,
+  plan,
+  canWrite,
+  onEditTable,
+}: {
+  weddingId: string;
+  plan: SeatingPlan;
+  canWrite: boolean;
+  onEditTable?: (id: string) => void;
+}) {
   const queryClient = useQueryClient();
   const toast = useToast();
   const room = plan.room;
@@ -155,10 +266,10 @@ export function RoomLayout({ weddingId, plan, canWrite }: { weddingId: string; p
       </div>
       {placedCount < plan.tables.length && (
         <p className="text-secondary">
-          Stoły bez pozycji ustawiliśmy wstępnie w siatce — przesuńcie je jak na sali i zapiszcie układ.
+          Stoły bez pozycji ustawiliśmy wstępnie wokół parkietu — przesuńcie je jak na sali i zapiszcie układ.
         </p>
       )}
-      <Card className="form-stack">
+      <Card className="form-stack room-card">
         <svg
           ref={svgRef}
           className="room-plan"
@@ -177,6 +288,17 @@ export function RoomLayout({ weddingId, plan, canWrite }: { weddingId: string; p
             {`Plan sali ${room.width_m} na ${room.length_m} m: ${plan.tables.length} stołów${roomItems.length ? ", " + roomItems.map((i) => i.label || ITEM_LABEL[i.kind]).join(", ") : ""}`}
           </title>
           <rect className="room-plan__floor" x={0} y={0} width={room.width_m} height={room.length_m} />
+          {/* Tło sali (grafika właściciela: podłoga, ściany, kwiaty i światła) rozciągnięte na wymiar sali. */}
+          <image
+            className="room-plan__backdrop"
+            href={`${MEDIA}/sala-tlo.webp`}
+            x={0}
+            y={0}
+            width={room.width_m}
+            height={room.length_m}
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          />
           {roomItems.map((i, n) => (
             <g key={`${i.kind}-${n}`} className={`room-plan__item room-plan__item--${i.kind}`}>
               <rect x={i.x - i.w / 2} y={i.y - i.h / 2} width={i.w} height={i.h} rx={0.2} />
@@ -189,6 +311,8 @@ export function RoomLayout({ weddingId, plan, canWrite }: { weddingId: string; p
             const p = posOf(t);
             const { w, h } = tableSize(t);
             const seated = t.capacity - t.free_seats;
+            const art = tableArt(t);
+            const fontSize = Math.min(t.kind === "head" ? 0.34 : 0.42, Math.max(0.28, w * 0.19));
             return (
               <g
                 key={t.id}
@@ -203,10 +327,58 @@ export function RoomLayout({ weddingId, plan, canWrite }: { weddingId: string; p
                 }}
               >
                 <title>{`${t.name}: ${seated} z ${t.capacity} miejsc`}</title>
-                {t.shape === "round" ? <circle r={w / 2} /> : <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={0.1} />}
-                <text className="room-plan__label" transform={`rotate(${-p.rotation})`}>
-                  {t.name}
-                </text>
+                {art ? (
+                  <>
+                    <image
+                      className="room-plan__art"
+                      href={`${MEDIA}/${art.file}.webp`}
+                      x={-art.cx * (w / art.body)}
+                      y={-art.cy * (w / art.body)}
+                      width={w / art.body}
+                      height={w / art.body}
+                    />
+                    {t.shape === "round" ? (
+                      <circle className="room-plan__outline" r={w / 2} />
+                    ) : (
+                      <rect className="room-plan__outline" x={-w / 2} y={-h / 2} width={w} height={h} rx={0.12} />
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {chairPositions(t).map((c, i) => (
+                      <rect
+                        key={i}
+                        className="room-plan__chair"
+                        x={-0.2}
+                        y={-0.15}
+                        width={0.4}
+                        height={0.3}
+                        rx={0.11}
+                        transform={`translate(${c.x} ${c.y}) rotate(${c.rot})`}
+                      />
+                    ))}
+                    <rect x={-w / 2} y={-h / 2} width={w} height={h} rx={0.1} />
+                  </>
+                )}
+                <g transform={`rotate(${-p.rotation})`}>
+                  {!art && (
+                    <image
+                      className="room-plan__icon"
+                      href={`${MEDIA}/${t.kind === "head" ? "obraczki" : "stol-kwiaty"}.webp`}
+                      x={-0.22}
+                      y={-0.5}
+                      width={0.44}
+                      height={0.44}
+                    />
+                  )}
+                  <text className="room-plan__label" y={art ? art.label * w : 0.25} style={{ fontSize: `${fontSize}px` }}>
+                    {(t.kind === "head" ? headLines(t.name) : [t.name]).map((line, i) => (
+                      <tspan key={i} x={0} dy={i === 0 ? 0 : fontSize * 1.25}>
+                        {line}
+                      </tspan>
+                    ))}
+                  </text>
+                </g>
               </g>
             );
           })}
@@ -236,9 +408,15 @@ export function RoomLayout({ weddingId, plan, canWrite }: { weddingId: string; p
               <Button variant="secondary" icon={<RotateCw aria-hidden size={18} />} onPress={() => move(sel.id, { rotation: posOf(sel).rotation + 45 })}>
                 Obróć
               </Button>
+              {onEditTable && (
+                <Button variant="secondary" icon={<Pencil aria-hidden size={18} />} onPress={() => onEditTable(sel.id)}>
+                  Kształt i wielkość stołu
+                </Button>
+              )}
             </div>
             <p className="text-secondary num" aria-live="polite">
-              {sel.name}: {posOf(sel).x} m od lewej, {posOf(sel).y} m od góry, obrót {posOf(sel).rotation}°
+              {sel.name} ({SHAPE_LABEL[sel.shape] ?? sel.shape}, {sel.capacity} miejsc, ok. {tableSize(sel).w.toFixed(1).replace(".", ",")}
+              {sel.shape === "round" ? "" : ` × ${tableSize(sel).h.toFixed(1).replace(".", ",")}`} m): {posOf(sel).x} m od lewej, {posOf(sel).y} m od góry, obrót {posOf(sel).rotation}°
             </p>
             {error && (
               <Notice tone="error" live>

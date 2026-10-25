@@ -401,6 +401,70 @@
   opacity: 0.8;
 }
 
+/* --- Etap 4: plan stołów, usługodawcy, oferty --- */
+
+/* Karty stołów: nazwa szeryfem, pudrowa poświata u góry, goście jak pudrowe żetony. */
+:root[data-theme="romantic"] .seating-table {
+  background: linear-gradient(180deg, var(--rm-blush-soft), var(--wp-surface) 4.5rem);
+}
+
+:root[data-theme="romantic"] .seating-table .row__title {
+  font: 400 1.25rem/1.2 var(--wp-font-heading);
+}
+
+:root[data-theme="romantic"] .person-chip {
+  border-color: var(--rm-blush);
+  background: color-mix(in srgb, var(--wp-surface) 70%, var(--rm-blush-soft));
+  transition: background-color 160ms var(--rm-ease), border-color 160ms var(--rm-ease);
+}
+
+:root[data-theme="romantic"] button.person-chip:hover {
+  background: var(--rm-blush);
+  border-color: var(--wp-gold-decorative);
+}
+
+/* Plan sali: kremowa podłoga z miedzianym obrysem, stoły pudrowe, wybrany — mocniejszy. */
+:root[data-theme="romantic"] .room-plan__floor {
+  fill: var(--wp-background);
+  stroke: var(--wp-gold-decorative);
+}
+
+:root[data-theme="romantic"] .room-plan__table circle,
+:root[data-theme="romantic"] .room-plan__table rect {
+  fill: var(--rm-blush);
+  stroke: var(--wp-action-primary);
+}
+
+:root[data-theme="romantic"] .room-plan__table.is-head circle,
+:root[data-theme="romantic"] .room-plan__table.is-head rect {
+  fill: var(--rm-blush-soft);
+  stroke: var(--wp-gold-decorative);
+}
+
+:root[data-theme="romantic"] .room-plan__item--dance_floor rect {
+  fill: color-mix(in srgb, var(--wp-gold-decorative) 18%, var(--wp-surface));
+}
+
+/* Usługodawcy: monogram w pudrowym kółku ze złotą obwódką. */
+:root[data-theme="romantic"] .vendor-mono {
+  background: var(--rm-blush-soft);
+  box-shadow: inset 0 0 0 1px var(--rm-blush);
+}
+
+/* Link wyglądający jak przycisk — bez podkreślenia (np. „Porównaj z innymi”). */
+:root[data-theme="romantic"] a.wp-button:not(.wp-button--text) {
+  text-decoration: none;
+}
+
+/* Oferty: kwoty pozycji szeryfem, suma porównania w miedzi. */
+:root[data-theme="romantic"] .offer-line__end strong {
+  font: 400 1.125rem/1.3 var(--wp-font-heading);
+}
+
+:root[data-theme="romantic"] .quote__total .stat__value {
+  color: var(--wp-action-primary);
+}
+
 /* Ograniczenie ruchu: bez uniesienia kart. */
 :root.reduce-motion[data-theme="romantic"] .link-card:hover,
 :root.reduce-motion[data-theme="romantic"] .household:hover {
@@ -435,3 +499,329 @@
     background: #fff;
   }
 }
+
+/* --- Plan stołów wg wzoru: nagłówek, statystyki, kafelki stołów, sala z krzesłami --- */
+.seating-head {
+  align-items: flex-start;
+}
+
+.seating-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--wp-space-2);
+}
+
+.seating-head__meta span + span::before {
+  content: "•";
+  margin-right: var(--wp-space-2);
+}
+
+.seating-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--wp-space-3);
+}
+
+.seating-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--wp-space-3);
+}
+
+.seating-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-3);
+  min-width: 0;
+  padding: var(--wp-space-3);
+  border: 1px solid var(--wp-separator);
+  border-radius: 14px;
+  background: var(--wp-surface);
+  color: var(--wp-text-primary);
+  font: inherit;
+  text-align: left;
+}
+
+button.seating-stat {
+  cursor: default;
+}
+
+button.seating-stat:not(:disabled) {
+  cursor: pointer;
+}
+
+.seating-stat__icon,
+.seating-table__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--wp-accent-surface);
+}
+
+.seating-stat__icon img {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.seating-stat__value {
+  display: block;
+  font: 400 1.5rem/1.1 var(--wp-font-heading, serif);
+}
+
+.seating-stat__label {
+  display: block;
+  color: var(--wp-text-secondary);
+  font-size: var(--wp-type-secondary, 0.875rem);
+}
+
+.seating-stat--warn .seating-stat__value {
+  color: var(--wp-warning-text);
+}
+
+.seating-table {
+  position: relative;
+  overflow: hidden;
+}
+
+.seating-table__top {
+  display: flex;
+  align-items: center;
+  gap: var(--wp-space-3);
+}
+
+.seating-table__name {
+  flex: 1;
+  min-width: 0;
+}
+
+.seating-table__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.seating-table__icon img {
+  width: 1.75rem;
+  height: 1.75rem;
+  object-fit: contain;
+}
+
+.seating-table__guests {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.25rem;
+  vertical-align: -0.15em;
+}
+
+.seating-table--head {
+  border-color: var(--wp-action-primary);
+  background: linear-gradient(135deg, var(--rm-blush-soft), var(--wp-surface));
+}
+
+.seating-table__corner {
+  position: absolute;
+  width: 2.75rem;
+  height: 2.75rem;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.seating-table__corner--l {
+  left: -0.4rem;
+  bottom: -0.4rem;
+  transform: scaleY(-1);
+}
+
+.seating-table__corner--r {
+  right: -0.4rem;
+  bottom: -0.4rem;
+  transform: rotate(180deg);
+}
+
+.room-plan__frame {
+  fill: none;
+  stroke: var(--wp-gold-decorative, var(--wp-separator));
+  stroke-width: 0.05;
+  pointer-events: none;
+}
+
+.room-plan__window {
+  fill: var(--wp-surface);
+  stroke: var(--wp-gold-decorative, var(--wp-separator));
+  stroke-width: 0.04;
+}
+
+:root[data-theme] .room-plan__table .room-plan__chair,
+.room-plan__chair {
+  fill: color-mix(in srgb, var(--rm-blush) 35%, var(--wp-surface));
+  stroke: color-mix(in srgb, var(--wp-action-primary) 60%, var(--rm-blush));
+  stroke-width: 0.04;
+  pointer-events: none;
+}
+
+.room-plan__door {
+  fill: none;
+  stroke: var(--wp-gold-decorative, var(--wp-separator));
+  stroke-width: 0.04;
+}
+
+:root[data-theme="romantic"] .room-plan__table circle:not(.room-plan__chair),
+:root[data-theme="romantic"] .room-plan__table rect:not(.room-plan__chair) {
+  fill: color-mix(in srgb, var(--rm-blush) 80%, var(--wp-surface));
+  stroke: color-mix(in srgb, var(--wp-action-primary) 70%, var(--rm-blush));
+  stroke-width: 0.06;
+}
+
+:root[data-theme="romantic"] .room-plan__table.is-selected circle:not(.room-plan__chair),
+:root[data-theme="romantic"] .room-plan__table.is-selected rect:not(.room-plan__chair) {
+  stroke: var(--wp-action-primary);
+  stroke-width: 0.1;
+}
+
+:root[data-theme="romantic"] .room-plan__table.is-head circle:not(.room-plan__chair),
+:root[data-theme="romantic"] .room-plan__table.is-head rect:not(.room-plan__chair) {
+  fill: var(--wp-action-primary);
+  stroke: var(--wp-action-primary);
+}
+
+.room-plan__label {
+  stroke: none;
+  font-size: 0.38px;
+  font-weight: 500;
+  fill: var(--wp-text-primary);
+}
+
+.room-plan__table.is-head .room-plan__label {
+  font-size: 0.34px;
+  fill: var(--wp-text-on-primary);
+  stroke: none;
+  font-weight: 700;
+}
+
+.room-plan__decor image,
+.room-plan__arch,
+.room-plan__icon {
+  pointer-events: none;
+}
+
+.page:has(.seating-stats) {
+  position: relative;
+}
+
+.page:has(.seating-stats)::after {
+  content: "";
+  position: absolute;
+  top: 4rem;
+  right: -5rem;
+  width: 8rem;
+  height: 13rem;
+  background: url("/media/plan-stolow/galazka.webp") right top / contain no-repeat;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+@media (max-width: 1500px) {
+  .page:has(.seating-stats)::after {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .seating-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .page:has(.seating-stats)::after,
+  .seating-table__corner {
+    display: none;
+  }
+}
+
+/* Stoły z grafik: obrys niewidoczny (pole do chwytania), widoczny dopiero dla wybranego stołu. */
+:root[data-theme] .room-plan__table.room-plan__table .room-plan__outline.room-plan__outline {
+  fill: transparent;
+  stroke: none;
+}
+
+:root[data-theme] .room-plan__table.room-plan__table.is-selected .room-plan__outline.room-plan__outline {
+  stroke: var(--wp-action-primary);
+  stroke-width: 0.08;
+  stroke-dasharray: 0.25 0.15;
+}
+
+.room-plan__art {
+  cursor: grab;
+}
+
+/* Grafiki stołów są jasne także w trybie ciemnym — kolory napisów stałe, dobrane do grafik. */
+.room-plan__table .room-plan__label {
+  fill: #7a4436;
+  font-weight: 700;
+}
+
+.room-plan__table.is-head .room-plan__label {
+  fill: #fff8f4;
+}
+
+/* Stół prostokątny (bez grafiki) w kolorach grafik: kremowy blat, miedziana obwódka. */
+:root[data-theme] .room-plan__table.room-plan__table:not(.is-head) rect:not(.room-plan__chair):not(.room-plan__outline) {
+  fill: #f6ebe3;
+  stroke: #c98b6b;
+  stroke-width: 0.05;
+}
+
+:root[data-theme] .room-plan__table.room-plan__table .room-plan__chair {
+  fill: #f3e6dc;
+  stroke: #c98b6b;
+  stroke-width: 0.04;
+}
+
+/* Nazwa stołu na planie pojawia się dopiero po najechaniu myszą albo wybraniu stołu
+   (pełna nazwa i liczba miejsc są też w podpowiedzi <title> i na liście „Przesuń stół”). */
+.room-plan__table .room-plan__label {
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.room-plan__table:hover .room-plan__label,
+.room-plan__table.is-selected .room-plan__label {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .room-plan__table .room-plan__label {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .room-plan__table .room-plan__label {
+    transition: none;
+  }
+}
+
+.room-plan__backdrop {
+  pointer-events: none;
+}
+
+/* Plan sali na całą szerokość karty (bez białego marginesu); przyciski pod spodem z normalnym odstępem. */
+.room-card {
+  overflow: hidden;
+}
+
+.room-card > .room-plan {
+  width: calc(100% + 2 * var(--wp-space-4));
+  max-width: none;
+  max-height: none;
+  margin: calc(-1 * var(--wp-space-4)) calc(-1 * var(--wp-space-4)) 0;
+}
+
+.room-card > .room-plan:last-child {
+  margin-bottom: calc(-1 * var(--wp-space-4));
+}
+
