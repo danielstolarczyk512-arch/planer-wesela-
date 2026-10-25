@@ -89,6 +89,38 @@ services:
     depends_on:
       migrate: { condition: service_completed_successfully }
 
+  # Badacz katalogu firm (opcjonalny: `--profile discovery`; nie startuje domyślnie). Zob. ADR-0008.
+  discovery-worker:
+    <<: *app
+    profiles: ["discovery"]
+    environment:
+      <<: *app-env
+      WP_WORKER_LANE: discovery
+    command: ["python", "-m", "app.jobs.worker"]
+    healthcheck:
+      disable: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 512m
+    cpus: 0.5
+    pids_limit: 128
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  discovery-scheduler:
+    <<: *app
+    profiles: ["discovery"]
+    command: ["python", "-m", "app.modules.discovery.scheduler"]
+    healthcheck:
+      disable: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    cpus: 0.25
+    pids_limit: 64
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
   clamav:
     # ClamAV (GPL) jako osobny proces; aplikacja rozmawia z clamd przez TCP (ADR-0006).
     # Bez publikowanych portów. Potrzebuje internetu do aktualizacji sygnatur (freshclam)

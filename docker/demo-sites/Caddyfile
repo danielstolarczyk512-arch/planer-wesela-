@@ -1,0 +1,17 @@
+# Fikcyjne strony fotografów do pokazu badacza (profil e2e). To NIE są prawdziwe firmy.
+# Badacz pobiera je tą samą ścieżką co zwykłe strony (z robots.txt, limitami i kontrolą adresów);
+# jedyna różnica to zgoda na adresy prywatne w kontenerach e2e (WP_DISCOVERY_ALLOW_PRIVATE_HOSTS).
+{
+	auto_https off
+	admin off
+}
+
+http://demo-foto-ola:8080 {
+	root * /srv/ola
+	file_server
+}
+
+http://demo-foto-bartek:8080 {
+	root * /srv/bartek
+	file_server
+}

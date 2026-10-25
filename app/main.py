@@ -12,10 +12,15 @@ from app.modules.ai.router import router as ai_router
 from app.modules.budget.router import router as budget_router
 from app.modules.calendar.router import public_router as calendar_public_router
 from app.modules.calendar.router import router as calendar_router
+from app.modules.catalog.router import admin_router as catalog_admin_router
+from app.modules.catalog.router import router as catalog_router
+from app.modules.concierge.router import router as concierge_router
+from app.modules.discovery.router import router as discovery_router
 from app.modules.documents.router import router as documents_router
 from app.modules.guests.router import public_router as rsvp_router
 from app.modules.guests.router import router as guests_router
 from app.modules.identity.router import auth_router, me_router
+from app.modules.inquiries.router import router as inquiries_router
 from app.modules.logistics.router import router as logistics_router
 from app.modules.menu.router import router as menu_router
 from app.modules.notifications.router import router as notifications_router
@@ -72,6 +77,11 @@ def create_app() -> FastAPI:
         seating_router,
         logistics_router,
         aftercare_router,
+        catalog_router,
+        catalog_admin_router,
+        discovery_router,
+        concierge_router,
+        inquiries_router,
         calendar_router,
         calendar_public_router,
         day_public_router,

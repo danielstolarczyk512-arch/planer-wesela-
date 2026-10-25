@@ -3,8 +3,10 @@
 Uruchomienie: python -m app.jobs.worker
 
 Tory (WP_WORKER_LANE): `all` — wszystkie zadania i utrzymanie (dev, jedyny worker);
-`fast` — tylko szybkie zadania (e-maile), bez utrzymania. W produkcji działają oba: OCR, AI
-i automat stołów (minuty) nie wstrzymują wtedy resetu hasła ani linków RSVP.
+`fast` — tylko szybkie zadania (e-maile), bez utrzymania; `discovery` — wyłącznie zadania
+badacza katalogu (pobieranie stron firm; osobny proces z własnymi ograniczeniami sieci). Tor `all`
+zadań badacza NIE przejmuje. W produkcji działają `all` i `fast`: OCR, AI i automat stołów
+(minuty) nie wstrzymują wtedy resetu hasła ani linków RSVP.
 """
 
 import signal
@@ -29,7 +31,11 @@ from app.core.logging import configure_logging
 from app.jobs.queue import Job, claim_next, extend_lock, purge_finished, requeue_stale
 from app.modules.ai import service as ai
 from app.modules.audit import service as audit
+from app.modules.concierge import chat as concierge_chat
+from app.modules.concierge import service as concierge
+from app.modules.discovery import service as discovery
 from app.modules.documents import service as documents
+from app.modules.inquiries import service as inquiries
 from app.modules.seating import service as seating
 
 log = structlog.get_logger()
@@ -58,16 +64,29 @@ HANDLERS: dict[str, Handler] = {
     documents.DELETE_PREFIX_JOB: documents.run_delete_prefix,
     ai.EXTRACT_JOB: ai.run_offer_extraction,
     seating.AUTO_JOB: seating.run_auto_job,
+    discovery.FETCH_JOB: discovery.run_fetch_source,
+    discovery.REQUEST_JOB: concierge.run_discovery_request,
+    concierge_chat.REPLY_JOB: concierge_chat.run_reply,
+    inquiries.SEND_JOB: inquiries.run_send,
 }
 
 
 # Zadania, które obsługuje tor `fast`: krótkie i pilne dla użytkownika.
-FAST_JOBS = frozenset({SEND_EMAIL_JOB})
+FAST_JOBS = frozenset({SEND_EMAIL_JOB, inquiries.SEND_JOB})
 
 
 def lane_types(lane: str) -> frozenset[str] | None:
-    """Typy zadań toru; None = wszystkie."""
-    return FAST_JOBS if lane == "fast" else None
+    """Typy zadań toru; None = wszystkie (poza zadaniami badacza, zob. `lane_excluded`)."""
+    if lane == "fast":
+        return FAST_JOBS
+    if lane == "discovery":
+        return discovery.DISCOVERY_JOBS
+    return None
+
+
+def lane_excluded(lane: str) -> frozenset[str]:
+    """Typy, których tor nie przejmuje: tor `all` zostawia zadania sieciowe badaczowi."""
+    return discovery.DISCOVERY_JOBS if lane == "all" else frozenset()
 
 
 def _backoff(attempts: int) -> timedelta:
@@ -141,11 +160,13 @@ def run_job(job_id: UUID, handlers: dict[str, Handler] | None = None) -> None:
 
 
 def run_once(
-    handlers: dict[str, Handler] | None = None, types: frozenset[str] | None = None
+    handlers: dict[str, Handler] | None = None,
+    types: frozenset[str] | None = None,
+    exclude: frozenset[str] | None = None,
 ) -> bool:
     """Wykonuje jedno zadanie (z typów toru). Zwraca False, gdy kolejka jest pusta."""
     with get_sessionmaker()() as db:
-        job = claim_next(db, types)
+        job = claim_next(db, types, exclude)
         job_id = job.id if job else None
     if job_id is None:
         return False
@@ -213,9 +234,17 @@ def main() -> None:
     signal.signal(signal.SIGTERM, _stop)
     signal.signal(signal.SIGINT, _stop)
     types = lane_types(settings.worker_lane)
+    excluded = lane_excluded(settings.worker_lane)
     log.info("worker_started", lane=settings.worker_lane)
     last_maintenance = 0.0
+    last_beat = 0.0
     while not stopping:
+        if settings.worker_lane == "discovery" and time.monotonic() - last_beat > 30:
+            try:
+                discovery.beat_worker()
+            except Exception:
+                log.exception("discovery_beat_failed")
+            last_beat = time.monotonic()
         if (
             settings.worker_lane == "all"
             and time.monotonic() - last_maintenance > MAINTENANCE_INTERVAL.total_seconds()
@@ -226,7 +255,7 @@ def main() -> None:
                 log.exception("maintenance_failed")
             last_maintenance = time.monotonic()
         try:
-            worked = run_once(types=types)
+            worked = run_once(types=types, exclude=excluded)
         except Exception:
             log.exception("worker_loop_error")
             worked = False

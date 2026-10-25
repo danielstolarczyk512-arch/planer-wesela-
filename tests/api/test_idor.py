@@ -65,6 +65,58 @@ CASES = [
     ("GET", f"{W}/guests/export.csv", None),
     ("GET", f"{W}/budget/export.csv", None),
     ("POST", f"{W}/rsvp-qr", {"dry_run": True}),
+    # dobór usługodawców i zapytania do firm (etapy 2-3 pakietu „agenci weselni”)
+    ("GET", f"{W}/vendor-preferences/{{x}}", None),
+    ("PUT", f"{W}/vendor-preferences/{{x}}", {"notes": "X"}),
+    ("POST", f"{W}/vendor-search", {"category": "photographer"}),
+    ("GET", f"{W}/candidates", None),
+    ("POST", f"{W}/candidates", {"catalog_vendor_id": FAKE}),
+    ("PATCH", f"{W}/candidates/{{x}}", {"state": "rejected"}),
+    ("POST", f"{W}/candidates/{{x}}/to-vendor", None),
+    ("GET", f"{W}/candidates-compare?ids={{x}}&ids={{x}}", None),
+    ("GET", f"{W}/discovery-requests", None),
+    ("POST", f"{W}/discovery-requests", {"category": "dj"}),
+    ("GET", f"{W}/discovery-requests/{{x}}", None),
+    ("GET", f"{W}/concierge/conversations", None),
+    ("POST", f"{W}/concierge/conversations", None),
+    ("GET", f"{W}/concierge/conversations/{{x}}/messages", None),
+    ("POST", f"{W}/concierge/conversations/{{x}}/messages", {"text": "X"}),
+    ("GET", f"{W}/inquiries", None),
+    ("POST", f"{W}/inquiries", {"recipients": [{"catalog_vendor_id": FAKE}]}),
+    ("GET", f"{W}/inquiries/{{x}}", None),
+    (
+        "PUT",
+        f"{W}/inquiries/{{x}}",
+        {"base_revision": 1, "to_email": "x@example.com", "subject": "X", "body": "X"},
+    ),
+    ("DELETE", f"{W}/inquiries/{{x}}", None),
+    (
+        "POST",
+        f"{W}/inquiries/{{x}}/approve-and-send",
+        {
+            "revision_id": FAKE,
+            "content_hash": "0" * 64,
+            "to_email": "x@example.com",
+        },
+    ),
+    (
+        "POST",
+        f"{W}/inquiries-approve-and-send",
+        {
+            "items": [
+                [
+                    FAKE,
+                    {
+                        "revision_id": FAKE,
+                        "content_hash": "0" * 64,
+                        "to_email": "x@example.com",
+                    },
+                ]
+            ]
+        },
+    ),
+    ("POST", f"{W}/inquiries/{{x}}/import-response", {"text": "X"}),
+    ("POST", f"{W}/inquiries/{{x}}/responses/{{x}}/analyze", None),
     # budżet
     ("GET", f"{W}/budget/categories", None),
     ("POST", f"{W}/budget/categories", {"name": "X"}),

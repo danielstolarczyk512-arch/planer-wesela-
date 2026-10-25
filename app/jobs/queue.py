@@ -67,12 +67,16 @@ def enqueue(
     return job
 
 
-def claim_next(db: Session, types: Collection[str] | None = None) -> Job | None:
-    """Pobiera najstarsze gotowe zadanie; `types` zawęża do wskazanych typów (tor workera)."""
+def claim_next(
+    db: Session, types: Collection[str] | None = None, exclude: Collection[str] | None = None
+) -> Job | None:
+    """Pobiera najstarsze gotowe zadanie; `types` zawęża do typów toru, `exclude` je pomija."""
     now = utcnow()
     query = select(Job).where(Job.status == "queued", Job.run_after <= now)
     if types is not None:
         query = query.where(Job.type.in_(types))
+    if exclude:
+        query = query.where(Job.type.not_in(exclude))
     job = db.scalars(
         query.order_by(Job.run_after).limit(1).with_for_update(skip_locked=True)
     ).first()

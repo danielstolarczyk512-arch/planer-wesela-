@@ -88,6 +88,8 @@ services:
       WP_PUBLIC_APP_URL: http://localhost:5174
       # Testy przeglądarkowe otwierają wiele stron RSVP z jednego adresu IP.
       WP_RSVP_RATE_LIMIT: "2000"
+      # Pokaz badacza na fikcyjnych stronach w sieci Dockera (tylko środowisko e2e; prod to blokuje).
+      WP_DISCOVERY_ALLOW_PRIVATE_HOSTS: "true"
     command:
       - sh
       - -c
@@ -124,6 +126,45 @@ services:
       migrate-e2e:
         condition: service_completed_successfully
 
+  # --- pokaz badacza na danych E2E (profil e2e): fikcyjne strony fotografów + badacz na bazie wedding_e2e ---
+  # Strony to fixtures (docker/demo-sites), a nie prawdziwe firmy. Badacz pobiera je normalną ścieżką;
+  # zgoda na adresy prywatne dotyczy WYŁĄCZNIE tych kontenerów (w produkcji walidator ją blokuje).
+  demo-sites:
+    image: caddy:2.10-alpine
+    profiles: ["e2e"]
+    volumes:
+      - ./docker/demo-sites/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./docker/demo-sites/sites:/srv:ro
+    networks:
+      default:
+        aliases: [demo-foto-ola, demo-foto-bartek]
+    restart: unless-stopped
+
+  discovery-worker-e2e:
+    <<: *app
+    profiles: ["e2e"]
+    environment: &e2e-discovery-env
+      <<: *e2e-env
+      WP_WORKER_LANE: discovery
+      WP_DISCOVERY_DOMAIN_MIN_INTERVAL_SECONDS: "1"
+    command: ["python", "-m", "app.jobs.worker"]
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate-e2e:
+        condition: service_completed_successfully
+
+  discovery-scheduler-e2e:
+    <<: *app
+    profiles: ["e2e"]
+    environment: *e2e-discovery-env
+    command: ["python", "-m", "app.modules.discovery.scheduler"]
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate-e2e:
+        condition: service_completed_successfully
+
   clamav:
     # ClamAV (GPL) wyłącznie jako osobny proces — aplikacja łączy się z clamd przez TCP (ADR-0006).
     # Pierwszy start pobiera bazę sygnatur (ok. 300 MB) i ładuje ją 1–2 min; potrzebuje ok. 1,5 GB RAM.
@@ -151,6 +192,43 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  # --- badacz katalogu firm (profil discovery, ADR-0008) ---
+  # Opcjonalny: `docker compose --profile discovery up -d`. Pobiera TYLKO strony podane przez
+  # administratora w panelu (API /admin/discovery). Bez montowania docker.sock i katalogów
+  # użytkownika, bez wolumenu plików, z limitami zasobów. Zadań badacza nie przejmuje zwykły worker.
+  discovery-worker:
+    <<: *app
+    profiles: ["discovery"]
+    environment:
+      <<: *app-env
+      WP_WORKER_LANE: discovery
+    command: ["python", "-m", "app.jobs.worker"]
+    healthcheck:
+      disable: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 512m
+    cpus: 0.5
+    pids_limit: 128
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  discovery-scheduler:
+    <<: *app
+    profiles: ["discovery"]
+    command: ["python", "-m", "app.modules.discovery.scheduler"]
+    healthcheck:
+      disable: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 256m
+    cpus: 0.25
+    pids_limit: 64
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
   mailpit:
     # Przechwytuje e-maile w dev (nic nie wychodzi do internetu). UI: http://localhost:8025

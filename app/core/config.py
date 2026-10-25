@@ -9,7 +9,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 # Znacznik wartości przykładowej (nie sekret).
 _DEV_SECRET_MARKER = "change-me"  # noqa: S105  # nosec B105
 # Serwery SMTP, z którymi połączenie nie opuszcza maszyny ani sieci Dockera (bez STARTTLS w prod).
-_LOCAL_SMTP_HOSTS = frozenset({"localhost", "127.0.0.1", "::1", "mailpit"})
+LOCAL_SMTP_HOSTS = frozenset({"localhost", "127.0.0.1", "::1", "mailpit"})
+_LOCAL_SMTP_HOSTS = LOCAL_SMTP_HOSTS
 
 
 class Settings(BaseSettings):
@@ -89,12 +90,35 @@ class Settings(BaseSettings):
     ai_provider: Literal["ollama", "fake", "fake_external"] = "ollama"
     # Tor workera (app/jobs/worker.py): "all" — wszystkie zadania i utrzymanie; "fast" — tylko
     # e-maile (w produkcji osobny kontener, żeby OCR/AI nie wstrzymywały wysyłki).
-    worker_lane: Literal["all", "fast"] = "all"
+    worker_lane: Literal["all", "fast", "discovery"] = "all"
     ollama_url: str = "http://localhost:11434"
     ollama_model: str = "qwen2.5:7b-instruct"
     ai_timeout_seconds: int = 600
     ai_max_input_chars: int = 20000
     ai_max_runs_per_wedding_per_day: int = 20
+    # Badacz katalogu firm (ADR-0008): pobiera tylko strony podane przez administratora.
+    # Wartości domyślne wg pakietu „agenci weselni”; to limity produktu, nie uprawnienie do
+    # pobrania danej strony. Rozmiary w bajtach, czasy w sekundach.
+    discovery_user_agent: str = "NaszDzienBot/1.0 (+https://example.invalid/bot)"
+    discovery_timeout_seconds: int = 20
+    discovery_max_html_bytes: int = 2_000_000
+    discovery_max_redirects: int = 3
+    discovery_domain_min_interval_seconds: int = 5
+    discovery_max_attempts: int = 3
+    discovery_daily_fetch_limit: int = 100
+    discovery_price_refresh_days: int = 14
+    discovery_observation_retention_days: int = 90
+    # Tylko testy i lokalny pokaz: pozwala pobierać z adresów prywatnych (kontrolowany serwer).
+    # W produkcji i poza WP_ENV=test/dev walidator wymusza false.
+    discovery_allow_private_hosts: bool = False
+    # Asystent doboru usługodawców: limit wiadomości pary na wesele na dobę.
+    concierge_max_messages_per_day: int = 100
+    # Zapytania do firm (etap 3): MVP wysyła tylko do lokalnego Mailpit. Prawdziwa wysyłka wymaga
+    # decyzji właściciela (nadawca, SPF/DKIM/DMARC, odbiór odpowiedzi, zasady kontaktu — etap 4).
+    inquiry_real_smtp: bool = False
+    inquiry_max_sends_per_day: int = 20
+    inquiry_max_per_recipient_per_day: int = 3
+    inquiry_send_attempts: int = 4
     log_level: str = "INFO"
     log_json: bool = True
 
@@ -123,6 +147,8 @@ class Settings(BaseSettings):
                 raise ValueError("W produkcji WP_JWT_SECRET nie może być wartością przykładową")
             if self.expose_docs:
                 raise ValueError("W produkcji ustaw WP_EXPOSE_DOCS=false")
+            if self.discovery_allow_private_hosts:
+                raise ValueError("W produkcji WP_DISCOVERY_ALLOW_PRIVATE_HOSTS musi być false")
             if not self.clamav_host:
                 raise ValueError("W produkcji ustaw WP_CLAMAV_HOST (skanowanie plików, ClamAV)")
             self._prod_url_mail_ai()

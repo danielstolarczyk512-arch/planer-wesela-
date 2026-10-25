@@ -3319,6 +3319,559 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/catalog/vendors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Katalog firm (opublikowane, publiczne dane) */
+        get: operations["list_vendors_api_v1_catalog_vendors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/catalog/vendors/{vendor_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Firma z katalogu */
+        get: operations["get_vendor_api_v1_catalog_vendors__vendor_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/catalog/vendors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Wszystkie firmy katalogu (także niepublikowane) */
+        get: operations["admin_vendors_api_v1_admin_catalog_vendors_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/catalog/vendors/{vendor_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Zmiana statusu publikacji */
+        put: operations["admin_set_status_api_v1_admin_catalog_vendors__vendor_id__status_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/catalog/vendors/{vendor_id}/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Tagi stylu potwierdzone przez człowieka */
+        put: operations["admin_set_tags_api_v1_admin_catalog_vendors__vendor_id__tags_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/catalog/vendors/{vendor_id}/merge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Scal firmę (odwracalne) */
+        post: operations["admin_merge_api_v1_admin_catalog_vendors__vendor_id__merge_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/catalog/vendors/{vendor_id}/unmerge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cofnij scalenie */
+        post: operations["admin_unmerge_api_v1_admin_catalog_vendors__vendor_id__unmerge_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/catalog/review": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Kolejka weryfikacji */
+        get: operations["admin_review_api_v1_admin_catalog_review_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/catalog/review/{review_id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Zamknij wpis weryfikacji */
+        post: operations["admin_resolve_api_v1_admin_catalog_review__review_id__resolve_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/discovery/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Stan badacza: tętno, kolejka, źródła, możliwości */
+        get: operations["status_api_v1_admin_discovery_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/discovery/pause": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Wstrzymaj badacza */
+        post: operations["pause_api_v1_admin_discovery_pause_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/discovery/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Wznów badacza */
+        post: operations["resume_api_v1_admin_discovery_resume_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/discovery/limits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Dzienny limit pobrań */
+        put: operations["limits_api_v1_admin_discovery_limits_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/discovery/sources": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Źródła (strony firm) */
+        get: operations["list_sources_api_v1_admin_discovery_sources_get"];
+        put?: never;
+        /** Dodaj stronę firmy jako źródło */
+        post: operations["create_source_api_v1_admin_discovery_sources_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/discovery/sources/{source_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Wstrzymaj albo wznów źródło */
+        patch: operations["patch_source_api_v1_admin_discovery_sources__source_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/admin/discovery/sources/{source_id}/fetch-now": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Odśwież teraz */
+        post: operations["fetch_now_api_v1_admin_discovery_sources__source_id__fetch_now_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/vendor-preferences/{category}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preferencje kategorii */
+        get: operations["get_preferences_api_v1_weddings__wedding_id__vendor_preferences__category__get"];
+        /** Zapis preferencji (If-Match przy zmianie) */
+        put: operations["put_preferences_api_v1_weddings__wedding_id__vendor_preferences__category__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/vendor-search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dobór z katalogu wg preferencji (bez AI) */
+        post: operations["vendor_search_api_v1_weddings__wedding_id__vendor_search_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista kandydatów */
+        get: operations["list_candidates_api_v1_weddings__wedding_id__candidates_get"];
+        put?: never;
+        /** Zapisz firmę z katalogu */
+        post: operations["save_candidate_api_v1_weddings__wedding_id__candidates_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/candidates/{candidate_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Zapisz/odrzuć kandydata */
+        patch: operations["patch_candidate_api_v1_weddings__wedding_id__candidates__candidate_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/candidates/{candidate_id}/to-vendor": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dodaj do moich usługodawców */
+        post: operations["candidate_to_vendor_api_v1_weddings__wedding_id__candidates__candidate_id__to_vendor_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/candidates-compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Porównanie 2–4 firm z katalogu */
+        get: operations["compare_api_v1_weddings__wedding_id__candidates_compare_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/discovery-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Zlecenia researchu */
+        get: operations["list_requests_api_v1_weddings__wedding_id__discovery_requests_get"];
+        put?: never;
+        /** Poproś o odświeżenie źródeł */
+        post: operations["create_request_api_v1_weddings__wedding_id__discovery_requests_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/discovery-requests/{request_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Stan zlecenia */
+        get: operations["get_request_api_v1_weddings__wedding_id__discovery_requests__request_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/concierge/conversations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Rozmowy z asystentem */
+        get: operations["list_conversations_api_v1_weddings__wedding_id__concierge_conversations_get"];
+        put?: never;
+        /** Nowa rozmowa */
+        post: operations["create_conversation_api_v1_weddings__wedding_id__concierge_conversations_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/concierge/conversations/{conversation_id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Wiadomości rozmowy */
+        get: operations["get_messages_api_v1_weddings__wedding_id__concierge_conversations__conversation_id__messages_get"];
+        put?: never;
+        /** Napisz do asystenta (odpowiedź w tle) */
+        post: operations["post_message_api_v1_weddings__wedding_id__concierge_conversations__conversation_id__messages_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/inquiries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Zapytania do firm */
+        get: operations["list_inquiries_api_v1_weddings__wedding_id__inquiries_get"];
+        put?: never;
+        /** Szkice zapytań (nic nie wysyła) */
+        post: operations["create_drafts_api_v1_weddings__wedding_id__inquiries_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/inquiries/{inquiry_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Zapytanie z odpowiedziami */
+        get: operations["get_inquiry_api_v1_weddings__wedding_id__inquiries__inquiry_id__get"];
+        /** Zmiana treści/adresata = nowa rewizja bez zgody */
+        put: operations["edit_inquiry_api_v1_weddings__wedding_id__inquiries__inquiry_id__put"];
+        post?: never;
+        /** Usuń szkic (niewysłany) */
+        delete: operations["delete_inquiry_api_v1_weddings__wedding_id__inquiries__inquiry_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/inquiries/{inquiry_id}/approve-and-send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Zatwierdź rewizję i wyślij (idempotentne) */
+        post: operations["approve_and_send_api_v1_weddings__wedding_id__inquiries__inquiry_id__approve_and_send_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/inquiries-approve-and-send": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Zatwierdź i wyślij kilka zapytań naraz */
+        post: operations["approve_batch_api_v1_weddings__wedding_id__inquiries_approve_and_send_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/inquiries/{inquiry_id}/import-response": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dodaj odpowiedź firmy (wklejona ręcznie) */
+        post: operations["import_response_api_v1_weddings__wedding_id__inquiries__inquiry_id__import_response_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/weddings/{wedding_id}/inquiries/{inquiry_id}/responses/{response_id}/analyze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Przeanalizuj odpowiedź (szkic oferty do zatwierdzenia) */
+        post: operations["analyze_response_api_v1_weddings__wedding_id__inquiries__inquiry_id__responses__response_id__analyze_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/weddings/{wedding_id}/calendar": {
         parameters: {
             query?: never;
@@ -3467,6 +4020,29 @@ export interface components {
              */
             acknowledged_at: string;
         };
+        /** AdminVendorOut */
+        AdminVendorOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** City */
+            city: string | null;
+            /** Publication Status */
+            publication_status: string;
+            /** Merged Into Id */
+            merged_into_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /** AfterPartyForecast */
         AfterPartyForecast: {
             /** Event Name */
@@ -3592,14 +4168,16 @@ export interface components {
              */
             text?: string | null;
         };
-        /** ApproveIn */
-        ApproveIn: {
+        /** ApproveResult */
+        ApproveResult: {
             /**
-             * Confirm Unverified
-             * @description Potwierdzam pola oznaczone jako niepewne/niezweryfikowane
-             * @default false
+             * Inquiry Id
+             * Format: uuid
              */
-            confirm_unverified: boolean;
+            inquiry_id: string;
+            /** Created */
+            created: boolean;
+            inquiry: components["schemas"]["InquiryOut"];
         };
         /** AssignmentIn */
         AssignmentIn: {
@@ -3818,6 +4396,14 @@ export interface components {
             /** @description Propozycja (status done) */
             result: components["schemas"]["AutoResult"] | null;
         };
+        /** BatchApproveIn */
+        BatchApproveIn: {
+            /** Items */
+            items: [
+                string,
+                components["schemas"]["app__modules__inquiries__schemas__ApproveIn"]
+            ][];
+        };
         /** Body_add_version_api_v1_weddings__wedding_id__documents__document_id__versions_post */
         Body_add_version_api_v1_weddings__wedding_id__documents__document_id__versions_post: {
             /**
@@ -4020,6 +4606,64 @@ export interface components {
              */
             link?: string | null;
         };
+        /** CandidateCompareOut */
+        CandidateCompareOut: {
+            /** Category */
+            category: string;
+            /** Items */
+            items: components["schemas"]["MatchOut"][];
+        };
+        /** CandidateIn */
+        CandidateIn: {
+            /**
+             * Catalog Vendor Id
+             * Format: uuid
+             */
+            catalog_vendor_id: string;
+            /** Note */
+            note?: string | null;
+        };
+        /** CandidateOut */
+        CandidateOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Catalog Vendor Id
+             * Format: uuid
+             */
+            catalog_vendor_id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** City */
+            city: string | null;
+            /** State */
+            state: string;
+            /** Note */
+            note: string | null;
+            /** Reasoning */
+            reasoning: {
+                [key: string]: unknown;
+            };
+            /** Vendor Id */
+            vendor_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** CandidatePatch */
+        CandidatePatch: {
+            /** State */
+            state?: string | null;
+            /** Note */
+            note?: string | null;
+        };
         /** Cashflow */
         Cashflow: {
             /** Months */
@@ -4060,6 +4704,65 @@ export interface components {
             /** @description Zaplanowane płatności przypisane sponsorom */
             sponsors: components["schemas"]["Money-Output"];
             total: components["schemas"]["Money-Output"];
+        };
+        /** CatalogPage */
+        CatalogPage: {
+            /** Items */
+            items: components["schemas"]["CatalogVendorOut"][];
+            /** Total */
+            total: number;
+        };
+        /** CatalogVendorOut */
+        CatalogVendorOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Category */
+            category: string;
+            /** City */
+            city: string | null;
+            /** Service Area */
+            service_area: string | null;
+            /** Website */
+            website: string | null;
+            /** Phones */
+            phones: string[];
+            /** Emails */
+            emails: string[];
+            /** Social */
+            social: string[];
+            /** Packages */
+            packages: components["schemas"]["PackageOut"][];
+            /** Surcharges */
+            surcharges: components["schemas"]["PackageOut"][];
+            /**
+             * Freshness
+             * @enum {string}
+             */
+            freshness: "fresh" | "stale" | "unknown";
+            /** Last Observed At */
+            last_observed_at: string | null;
+            /**
+             * Availability
+             * @default unconfirmed
+             * @constant
+             */
+            availability: "unconfirmed";
+            /**
+             * Price Status
+             * @enum {string}
+             */
+            price_status: "public_price" | "ask_for_quote";
+            /** Sources */
+            sources: components["schemas"]["app__modules__catalog__schemas__SourceOut"][];
+            /** Tags */
+            tags: string[];
+            /** Missing */
+            missing: string[];
         };
         /** CatchUpOut */
         CatchUpOut: {
@@ -4617,6 +5320,21 @@ export interface components {
              */
             status: "confirmed" | "reported";
         };
+        /** ConversationOut */
+        ConversationOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /** DateCheck */
         DateCheck: {
             /**
@@ -4858,6 +5576,19 @@ export interface components {
             /** Version */
             version: number;
         };
+        /** DeliveryOut */
+        DeliveryOut: {
+            /** State */
+            state: string;
+            /** Attempts */
+            attempts: number;
+            /** Accepted At */
+            accepted_at: string | null;
+            /** Last Error */
+            last_error: string | null;
+            /** Note */
+            note: string;
+        };
         /** DeliveryOverview */
         DeliveryOverview: {
             /** In Person Total */
@@ -4909,6 +5640,41 @@ export interface components {
             vegan: number;
             /** Gluten Free */
             gluten_free: number;
+        };
+        /** DiscoveryIn */
+        DiscoveryIn: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "venue" | "catering" | "photographer" | "videographer" | "dj" | "band" | "musician" | "florist" | "decorations" | "wedding_planner" | "bartender" | "photobooth" | "attractions" | "cake" | "sweet_table" | "transport" | "accommodation" | "makeup" | "hairdresser" | "dress" | "suit" | "jeweler" | "invitations" | "stationery" | "other";
+            /** Region */
+            region?: string | null;
+        };
+        /** DiscoveryOut */
+        DiscoveryOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Category */
+            category: string;
+            /** Region */
+            region: string | null;
+            /** State */
+            state: string;
+            /** Result */
+            result: {
+                [key: string]: unknown;
+            };
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Finished At */
+            finished_at: string | null;
         };
         /** DishIn */
         DishIn: {
@@ -5023,6 +5789,13 @@ export interface components {
             /** Done */
             done: boolean;
         };
+        /** DraftsIn */
+        DraftsIn: {
+            /** Recipients */
+            recipients: components["schemas"]["RecipientIn"][];
+            /** Extra Questions */
+            extra_questions?: string[];
+        };
         /** DryRunIn */
         DryRunIn: {
             /**
@@ -5042,6 +5815,20 @@ export interface components {
             name: string;
             /** Reasons */
             reasons: string[];
+        };
+        /** EditIn */
+        EditIn: {
+            /** Base Revision */
+            base_revision: number;
+            /**
+             * To Email
+             * Format: email
+             */
+            to_email: string;
+            /** Subject */
+            subject: string;
+            /** Body */
+            body: string;
         };
         /** EventCreate */
         EventCreate: {
@@ -6204,6 +6991,46 @@ export interface components {
              */
             reviews_soon: components["schemas"]["IndexationItem"][];
         };
+        /** InquiryOut */
+        InquiryOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Vendor Id
+             * Format: uuid
+             */
+            vendor_id: string;
+            /** Vendor Name */
+            vendor_name: string;
+            /** Catalog Vendor Id */
+            catalog_vendor_id: string | null;
+            /** Category */
+            category: string;
+            /** Status */
+            status: string;
+            revision: components["schemas"]["RevisionOut"];
+            /** Revisions Count */
+            revisions_count: number;
+            delivery: components["schemas"]["DeliveryOut"] | null;
+            /** Warnings */
+            warnings: string[];
+            /** Disclosed */
+            disclosed: {
+                [key: string]: string;
+            }[];
+            /** Responses */
+            responses: components["schemas"]["ResponseOut"][];
+            /** Outbound Enabled */
+            outbound_enabled: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /** Installment */
         "Installment-Input": {
             /**
@@ -6300,6 +7127,11 @@ export interface components {
             table_ids: string[];
             /** Message */
             message: string;
+        };
+        /** LimitsBody */
+        LimitsBody: {
+            /** Daily Fetch Limit */
+            daily_fetch_limit: number;
         };
         /** LodgingRoomCreate */
         LodgingRoomCreate: {
@@ -6423,6 +7255,25 @@ export interface components {
              */
             paid_on?: string | null;
         };
+        /** MatchOut */
+        MatchOut: {
+            /**
+             * Catalog Vendor Id
+             * Format: uuid
+             */
+            catalog_vendor_id: string;
+            vendor: components["schemas"]["CatalogVendorOut"];
+            /** Reasons */
+            reasons: components["schemas"]["ReasonOut"][];
+            /** Missing */
+            missing: string[];
+            /** Flags */
+            flags: string[];
+            /** Region Fit */
+            region_fit: string;
+            /** Budget Fit */
+            budget_fit: string;
+        };
         /** MeOut */
         MeOut: {
             /**
@@ -6518,6 +7369,46 @@ export interface components {
             warnings: string[];
             /** Show To Guests */
             show_to_guests: boolean;
+        };
+        /** MergeBody */
+        MergeBody: {
+            /**
+             * Into
+             * Format: uuid
+             */
+            into: string;
+        };
+        /** MessageIn */
+        MessageIn: {
+            /** Text */
+            text: string;
+        };
+        /** MessageOut */
+        MessageOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Role */
+            role: string;
+            /** Content */
+            content: string;
+            /** State */
+            state: string;
+            /** Actions */
+            actions: {
+                [key: string]: unknown;
+            }[];
+            /** Cards */
+            cards: {
+                [key: string]: unknown;
+            }[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
         };
         /** MfaChallengeOut */
         MfaChallengeOut: {
@@ -6895,6 +7786,50 @@ export interface components {
             /** Overdue */
             overdue: boolean;
         };
+        /** PackageOut */
+        PackageOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "package" | "surcharge";
+            /** Name */
+            name: string;
+            /** Price From */
+            price_from: string | null;
+            /** Price To */
+            price_to: string | null;
+            /** Currency */
+            currency: string;
+            /** Unit */
+            unit: string;
+            /** Price Label */
+            price_label: string;
+            /** Season */
+            season: string | null;
+            /** Season Known */
+            season_known: boolean;
+            /** Evidence */
+            evidence: string;
+            /** Source Url */
+            source_url: string | null;
+            /**
+             * Observed At
+             * Format: date-time
+             */
+            observed_at: string;
+            /** Fresh */
+            fresh: boolean;
+            /** Conflict */
+            conflict: boolean;
+            /** Note */
+            note: string;
+        };
         /** PageText */
         PageText: {
             /** Page */
@@ -7129,6 +8064,37 @@ export interface components {
              */
             computed: boolean;
         };
+        /** PostedOut */
+        PostedOut: {
+            user_message: components["schemas"]["MessageOut"];
+            reply: components["schemas"]["MessageOut"];
+        };
+        /** PreferencesIn */
+        PreferencesIn: {
+            /** Scope Terms */
+            scope_terms?: string[] | null;
+            /** Style Tags */
+            style_tags?: string[] | null;
+            /** Budget Max */
+            budget_max?: number | string | null;
+            /** Notes */
+            notes?: string | null;
+        };
+        /** PreferencesOut */
+        PreferencesOut: {
+            /** Category */
+            category: string;
+            /** Scope Terms */
+            scope_terms: string[];
+            /** Style Tags */
+            style_tags: string[];
+            /** Budget Max */
+            budget_max: string | null;
+            /** Notes */
+            notes: string | null;
+            /** Version */
+            version: number;
+        };
         /** PrepOverview */
         PrepOverview: {
             /** Ready By */
@@ -7358,6 +8324,26 @@ export interface components {
             /** Note */
             note: string | null;
         };
+        /** ReasonOut */
+        ReasonOut: {
+            /** Kind */
+            kind: string;
+            /** Text */
+            text: string;
+            /** Evidence */
+            evidence: string | null;
+            /** Source Url */
+            source_url: string | null;
+        };
+        /** RecipientIn */
+        RecipientIn: {
+            /** Catalog Vendor Id */
+            catalog_vendor_id?: string | null;
+            /** Vendor Id */
+            vendor_id?: string | null;
+            /** To Email */
+            to_email?: string | null;
+        };
         /** RecoveryCodesOut */
         RecoveryCodesOut: {
             /**
@@ -7554,6 +8540,99 @@ export interface components {
              * Format: password
              */
             new_password: string;
+        };
+        /** ResolveBody */
+        ResolveBody: {
+            /** Resolution */
+            resolution: string;
+            /** Confirm Package Id */
+            confirm_package_id?: string | null;
+        };
+        /** ResponseIn */
+        ResponseIn: {
+            /** Text */
+            text: string;
+            /** Subject */
+            subject?: string | null;
+            /** Received At */
+            received_at?: string | null;
+        };
+        /** ResponseOut */
+        ResponseOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Subject */
+            subject: string | null;
+            /** Body */
+            body: string;
+            /** Received At */
+            received_at: string | null;
+            /** Document Id */
+            document_id: string | null;
+            /** Version Id */
+            version_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** ReviewOut */
+        ReviewOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Kind */
+            kind: string;
+            /** Catalog Vendor Id */
+            catalog_vendor_id: string | null;
+            /** Source Id */
+            source_id: string | null;
+            /** Summary */
+            summary: string;
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+            /** State */
+            state: string;
+            /** Resolution */
+            resolution: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** RevisionOut */
+        RevisionOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Number */
+            number: number;
+            /** To Email */
+            to_email: string;
+            /** Subject */
+            subject: string;
+            /** Body */
+            body: string;
+            /** Content Hash */
+            content_hash: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Approved At */
+            approved_at: string | null;
         };
         /** RoomIn */
         RoomIn: {
@@ -8323,6 +9402,28 @@ export interface components {
              */
             in_title: boolean;
         };
+        /** SearchIn */
+        SearchIn: {
+            /**
+             * Category
+             * @enum {string}
+             */
+            category: "venue" | "catering" | "photographer" | "videographer" | "dj" | "band" | "musician" | "florist" | "decorations" | "wedding_planner" | "bartender" | "photobooth" | "attractions" | "cake" | "sweet_table" | "transport" | "accommodation" | "makeup" | "hairdresser" | "dress" | "suit" | "jeweler" | "invitations" | "stationery" | "other";
+            /**
+             * Limit
+             * @default 5
+             */
+            limit: number;
+        };
+        /** SearchOut */
+        SearchOut: {
+            /** Category */
+            category: string;
+            /** Items */
+            items: components["schemas"]["MatchOut"][];
+            /** Note */
+            note?: string | null;
+        };
         /** SeatIn */
         SeatIn: {
             /**
@@ -8554,6 +9655,38 @@ export interface components {
             /** Enabled */
             enabled: boolean;
         };
+        /** SourceCreate */
+        SourceCreate: {
+            /**
+             * Url
+             * @example https://studio-foto.example/cennik
+             */
+            url: string;
+            /**
+             * Category
+             * @default photographer
+             */
+            category: string;
+            /** Region Hint */
+            region_hint?: string | null;
+            /** Access Basis */
+            access_basis?: string | null;
+            /**
+             * Refresh Interval Days
+             * @default 14
+             */
+            refresh_interval_days: number;
+            /** Catalog Vendor Id */
+            catalog_vendor_id?: string | null;
+        };
+        /** SourcePatch */
+        SourcePatch: {
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "active" | "paused";
+        };
         /** SplitIn */
         SplitIn: {
             /**
@@ -8587,6 +9720,14 @@ export interface components {
             share_percent: string;
             old_planned: components["schemas"]["Money-Output"];
             new_planned: components["schemas"]["Money-Output"];
+        };
+        /** StatusBody */
+        StatusBody: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "published" | "hidden" | "draft" | "needs_review";
         };
         /** SyncTemplateOut */
         SyncTemplateOut: {
@@ -8744,6 +9885,11 @@ export interface components {
             pos_y?: number | null;
             /** Rotation */
             rotation?: number | null;
+        };
+        /** TagsBody */
+        TagsBody: {
+            /** Tags */
+            tags: string[];
         };
         /** TaskBrief */
         TaskBrief: {
@@ -9654,6 +10800,79 @@ export interface components {
              * @description Termin aneksu / potwierdzenia ceny (przypomnienie)
              */
             price_review_on?: string | null;
+        };
+        /** SourceOut */
+        app__modules__catalog__schemas__SourceOut: {
+            /** Url */
+            url: string;
+            /** Observed At */
+            observed_at: string | null;
+        };
+        /** SourceOut */
+        app__modules__discovery__router__SourceOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Url */
+            url: string;
+            /** Domain */
+            domain: string;
+            /** Category */
+            category: string;
+            /** Region Hint */
+            region_hint: string | null;
+            /** Access Basis */
+            access_basis: string;
+            /** State */
+            state: string;
+            /** State Reason */
+            state_reason: string | null;
+            /** Refresh Interval Days */
+            refresh_interval_days: number;
+            /**
+             * Next Check At
+             * Format: date-time
+             */
+            next_check_at: string;
+            /** Last Checked At */
+            last_checked_at: string | null;
+            /** Last Success At */
+            last_success_at: string | null;
+            /** Consecutive Failures */
+            consecutive_failures: number;
+            /** Catalog Vendor Id */
+            catalog_vendor_id: string | null;
+        };
+        /** ApproveIn */
+        app__modules__inquiries__schemas__ApproveIn: {
+            /**
+             * Revision Id
+             * Format: uuid
+             */
+            revision_id: string;
+            /** Content Hash */
+            content_hash: string;
+            /**
+             * To Email
+             * Format: email
+             */
+            to_email: string;
+            /**
+             * Acknowledge Warnings
+             * @default false
+             */
+            acknowledge_warnings: boolean;
+        };
+        /** ApproveIn */
+        app__modules__offers__schemas__ApproveIn: {
+            /**
+             * Confirm Unverified
+             * @description Potwierdzam pola oznaczone jako niepewne/niezweryfikowane
+             * @default false
+             */
+            confirm_unverified: boolean;
         };
         /** ItemCreate */
         app__modules__schedule__schemas__ItemCreate: {
@@ -18566,7 +19785,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ApproveIn"];
+                "application/json": components["schemas"]["app__modules__offers__schemas__ApproveIn"];
             };
         };
         responses: {
@@ -23903,6 +25122,1881 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AfterWedding"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_vendors_api_v1_catalog_vendors_get: {
+        parameters: {
+            query?: {
+                category?: string | null;
+                city?: string | null;
+                q?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogPage"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_vendor_api_v1_catalog_vendors__vendor_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogVendorOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_vendors_api_v1_admin_catalog_vendors_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                limit?: number;
+                offset?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminVendorOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_set_status_api_v1_admin_catalog_vendors__vendor_id__status_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StatusBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminVendorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_set_tags_api_v1_admin_catalog_vendors__vendor_id__tags_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TagsBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminVendorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_merge_api_v1_admin_catalog_vendors__vendor_id__merge_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MergeBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminVendorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_unmerge_api_v1_admin_catalog_vendors__vendor_id__unmerge_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminVendorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_review_api_v1_admin_catalog_review_get: {
+        parameters: {
+            query?: {
+                state?: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_resolve_api_v1_admin_catalog_review__review_id__resolve_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                review_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResolveBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    status_api_v1_admin_discovery_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    pause_api_v1_admin_discovery_pause_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: boolean;
+                    };
+                };
+            };
+        };
+    };
+    resume_api_v1_admin_discovery_resume_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: boolean;
+                    };
+                };
+            };
+        };
+    };
+    limits_api_v1_admin_discovery_limits_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LimitsBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: number;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_sources_api_v1_admin_discovery_sources_get: {
+        parameters: {
+            query?: {
+                state?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["app__modules__discovery__router__SourceOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_source_api_v1_admin_discovery_sources_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SourceCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["app__modules__discovery__router__SourceOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    patch_source_api_v1_admin_discovery_sources__source_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                source_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SourcePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["app__modules__discovery__router__SourceOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    fetch_now_api_v1_admin_discovery_sources__source_id__fetch_now_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                source_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_preferences_api_v1_weddings__wedding_id__vendor_preferences__category__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                category: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreferencesOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_preferences_api_v1_weddings__wedding_id__vendor_preferences__category__put: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Wersja preferencji, np. "2" */
+                "if-match"?: string | null;
+            };
+            path: {
+                wedding_id: string;
+                category: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PreferencesIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PreferencesOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    vendor_search_api_v1_weddings__wedding_id__vendor_search_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SearchIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_candidates_api_v1_weddings__wedding_id__candidates_get: {
+        parameters: {
+            query?: {
+                state?: string | null;
+            };
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateOut"][];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_candidate_api_v1_weddings__wedding_id__candidates_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CandidateIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    patch_candidate_api_v1_weddings__wedding_id__candidates__candidate_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CandidatePatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    candidate_to_vendor_api_v1_weddings__wedding_id__candidates__candidate_id__to_vendor_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                candidate_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    compare_api_v1_weddings__wedding_id__candidates_compare_get: {
+        parameters: {
+            query: {
+                ids: string[];
+            };
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CandidateCompareOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_requests_api_v1_weddings__wedding_id__discovery_requests_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryOut"][];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_request_api_v1_weddings__wedding_id__discovery_requests_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DiscoveryIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_request_api_v1_weddings__wedding_id__discovery_requests__request_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DiscoveryOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_conversations_api_v1_weddings__wedding_id__concierge_conversations_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationOut"][];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_conversation_api_v1_weddings__wedding_id__concierge_conversations_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_messages_api_v1_weddings__wedding_id__concierge_conversations__conversation_id__messages_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                conversation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"][];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_message_api_v1_weddings__wedding_id__concierge_conversations__conversation_id__messages_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                conversation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MessageIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostedOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    list_inquiries_api_v1_weddings__wedding_id__inquiries_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InquiryOut"][];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_drafts_api_v1_weddings__wedding_id__inquiries_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DraftsIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InquiryOut"][];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    get_inquiry_api_v1_weddings__wedding_id__inquiries__inquiry_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                inquiry_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InquiryOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    edit_inquiry_api_v1_weddings__wedding_id__inquiries__inquiry_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                inquiry_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InquiryOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    delete_inquiry_api_v1_weddings__wedding_id__inquiries__inquiry_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                inquiry_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    approve_and_send_api_v1_weddings__wedding_id__inquiries__inquiry_id__approve_and_send_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                inquiry_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["app__modules__inquiries__schemas__ApproveIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApproveResult"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    approve_batch_api_v1_weddings__wedding_id__inquiries_approve_and_send_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BatchApproveIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApproveResult"][];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    import_response_api_v1_weddings__wedding_id__inquiries__inquiry_id__import_response_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                inquiry_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResponseIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResponseOut"];
+                };
+            };
+            /** @description Brak uwierzytelnienia */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Rola tylko do odczytu */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Nie znaleziono lub brak dostępu */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Konflikt */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Błąd walidacji */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    analyze_response_api_v1_weddings__wedding_id__inquiries__inquiry_id__responses__response_id__analyze_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                wedding_id: string;
+                inquiry_id: string;
+                response_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AiRunOut"];
                 };
             };
             /** @description Brak uwierzytelnienia */

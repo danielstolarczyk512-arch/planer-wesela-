@@ -16,6 +16,23 @@ from app.modules.budget.models import (
     Payment,
 )
 from app.modules.calendar.models import CalendarFeedToken
+from app.modules.catalog.models import (
+    CatalogVendor,
+    DiscoveryControl,
+    DomainState,
+    PublicPackage,
+    ReviewItem,
+    SourceObservation,
+    VendorFact,
+    VendorSource,
+)
+from app.modules.concierge.models import (
+    Candidate,
+    Conversation,
+    DiscoveryRequest,
+    Message,
+    VendorPreferences,
+)
 from app.modules.documents.models import Document, DocumentVersion
 from app.modules.guests.models import (
     GiftIdea,
@@ -35,6 +52,7 @@ from app.modules.identity.models import (
     User,
     UserMfa,
 )
+from app.modules.inquiries.models import IncomingMessage, Inquiry, InquiryRevision, MailDelivery
 from app.modules.logistics.models import LodgingRoom, RoomGuest, TransportRun, TransportSeat
 from app.modules.menu.models import MenuDish
 from app.modules.notifications.models import DigestLog, NotificationPreference
@@ -78,13 +96,19 @@ __all__ = [
     "BudgetCategory",
     "BudgetItem",
     "CalendarFeedToken",
+    "Candidate",
+    "CatalogVendor",
     "CeremonyDocument",
     "Consent",
+    "Conversation",
     "DayChecklistItem",
     "Deliverable",
     "DigestLog",
+    "DiscoveryControl",
+    "DiscoveryRequest",
     "Document",
     "DocumentVersion",
+    "DomainState",
     "Event",
     "Funder",
     "FunderContribution",
@@ -96,9 +120,14 @@ __all__ = [
     "Helper",
     "Household",
     "IdempotencyKey",
+    "IncomingMessage",
+    "Inquiry",
+    "InquiryRevision",
     "Job",
     "LodgingRoom",
+    "MailDelivery",
     "MenuDish",
+    "Message",
     "MfaRecoveryCode",
     "MusicEntry",
     "NotificationPreference",
@@ -111,8 +140,10 @@ __all__ = [
     "PrepPerson",
     "PrepPlan",
     "PricingComponent",
+    "PublicPackage",
     "RateLimitHit",
     "ReserveEntry",
+    "ReviewItem",
     "RoomGuest",
     "RsvpToken",
     "ScheduleDependency",
@@ -123,6 +154,7 @@ __all__ = [
     "SeatingRule",
     "SeatingTable",
     "SecurityEvent",
+    "SourceObservation",
     "Task",
     "TaskComment",
     "TaskDependency",
@@ -134,6 +166,9 @@ __all__ = [
     "VendorBrief",
     "VendorChecklistItem",
     "VendorDayLink",
+    "VendorFact",
+    "VendorPreferences",
+    "VendorSource",
     "Wedding",
     "WeddingInvitation",
     "WeddingMember",

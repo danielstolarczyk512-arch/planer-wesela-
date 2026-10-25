@@ -58,6 +58,10 @@ class Vendor(IdMixin, TimestampMixin, Base):
     notes: Mapped[str | None] = mapped_column(Text)
     # Ile osób obsługi (muzycy, fotograf) je posiłek na sali: koszt w ofercie sali (per_crew).
     crew_meals: Mapped[int | None] = mapped_column(Integer)
+    # Jawne powiązanie z firmą z katalogu (ADR-0008); aktualizacja katalogu nie rusza notatek.
+    catalog_vendor_id: Mapped[UUID | None] = mapped_column(
+        ForeignKey("catalog_vendors.id", ondelete="SET NULL"), index=True
+    )
     version: Mapped[int] = mapped_column(Integer, default=1)
 
     __mapper_args__ = {"version_id_col": version}  # noqa: RUF012

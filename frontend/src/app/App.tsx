@@ -122,6 +122,13 @@ const router = createBrowserRouter([
                 })),
               },
               {
+                // Panel badacza katalogu firm (tylko administrator; API zwraca 404 innym).
+                path: "/admin/katalog",
+                ...lazyPage(async () => ({
+                  Component: (await import("../features/admin/CatalogAdminView")).CatalogAdminView,
+                })),
+              },
+              {
                 // Link z e-maila zaproszenia (ścieżka ustalona w API).
                 path: "/invitations/accept",
                 ...lazyPage(async () => ({
@@ -201,6 +208,12 @@ const router = createBrowserRouter([
                     path: "uslugodawcy",
                     ...lazyPage(async () => ({
                       Component: (await import("../features/wedding/VendorsView")).VendorsView,
+                    })),
+                  },
+                  {
+                    path: "dobor",
+                    ...lazyPage(async () => ({
+                      Component: (await import("../features/assistant/AssistantView")).AssistantView,
                     })),
                   },
                   {

@@ -41,6 +41,7 @@ export const PLAN_SECTIONS: Section[] = [
 export const MONEY_SECTIONS: Section[] = [
   { to: "budzet", label: "Wydatki" },
   { to: "uslugodawcy", label: "Usługodawcy" },
+  { to: "dobor", label: "Dobór firm" },
   { to: "sponsorzy", label: "Kto płaci" },
 ];
 

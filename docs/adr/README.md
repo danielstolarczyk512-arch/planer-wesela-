@@ -9,5 +9,6 @@
 | 0005 | [LLM za interfejsem, prywatność domyślnie](0005-llm-za-interfejsem-prywatnosc.md) | zaakceptowany |
 | 0006 | [Polityka licencji zależności](0006-polityka-licencji.md) | zaakceptowany |
 | 0007 | [Środowiska: laptop, Synology, VPS UE](0007-dev-laptop-synology-backup.md) | zaakceptowany |
+| 0008 | [Katalog firm, agent badawczy i asystent doboru](0008-katalog-i-agenci-weselni.md) | zaakceptowany |
 
 Szablon: Kontekst → Decyzja → Konsekwencje → Odrzucone alternatywy.

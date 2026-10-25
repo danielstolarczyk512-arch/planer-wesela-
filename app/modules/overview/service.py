@@ -19,6 +19,13 @@ from app.modules.budget.models import (
     FunderContribution,
     Payment,
 )
+from app.modules.concierge.models import (
+    Candidate,
+    Conversation,
+    DiscoveryRequest,
+    Message,
+    VendorPreferences,
+)
 from app.modules.documents.models import Document, DocumentVersion
 from app.modules.guests import service as guests
 from app.modules.guests.models import (
@@ -31,6 +38,7 @@ from app.modules.guests.models import (
 )
 from app.modules.identity.models import User
 from app.modules.identity.service import Principal
+from app.modules.inquiries.models import IncomingMessage, Inquiry, InquiryRevision, MailDelivery
 from app.modules.logistics.models import LodgingRoom, RoomGuest, TransportRun, TransportSeat
 from app.modules.menu.models import MenuDish
 from app.modules.offers.models import Offer, OfferTerm, PricingComponent
@@ -280,6 +288,50 @@ def export_wedding(db: Session, principal: Principal, wedding_id: UUID) -> dict[
             for r in by_wedding(LodgingRoom)
         ],
         "vendor_briefs": [_row(b) for b in by_wedding(VendorBrief)],
+        # Dobór usługodawców (etapy 2-3): preferencje, rozmowy z asystentem, kandydaci, zapytania.
+        "vendor_search": {
+            "preferences": [_row(p) for p in by_wedding(VendorPreferences)],
+            "candidates": [_row(c) for c in by_wedding(Candidate)],
+            "discovery_requests": [_row(r) for r in by_wedding(DiscoveryRequest)],
+            "conversations": [
+                {
+                    **_row(c),
+                    "messages": [
+                        _row(m)
+                        for m in db.scalars(
+                            select(Message)
+                            .where(Message.conversation_id == c.id)
+                            .order_by(Message.created_at)
+                        )
+                    ],
+                }
+                for c in by_wedding(Conversation)
+            ],
+        },
+        "inquiries": [
+            {
+                **_row(i),
+                "revisions": [
+                    _row(r)
+                    for r in db.scalars(
+                        select(InquiryRevision)
+                        .where(InquiryRevision.inquiry_id == i.id)
+                        .order_by(InquiryRevision.number)
+                    )
+                ],
+                "deliveries": [
+                    _row(d)
+                    for d in db.scalars(select(MailDelivery).where(MailDelivery.inquiry_id == i.id))
+                ],
+                "responses": [
+                    _row(r)
+                    for r in db.scalars(
+                        select(IncomingMessage).where(IncomingMessage.inquiry_id == i.id)
+                    )
+                ],
+            }
+            for i in by_wedding(Inquiry)
+        ],
         "guests": [
             {
                 **_row(g, exclude=("dietary_note_encrypted",)),

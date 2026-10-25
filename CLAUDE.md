@@ -173,7 +173,7 @@ rewizja programu przy przesunięciu (409 przy nieaktualnym podglądzie, także w
 waloryzacji zapisane na weselu (`budget_assumptions`, `PUT /budget/indexation/assumptions`), osobny worker e-maili
 (`WP_WORKER_LANE=fast`, usługa `worker-fast` w compose prod), nowe kontrole `WP_ENV=prod` (https, SMTP, jawne
 `WP_AI_ENABLED`), CI w `.github/workflows/ci.yml` (backend, frontend, gitleaks; E2E nadal lokalnie).
-Ostatnia migracja: `b7e2f4a9c1d3`.
+Ostatnia migracja: `e5c1a7f3b9d4` (zob. Agenci weselni).
 **Test dla znajomych (23.10):** projekt Dockera `naszdzien-test` (konfiguracja prod na laptopie, Caddy
 `127.0.0.1:8090`, Mailpit `127.0.0.1:8026`, własna baza; `deploy/compose.test.yaml`, sekrety w `deploy/.env.test`),
 udostępnianie szybkim tunelem Cloudflare: `scripts/udostepnij-test.ps1`, instrukcja `docs/test-dla-znajomych.md`.
@@ -190,6 +190,15 @@ zrobione (raport `docs/gui/raport-motyw-romantyczny.md`): domyślny motyw `roman
 Naprawione nazwy krojów („… Variable”). Media i źródła: `frontend/public/media/ZRODLA.md`.
 **Następne: etap 3 (Budżet, Plan, Goście) po akceptacji właściciela.** Python na Windowsie zapisuje
 CRLF — w skryptach używaj `write_bytes`/`newline="\n"`.
+
+**Agenci weselni — etapy 0–3 (25.10, pakiet właściciela „Nasz-dzien-pakiet-dla-Claude”; raport `docs/gui/raport-agenci-weselni.md`,
+ADR-0008):** moduły `catalog` (wspólny katalog firm z dowodami), `discovery` (badacz: scheduler + tor workera `discovery`, fetcher z ochroną
+SSRF), `concierge` (preferencje, dobór w kodzie, czat z narzędziami, kandydaci), `inquiries` (zapytania: rewizje, zgoda na hash, wysyłka
+tylko do Mailpit, import odpowiedzi → szkic oferty). GUI: Budżet → „Dobór firm” (`features/assistant`), `/admin/katalog` (admin).
+Badacz **aktualizuje podane strony**, nie szuka nowych firm (nie skonfigurowano). Profil `discovery` w compose (opt-in); pokaz na
+fikcyjnych stronach: profil `e2e` (`docker/demo-sites`). Migracje `c3a9e5d1f7b2`, `d4b0f6e2a8c3`, `e5c1a7f3b9d4` (dev też zmigrowana, addytywnie).
+**Etap 4 czeka na decyzje właściciela** (źródło nowych adresów, nadawca/SPF/DKIM, odbiór poczty, DPA) — nie rób go sam.
+Pułapka: testy nie mogą wołać `worker.run_once()` bez `exclude` dla `send_email` (poczta trafia do Mailpit dev).
 
 ## Następne kroki (kolejność uzgodniona z właścicielem)
 

@@ -1,0 +1,123 @@
+/* Dobór firm: karty z dowodami, czat, kandydaci. Tokeny z design/tokens (zmienne --wp-*). */
+.match {
+  display: grid;
+  gap: var(--wp-space-3, 12px);
+}
+.match__head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--wp-space-2, 8px);
+}
+.match h3,
+.match h4 {
+  margin: 0;
+}
+.match h4 {
+  font-size: var(--wp-type-size-sm, 0.875rem);
+  color: var(--wp-text-secondary, inherit);
+}
+.match__list {
+  margin: 0;
+  padding-left: 1.1em;
+  display: grid;
+  gap: 4px;
+}
+.match__list--missing {
+  color: var(--wp-text-secondary, inherit);
+}
+.match__quote {
+  display: block;
+  margin: 2px 0 0;
+  font-size: 0.875rem;
+  color: var(--wp-text-secondary, inherit);
+}
+.match__quote::before,
+.match__quote::after {
+  content: "";
+}
+.match__pkgs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--wp-space-2, 8px);
+}
+.match__pkg {
+  display: grid;
+  gap: 2px;
+}
+.match__flags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.match__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chat {
+  display: grid;
+  gap: var(--wp-space-3, 12px);
+}
+.chat__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--wp-space-3, 12px);
+}
+.chat__msg {
+  display: grid;
+  gap: 8px;
+  max-width: 100%;
+}
+.chat__author {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--wp-text-secondary, inherit);
+}
+.chat__text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.chat__msg--user .chat__text {
+  background: var(--wp-surface-sunken, rgba(127, 127, 127, 0.12));
+  border-radius: var(--wp-radius-md, 12px);
+  padding: 10px 14px;
+}
+.chat__actions summary {
+  cursor: pointer;
+  color: var(--wp-text-secondary, inherit);
+}
+.chat__form {
+  display: grid;
+  gap: 8px;
+}
+
+.cand,
+.inq {
+  flex-wrap: wrap;
+}
+.cand__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Wiersze listy: treść zajmuje całą szerokość, przyciski i znaczniki zawijają się pod nią. */
+.cand > .row__body,
+.inq > .row__body {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+.cand .wp-chip,
+.inq .wp-chip {
+  flex: 0 1 auto;
+}
