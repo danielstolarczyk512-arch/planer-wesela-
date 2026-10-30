@@ -1,0 +1,9 @@
+data/
+.env
+*.sqlite3
+__pycache__/
+.pytest_cache/
+*.log
+*.mp4
+*.mov
+*.key

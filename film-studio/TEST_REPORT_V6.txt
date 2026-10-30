@@ -1,0 +1,66 @@
+TESTY V6 (lokalne i symulowane): 70 / 70 ZALICZONE. Nie wykonano LIVE Sogni.
+
+[studio] "GET /api/projects HTTP/1.1" 401 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/8ebe0c76-7d64-4e58-af0f-77e7348344e8/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/8ebe0c76-7d64-4e58-af0f-77e7348344e8/select HTTP/1.1" 200 -
+[studio] "PUT /api/projects/8ebe0c76-7d64-4e58-af0f-77e7348344e8/script HTTP/1.1" 200 -
+[studio] "GET /api/projects/8ebe0c76-7d64-4e58-af0f-77e7348344e8/export HTTP/1.1" 200 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/dc43d1aa-9464-48df-bdfd-6a8fb874908b/develop HTTP/1.1" 403 -
+[studio] "POST /api/projects/dc43d1aa-9464-48df-bdfd-6a8fb874908b/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/dc43d1aa-9464-48df-bdfd-6a8fb874908b/shots/S01/render HTTP/1.1" 409 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/aa346707-34d4-44d4-b176-a50c56b46c90/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/aa346707-34d4-44d4-b176-a50c56b46c90/shots/S01/quote HTTP/1.1" 200 -
+[studio] "POST /api/projects/aa346707-34d4-44d4-b176-a50c56b46c90/shots/S01/render HTTP/1.1" 200 -
+[studio] "GET /api/projects/aa346707-34d4-44d4-b176-a50c56b46c90/jobs/9092a62c-3690-46d4-a311-49c8c28a145a HTTP/1.1" 200 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/b7d51f2c-17d9-4d8c-b09a-306c239f1242/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/b7d51f2c-17d9-4d8c-b09a-306c239f1242/clips/S01 HTTP/1.1" 200 -
+[studio] "POST /api/projects/b7d51f2c-17d9-4d8c-b09a-306c239f1242/assemble HTTP/1.1" 200 -
+[studio] "GET /api/projects/b7d51f2c-17d9-4d8c-b09a-306c239f1242/movie HTTP/1.1" 200 -
+[studio] "PUT /api/projects/b7d51f2c-17d9-4d8c-b09a-306c239f1242/shots/S01 HTTP/1.1" 200 -
+[studio] "GET /api/projects/b7d51f2c-17d9-4d8c-b09a-306c239f1242/readiness HTTP/1.1" 200 -
+[studio] "POST /api/projects/b7d51f2c-17d9-4d8c-b09a-306c239f1242/assemble HTTP/1.1" 409 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/9a94f905-ef4a-460b-8b5f-786eeb25fc1d/develop HTTP/1.1" 200 -
+[studio] "PUT /api/projects/9a94f905-ef4a-460b-8b5f-786eeb25fc1d/cast HTTP/1.1" 200 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/e49d338a-ec3f-4740-8a38-ef41338650b2/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/e49d338a-ec3f-4740-8a38-ef41338650b2/clips/S01 HTTP/1.1" 400 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/e72228bc-278a-4956-8197-0d45bb8a9ca6/develop HTTP/1.1" 200 -
+[studio] "PUT /api/projects/e72228bc-278a-4956-8197-0d45bb8a9ca6/script HTTP/1.1" 200 -
+[studio] "POST /api/projects/e72228bc-278a-4956-8197-0d45bb8a9ca6/shots/S01/quote HTTP/1.1" 409 -
+[studio] "GET /api/projects/e72228bc-278a-4956-8197-0d45bb8a9ca6/readiness HTTP/1.1" 200 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/1eb23526-f590-4a7b-851d-3e3b7154ed1b/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/1eb23526-f590-4a7b-851d-3e3b7154ed1b/director-v4 HTTP/1.1" 200 -
+[studio] "GET /api/projects/1eb23526-f590-4a7b-851d-3e3b7154ed1b/v4/story-audit HTTP/1.1" 200 -
+[studio] "GET /api/projects/1eb23526-f590-4a7b-851d-3e3b7154ed1b/readiness HTTP/1.1" 200 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/director-v4 HTTP/1.1" 200 -
+[studio] "POST /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/clips/S06 HTTP/1.1" 200 -
+[studio] "GET /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/clips/S06/preview HTTP/1.1" 200 -
+[studio] "GET /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/clips/S06/inspect HTTP/1.1" 200 -
+[studio] "POST /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/clips/S06/approve HTTP/1.1" 400 -
+[studio] "POST /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/clips/S06/approve HTTP/1.1" 200 -
+[studio] "POST /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d/clips/S06 HTTP/1.1" 200 -
+[studio] "GET /api/projects/a0746c79-963f-4c95-9fc2-594363d81f2d HTTP/1.1" 200 -
+[studio] "GET /api/v6/references HTTP/1.1" 200 -
+[studio] "GET /api/v6/references/KOBIETA__EXPRESSIONS__10_neutral/image HTTP/1.1" 200 -
+[studio] "POST /api/v6/references/KOBIETA__EXPRESSIONS__10_neutral/sync HTTP/1.1" 403 -
+[studio] "GET /api/v6/camera360 HTTP/1.1" 200 -
+[studio] "GET /api/v6/references HTTP/1.1" 200 -
+[studio] "POST /api/projects HTTP/1.1" 201 -
+[studio] "POST /api/projects/6178b326-f2b6-43cb-819d-bb88018b5a3d/develop HTTP/1.1" 200 -
+[studio] "POST /api/projects/6178b326-f2b6-43cb-819d-bb88018b5a3d/shots/S01/360 HTTP/1.1" 200 -
+[studio] "POST /api/projects/6178b326-f2b6-43cb-819d-bb88018b5a3d/shots/S01/360/recipe HTTP/1.1" 200 -
+[studio] "POST /api/projects/6178b326-f2b6-43cb-819d-bb88018b5a3d/shots/S01/360 HTTP/1.1" 400 -
+[studio] "POST /api/v6/camera360/generate HTTP/1.1" 409 -
+----------------------------------------------------------------------
+Ran 70 tests in 12.129s
+
+OK

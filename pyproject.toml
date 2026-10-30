@@ -54,6 +54,8 @@ package = false
 
 [tool.ruff]
 line-length = 100
+extend-exclude = ["film-studio"]  # osobny program (generator reklam), poza lintem aplikacji
+force-exclude = true
 target-version = "py312"
 
 [tool.ruff.lint]

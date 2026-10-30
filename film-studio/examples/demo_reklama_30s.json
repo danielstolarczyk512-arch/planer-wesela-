@@ -1,0 +1,654 @@
+{
+  "id": "223d2322-386c-472d-ab99-033da10caa7e",
+  "title": "Operacja: Stół numer 7",
+  "idea": "Para młoda przypadkowo sadza przy jednym stole dwie skłócone ciocie. Ślubne planowanie przeradza się w komedię szpiegowską.",
+  "objective": "Rejestracje w Nasz Dzień",
+  "duration": 30,
+  "format": "9:16",
+  "tone": "Komedia",
+  "audience": "Narzeczeni 23–35",
+  "feature": "plan stołów",
+  "claims_approved": false,
+  "created": "2026-10-28T12:33:38+00:00",
+  "updated": "2026-10-28T12:33:38+00:00",
+  "status": "storyboard",
+  "concepts": [
+    {
+      "id": "C01",
+      "title": "Operacja: Plan Stołów",
+      "genre": "Komedia szpiegowska",
+      "hook": "Jedna wizytówka potrafi wywołać kryzys dyplomatyczny.",
+      "conflict": "Ciocia odkrywa, że siedzi obok dawnej rywalki.",
+      "twist": "Okazuje się, że największą bronią pary jest spokojne przesunięcie miejsca.",
+      "feature": "plan stołów",
+      "synopsis": "Jedna wizytówka potrafi wywołać kryzys dyplomatyczny. Ciocia odkrywa, że siedzi obok dawnej rywalki. Okazuje się, że największą bronią pary jest spokojne przesunięcie miejsca.",
+      "fit": "wysokie"
+    },
+    {
+      "id": "C02",
+      "title": "Kontrola budżetu",
+      "genre": "Thriller finansowy",
+      "hook": "Dzwoni telefon. „Mamy mały problem z budżetem”.",
+      "conflict": "Nagle pojawia się lista kolejnych niespodziewanych wydatków.",
+      "twist": "Na ekranie pojawia się przejrzysty budżet i ważne terminy płatności.",
+      "feature": "budżet",
+      "synopsis": "Dzwoni telefon. „Mamy mały problem z budżetem”. Nagle pojawia się lista kolejnych niespodziewanych wydatków. Na ekranie pojawia się przejrzysty budżet i ważne terminy płatności.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C03",
+      "title": "Agentka RSVP",
+      "genre": "Komedia kryminalna",
+      "hook": "Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”.",
+      "conflict": "Detektyw w sukni ślubnej rozpracowuje tajemnicze odpowiedzi gości.",
+      "twist": "Lista gości i RSVP pozwalają odzyskać kontrolę.",
+      "feature": "lista gości",
+      "synopsis": "Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”. Detektyw w sukni ślubnej rozpracowuje tajemnicze odpowiedzi gości. Lista gości i RSVP pozwalają odzyskać kontrolę.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C04",
+      "title": "Wesele na 37 karteczkach",
+      "genre": "Mockument",
+      "hook": "Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”.",
+      "conflict": "Kamera odsłania lodówkę pełną karteczek i zakreślaczy.",
+      "twist": "Jeden planer zastępuje improwizowany system.",
+      "feature": "harmonogram",
+      "synopsis": "Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”. Kamera odsłania lodówkę pełną karteczek i zakreślaczy. Jeden planer zastępuje improwizowany system.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C05",
+      "title": "Powrót do przyszłości",
+      "genre": "Komedia science fiction",
+      "hook": "Para otrzymuje wiadomość od samych siebie z dnia wesela.",
+      "conflict": "Przyszli nowożeńcy ostrzegają przed jednym szczegółem organizacyjnym.",
+      "twist": "Teraz mogą go wcześniej zaplanować.",
+      "feature": "harmonogram",
+      "synopsis": "Para otrzymuje wiadomość od samych siebie z dnia wesela. Przyszli nowożeńcy ostrzegają przed jednym szczegółem organizacyjnym. Teraz mogą go wcześniej zaplanować.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C06",
+      "title": "Sąd nad listą gości",
+      "genre": "Satyra sądowa",
+      "hook": "Sędzia uderza młotkiem: „Kto zaprosił kuzyna?”",
+      "conflict": "Świadkowie przedstawiają sprzeczne wersje listy gości.",
+      "twist": "Planer porządkuje zaproszenia i odpowiedzi.",
+      "feature": "lista gości",
+      "synopsis": "Sędzia uderza młotkiem: „Kto zaprosił kuzyna?” Świadkowie przedstawiają sprzeczne wersje listy gości. Planer porządkuje zaproszenia i odpowiedzi.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C07",
+      "title": "Misja: Ostatni piątek",
+      "genre": "Film akcji",
+      "hook": "Do wesela zostało 48 godzin. Wszystko nagle przyspiesza.",
+      "conflict": "W rytmie kina akcji para odhacza zadania.",
+      "twist": "Harmonogram zamienia pośpiech w jasny plan.",
+      "feature": "harmonogram",
+      "synopsis": "Do wesela zostało 48 godzin. Wszystko nagle przyspiesza. W rytmie kina akcji para odhacza zadania. Harmonogram zamienia pośpiech w jasny plan.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C08",
+      "title": "Jedna wiadomość za dużo",
+      "genre": "Komedia romantyczna",
+      "hook": "Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund.",
+      "conflict": "Każdy telefon dotyczy zupełnie innego szczegółu.",
+      "twist": "Wspólny plan pomaga odpowiadać spokojnie.",
+      "feature": "harmonogram",
+      "synopsis": "Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund. Każdy telefon dotyczy zupełnie innego szczegółu. Wspólny plan pomaga odpowiadać spokojnie.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C09",
+      "title": "Władca Exceli",
+      "genre": "Fantasy z humorem",
+      "hook": "Na stole pojawia się ogromna mapa weselnych krain.",
+      "conflict": "Bohaterowie szukają utraconej tabeli budżetu.",
+      "twist": "Realistyczne przejście do prostego planowania.",
+      "feature": "budżet",
+      "synopsis": "Na stole pojawia się ogromna mapa weselnych krain. Bohaterowie szukają utraconej tabeli budżetu. Realistyczne przejście do prostego planowania.",
+      "fit": "alternatywna funkcja"
+    },
+    {
+      "id": "C10",
+      "title": "Przesłuchanie fotografa",
+      "genre": "Komedia proceduralna",
+      "hook": "Z pokoju przesłuchań dobiega: „A umowa?”",
+      "conflict": "Para rozlicza własne notatki o usługodawcach.",
+      "twist": "Oferty i ustalenia trafiają w jedno uporządkowane miejsce.",
+      "feature": "usługodawcy",
+      "synopsis": "Z pokoju przesłuchań dobiega: „A umowa?” Para rozlicza własne notatki o usługodawcach. Oferty i ustalenia trafiają w jedno uporządkowane miejsce.",
+      "fit": "alternatywna funkcja"
+    }
+  ],
+  "reviews": [
+    {
+      "concept_id": "C01",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 12,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 12,
+            "silent_readability": 9
+          },
+          "total": 87,
+          "strength": "Wyrazisty pomysł: Jedna wizytówka potrafi wywołać kryzys dyplomatyczny.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 11,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 13,
+            "silent_readability": 9
+          },
+          "total": 84,
+          "strength": "Wyrazisty pomysł: Jedna wizytówka potrafi wywołać kryzys dyplomatyczny.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 85.5
+    },
+    {
+      "concept_id": "C02",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 11,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 12,
+            "silent_readability": 9
+          },
+          "total": 86,
+          "strength": "Wyrazisty pomysł: Dzwoni telefon. „Mamy mały problem z budżetem”.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 10,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 13,
+            "silent_readability": 9
+          },
+          "total": 83,
+          "strength": "Wyrazisty pomysł: Dzwoni telefon. „Mamy mały problem z budżetem”.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 84.5
+    },
+    {
+      "concept_id": "C03",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 10,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 10,
+            "silent_readability": 9
+          },
+          "total": 83,
+          "strength": "Wyrazisty pomysł: Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 9,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 11,
+            "silent_readability": 9
+          },
+          "total": 80,
+          "strength": "Wyrazisty pomysł: Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 81.5
+    },
+    {
+      "concept_id": "C04",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 13,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 12,
+            "silent_readability": 9
+          },
+          "total": 88,
+          "strength": "Wyrazisty pomysł: Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 12,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 13,
+            "silent_readability": 9
+          },
+          "total": 85,
+          "strength": "Wyrazisty pomysł: Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 86.5
+    },
+    {
+      "concept_id": "C05",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 16,
+            "story": 13,
+            "originality": 12,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 12,
+            "silent_readability": 9
+          },
+          "total": 85,
+          "strength": "Wyrazisty pomysł: Para otrzymuje wiadomość od samych siebie z dnia wesela.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 15,
+            "story": 12,
+            "originality": 11,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 13,
+            "silent_readability": 9
+          },
+          "total": 82,
+          "strength": "Wyrazisty pomysł: Para otrzymuje wiadomość od samych siebie z dnia wesela.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 83.5
+    },
+    {
+      "concept_id": "C06",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 11,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 10,
+            "silent_readability": 9
+          },
+          "total": 84,
+          "strength": "Wyrazisty pomysł: Sędzia uderza młotkiem: „Kto zaprosił kuzyna?”",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 10,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 11,
+            "silent_readability": 9
+          },
+          "total": 81,
+          "strength": "Wyrazisty pomysł: Sędzia uderza młotkiem: „Kto zaprosił kuzyna?”",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 82.5
+    },
+    {
+      "concept_id": "C07",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 10,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 12,
+            "silent_readability": 9
+          },
+          "total": 85,
+          "strength": "Wyrazisty pomysł: Do wesela zostało 48 godzin. Wszystko nagle przyspiesza.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 9,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 13,
+            "silent_readability": 9
+          },
+          "total": 82,
+          "strength": "Wyrazisty pomysł: Do wesela zostało 48 godzin. Wszystko nagle przyspiesza.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 83.5
+    },
+    {
+      "concept_id": "C08",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 13,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 12,
+            "silent_readability": 9
+          },
+          "total": 88,
+          "strength": "Wyrazisty pomysł: Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 12,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 13,
+            "silent_readability": 9
+          },
+          "total": 85,
+          "strength": "Wyrazisty pomysł: Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 86.5
+    },
+    {
+      "concept_id": "C09",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 18,
+            "story": 13,
+            "originality": 12,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 10,
+            "silent_readability": 9
+          },
+          "total": 85,
+          "strength": "Wyrazisty pomysł: Na stole pojawia się ogromna mapa weselnych krain.",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 17,
+            "story": 12,
+            "originality": 11,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 11,
+            "silent_readability": 9
+          },
+          "total": 82,
+          "strength": "Wyrazisty pomysł: Na stole pojawia się ogromna mapa weselnych krain.",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 83.5
+    },
+    {
+      "concept_id": "C10",
+      "reviews": [
+        {
+          "reviewer": "Dramaturg",
+          "scores": {
+            "hook": 16,
+            "story": 13,
+            "originality": 11,
+            "product": 14,
+            "marketing": 9,
+            "feasibility": 12,
+            "silent_readability": 9
+          },
+          "total": 84,
+          "strength": "Wyrazisty pomysł: Z pokoju przesłuchań dobiega: „A umowa?”",
+          "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        },
+        {
+          "reviewer": "Krytyk marketingowy",
+          "scores": {
+            "hook": 15,
+            "story": 12,
+            "originality": 10,
+            "product": 14,
+            "marketing": 8,
+            "feasibility": 13,
+            "silent_readability": 9
+          },
+          "total": 81,
+          "strength": "Wyrazisty pomysł: Z pokoju przesłuchań dobiega: „A umowa?”",
+          "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+          "veto": false,
+          "kind": "rule_based_demo"
+        }
+      ],
+      "average": 82.5
+    }
+  ],
+  "selected_concept_id": "C01",
+  "script": "TYTUŁ: Operacja: Plan Stołów\nGATUNEK: Komedia szpiegowska | FORMAT: 9:16 | CZAS: 30 s\n\nLOGLINE\nJedna wizytówka potrafi wywołać kryzys dyplomatyczny. Ciocia odkrywa, że siedzi obok dawnej rywalki. Okazuje się, że największą bronią pary jest spokojne przesunięcie miejsca.\n\nSCENARIUSZ\n000.0–003.0 s | Hook\nDwie bezimienne winietki zaczynają zbliżać się do siebie\nDialog: [bez dialogu]\n\n003.0–007.8 s | Reakcja\nNarzeczona wstrzymuje ruch dłoni i patrzy wprost w obiektyw\nDialog: „Nie. Tylko nie to.”\n\n007.8–012.9 s | Eskalacja\nPrzebitki na skonfliktowanych gości jak w thrillerze\nDialog: [bez dialogu]\n\n012.9–018.0 s | Zwrot\nNarzeczony wskazuje stos kartek z planem sali\nDialog: „To przecież miało być proste...”\n\n018.0–025.2 s | Produkt\nAutentyczny widok planu stołów w Nasz Dzień\nDialog: [bez dialogu]\n\n025.2–030.0 s | CTA\nPara spokojnie rozmawia przy kawie; logo i hasło\nDialog: „Nasz Dzień. Mniej chaosu, więcej Was.”\n\nUWAGA: film fikcyjny, lecz ekran aplikacji musi pochodzić z prawdziwego nagrania. Wszystkie roszczenia produktowe wymagają potwierdzenia.",
+  "cast": [
+    {
+      "id": "ONA",
+      "name": "Maja",
+      "look": "fictional Polish woman, 28, soft chestnut shoulder-length hair, brown eyes, natural makeup, ivory blazer, thin gold earrings",
+      "personality": "bystra, ironiczna, opanowana",
+      "avoid": "do not change face, hairstyle, blazer, jewelry"
+    },
+    {
+      "id": "ON",
+      "name": "Kuba",
+      "look": "fictional Polish man, 29, short dark brown hair, light stubble, charcoal shirt, navy trousers",
+      "personality": "pełen energii, ciepły, lekko roztrzepany",
+      "avoid": "do not change face, shirt, hair or beard"
+    }
+  ],
+  "shots": [
+    {
+      "id": "S01",
+      "index": 1,
+      "start": 0,
+      "duration": 3.0,
+      "generation_seconds": 5.2,
+      "beat": "Dwie bezimienne winietki zaczynają zbliżać się do siebie",
+      "function": "Hook",
+      "dialogue": "",
+      "camera": "Macro, 85mm, slow push-in",
+      "prompt": "Cinematic realistic live action, original fictional Polish couple. Dwie bezimienne winietki zaczynają zbliżać się do siebie. Macro, 85mm, slow push-in. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text.",
+      "mode": "t2v",
+      "video_model": "minimax-h3-fasth3-t2v-turbo",
+      "media_url": null,
+      "workflow_id": null,
+      "reference_image_urls": []
+    },
+    {
+      "id": "S02",
+      "index": 2,
+      "start": 3.0,
+      "duration": 4.8,
+      "generation_seconds": 5.2,
+      "beat": "Narzeczona wstrzymuje ruch dłoni i patrzy wprost w obiektyw",
+      "function": "Reakcja",
+      "dialogue": "„Nie. Tylko nie to.”",
+      "camera": "Medium close-up, rack focus",
+      "prompt": "Cinematic realistic live action, original fictional Polish couple. Narzeczona wstrzymuje ruch dłoni i patrzy wprost w obiektyw. Medium close-up, rack focus. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text. Featured woman: fictional Polish woman, 28, soft chestnut shoulder-length hair, brown eyes, natural makeup, ivory blazer, thin gold earrings. Featured man: fictional Polish man, 29, short dark brown hair, light stubble, charcoal shirt, navy trousers.",
+      "mode": "t2v",
+      "video_model": "minimax-h3-fasth3-t2v-turbo",
+      "media_url": null,
+      "workflow_id": null,
+      "reference_image_urls": []
+    },
+    {
+      "id": "S03",
+      "index": 3,
+      "start": 7.8,
+      "duration": 5.1,
+      "generation_seconds": 5.2,
+      "beat": "Przebitki na skonfliktowanych gości jak w thrillerze",
+      "function": "Eskalacja",
+      "dialogue": "",
+      "camera": "Alternating close-ups, whip pan",
+      "prompt": "Cinematic realistic live action, original fictional Polish couple. Przebitki na skonfliktowanych gości jak w thrillerze. Alternating close-ups, whip pan. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text.",
+      "mode": "t2v",
+      "video_model": "minimax-h3-fasth3-t2v-turbo",
+      "media_url": null,
+      "workflow_id": null,
+      "reference_image_urls": []
+    },
+    {
+      "id": "S04",
+      "index": 4,
+      "start": 12.9,
+      "duration": 5.1,
+      "generation_seconds": 5.2,
+      "beat": "Narzeczony wskazuje stos kartek z planem sali",
+      "function": "Zwrot",
+      "dialogue": "„To przecież miało być proste...”",
+      "camera": "Over-shoulder, controlled dolly",
+      "prompt": "Cinematic realistic live action, original fictional Polish couple. Narzeczony wskazuje stos kartek z planem sali. Over-shoulder, controlled dolly. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text. Featured woman: fictional Polish woman, 28, soft chestnut shoulder-length hair, brown eyes, natural makeup, ivory blazer, thin gold earrings. Featured man: fictional Polish man, 29, short dark brown hair, light stubble, charcoal shirt, navy trousers.",
+      "mode": "t2v",
+      "video_model": "minimax-h3-fasth3-t2v-turbo",
+      "media_url": null,
+      "workflow_id": null,
+      "reference_image_urls": []
+    },
+    {
+      "id": "S05",
+      "index": 5,
+      "start": 18.0,
+      "duration": 7.2,
+      "generation_seconds": 0,
+      "beat": "Autentyczny widok planu stołów w Nasz Dzień",
+      "function": "Produkt",
+      "dialogue": "",
+      "camera": "Real recorded screen capture, no AI depiction",
+      "prompt": "Nagraj autentyczny interfejs aplikacji Nasz Dzień, pokaż rzeczywistą funkcję, zamazuj dane prywatne.",
+      "mode": "ui",
+      "video_model": null,
+      "media_url": null,
+      "workflow_id": null,
+      "reference_image_urls": []
+    },
+    {
+      "id": "S06",
+      "index": 6,
+      "start": 25.2,
+      "duration": 4.8,
+      "generation_seconds": 0,
+      "beat": "Para spokojnie rozmawia przy kawie; logo i hasło",
+      "function": "CTA",
+      "dialogue": "„Nasz Dzień. Mniej chaosu, więcej Was.”",
+      "camera": "Warm two-shot, gentle pullback",
+      "prompt": "Nałóż własne logo i hasło w montażu, bez generowania tekstu w modelu wideo.",
+      "mode": "overlay",
+      "video_model": null,
+      "media_url": null,
+      "workflow_id": null,
+      "reference_image_urls": []
+    }
+  ],
+  "mode": "demo",
+  "revisions": 0,
+  "shot_generation": "b2068c98-b0dc-4839-8b2c-a5821ebdba6e"
+}

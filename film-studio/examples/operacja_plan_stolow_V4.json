@@ -1,0 +1,995 @@
+{
+  "project": {
+    "id": "625ada4a-ee8c-45d5-b66b-71ad478b6d13",
+    "title": "Operacja: Plan Stołów — V4",
+    "idea": "Chaos planowania wesela",
+    "objective": "Rejestracje",
+    "duration": 30,
+    "format": "9:16",
+    "tone": "Komedia",
+    "audience": "Narzeczeni 23–35",
+    "feature": "plan stołów",
+    "claims_approved": false,
+    "created": "2026-10-28T16:21:08+00:00",
+    "updated": "2026-10-28T16:21:08+00:00",
+    "status": "director_v4",
+    "concepts": [
+      {
+        "id": "C01",
+        "title": "Operacja: Plan Stołów",
+        "genre": "Komedia szpiegowska",
+        "hook": "Jedna wizytówka potrafi wywołać kryzys dyplomatyczny.",
+        "conflict": "Ciocia odkrywa, że siedzi obok dawnej rywalki.",
+        "twist": "Okazuje się, że największą bronią pary jest spokojne przesunięcie miejsca.",
+        "feature": "plan stołów",
+        "synopsis": "Jedna wizytówka potrafi wywołać kryzys dyplomatyczny. Ciocia odkrywa, że siedzi obok dawnej rywalki. Okazuje się, że największą bronią pary jest spokojne przesunięcie miejsca.",
+        "fit": "wysokie"
+      },
+      {
+        "id": "C02",
+        "title": "Kontrola budżetu",
+        "genre": "Thriller finansowy",
+        "hook": "Dzwoni telefon. „Mamy mały problem z budżetem”.",
+        "conflict": "Nagle pojawia się lista kolejnych niespodziewanych wydatków.",
+        "twist": "Na ekranie pojawia się przejrzysty budżet i ważne terminy płatności.",
+        "feature": "budżet",
+        "synopsis": "Dzwoni telefon. „Mamy mały problem z budżetem”. Nagle pojawia się lista kolejnych niespodziewanych wydatków. Na ekranie pojawia się przejrzysty budżet i ważne terminy płatności.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C03",
+        "title": "Agentka RSVP",
+        "genre": "Komedia kryminalna",
+        "hook": "Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”.",
+        "conflict": "Detektyw w sukni ślubnej rozpracowuje tajemnicze odpowiedzi gości.",
+        "twist": "Lista gości i RSVP pozwalają odzyskać kontrolę.",
+        "feature": "lista gości",
+        "synopsis": "Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”. Detektyw w sukni ślubnej rozpracowuje tajemnicze odpowiedzi gości. Lista gości i RSVP pozwalają odzyskać kontrolę.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C04",
+        "title": "Wesele na 37 karteczkach",
+        "genre": "Mockument",
+        "hook": "Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”.",
+        "conflict": "Kamera odsłania lodówkę pełną karteczek i zakreślaczy.",
+        "twist": "Jeden planer zastępuje improwizowany system.",
+        "feature": "harmonogram",
+        "synopsis": "Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”. Kamera odsłania lodówkę pełną karteczek i zakreślaczy. Jeden planer zastępuje improwizowany system.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C05",
+        "title": "Powrót do przyszłości",
+        "genre": "Komedia science fiction",
+        "hook": "Para otrzymuje wiadomość od samych siebie z dnia wesela.",
+        "conflict": "Przyszli nowożeńcy ostrzegają przed jednym szczegółem organizacyjnym.",
+        "twist": "Teraz mogą go wcześniej zaplanować.",
+        "feature": "harmonogram",
+        "synopsis": "Para otrzymuje wiadomość od samych siebie z dnia wesela. Przyszli nowożeńcy ostrzegają przed jednym szczegółem organizacyjnym. Teraz mogą go wcześniej zaplanować.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C06",
+        "title": "Sąd nad listą gości",
+        "genre": "Satyra sądowa",
+        "hook": "Sędzia uderza młotkiem: „Kto zaprosił kuzyna?”",
+        "conflict": "Świadkowie przedstawiają sprzeczne wersje listy gości.",
+        "twist": "Planer porządkuje zaproszenia i odpowiedzi.",
+        "feature": "lista gości",
+        "synopsis": "Sędzia uderza młotkiem: „Kto zaprosił kuzyna?” Świadkowie przedstawiają sprzeczne wersje listy gości. Planer porządkuje zaproszenia i odpowiedzi.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C07",
+        "title": "Misja: Ostatni piątek",
+        "genre": "Film akcji",
+        "hook": "Do wesela zostało 48 godzin. Wszystko nagle przyspiesza.",
+        "conflict": "W rytmie kina akcji para odhacza zadania.",
+        "twist": "Harmonogram zamienia pośpiech w jasny plan.",
+        "feature": "harmonogram",
+        "synopsis": "Do wesela zostało 48 godzin. Wszystko nagle przyspiesza. W rytmie kina akcji para odhacza zadania. Harmonogram zamienia pośpiech w jasny plan.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C08",
+        "title": "Jedna wiadomość za dużo",
+        "genre": "Komedia romantyczna",
+        "hook": "Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund.",
+        "conflict": "Każdy telefon dotyczy zupełnie innego szczegółu.",
+        "twist": "Wspólny plan pomaga odpowiadać spokojnie.",
+        "feature": "harmonogram",
+        "synopsis": "Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund. Każdy telefon dotyczy zupełnie innego szczegółu. Wspólny plan pomaga odpowiadać spokojnie.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C09",
+        "title": "Władca Exceli",
+        "genre": "Fantasy z humorem",
+        "hook": "Na stole pojawia się ogromna mapa weselnych krain.",
+        "conflict": "Bohaterowie szukają utraconej tabeli budżetu.",
+        "twist": "Realistyczne przejście do prostego planowania.",
+        "feature": "budżet",
+        "synopsis": "Na stole pojawia się ogromna mapa weselnych krain. Bohaterowie szukają utraconej tabeli budżetu. Realistyczne przejście do prostego planowania.",
+        "fit": "alternatywna funkcja"
+      },
+      {
+        "id": "C10",
+        "title": "Przesłuchanie fotografa",
+        "genre": "Komedia proceduralna",
+        "hook": "Z pokoju przesłuchań dobiega: „A umowa?”",
+        "conflict": "Para rozlicza własne notatki o usługodawcach.",
+        "twist": "Oferty i ustalenia trafiają w jedno uporządkowane miejsce.",
+        "feature": "usługodawcy",
+        "synopsis": "Z pokoju przesłuchań dobiega: „A umowa?” Para rozlicza własne notatki o usługodawcach. Oferty i ustalenia trafiają w jedno uporządkowane miejsce.",
+        "fit": "alternatywna funkcja"
+      }
+    ],
+    "reviews": [
+      {
+        "concept_id": "C01",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 12,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 12,
+              "silent_readability": 9
+            },
+            "total": 87,
+            "strength": "Wyrazisty pomysł: Jedna wizytówka potrafi wywołać kryzys dyplomatyczny.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 11,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 13,
+              "silent_readability": 9
+            },
+            "total": 84,
+            "strength": "Wyrazisty pomysł: Jedna wizytówka potrafi wywołać kryzys dyplomatyczny.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 85.5
+      },
+      {
+        "concept_id": "C02",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 11,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 12,
+              "silent_readability": 9
+            },
+            "total": 86,
+            "strength": "Wyrazisty pomysł: Dzwoni telefon. „Mamy mały problem z budżetem”.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 10,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 13,
+              "silent_readability": 9
+            },
+            "total": 83,
+            "strength": "Wyrazisty pomysł: Dzwoni telefon. „Mamy mały problem z budżetem”.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 84.5
+      },
+      {
+        "concept_id": "C03",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 10,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 10,
+              "silent_readability": 9
+            },
+            "total": 83,
+            "strength": "Wyrazisty pomysł: Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 9,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 11,
+              "silent_readability": 9
+            },
+            "total": 80,
+            "strength": "Wyrazisty pomysł: Ktoś wysłał wiadomość: „Przyjdziemy w pięcioro”.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 81.5
+      },
+      {
+        "concept_id": "C04",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 13,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 12,
+              "silent_readability": 9
+            },
+            "total": 88,
+            "strength": "Wyrazisty pomysł: Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 12,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 13,
+              "silent_readability": 9
+            },
+            "total": 85,
+            "strength": "Wyrazisty pomysł: Przyszły pan młody wypowiada słowa: „Wszystko mam zapisane”.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 86.5
+      },
+      {
+        "concept_id": "C05",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 16,
+              "story": 13,
+              "originality": 12,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 12,
+              "silent_readability": 9
+            },
+            "total": 85,
+            "strength": "Wyrazisty pomysł: Para otrzymuje wiadomość od samych siebie z dnia wesela.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 15,
+              "story": 12,
+              "originality": 11,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 13,
+              "silent_readability": 9
+            },
+            "total": 82,
+            "strength": "Wyrazisty pomysł: Para otrzymuje wiadomość od samych siebie z dnia wesela.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 83.5
+      },
+      {
+        "concept_id": "C06",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 11,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 10,
+              "silent_readability": 9
+            },
+            "total": 84,
+            "strength": "Wyrazisty pomysł: Sędzia uderza młotkiem: „Kto zaprosił kuzyna?”",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 10,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 11,
+              "silent_readability": 9
+            },
+            "total": 81,
+            "strength": "Wyrazisty pomysł: Sędzia uderza młotkiem: „Kto zaprosił kuzyna?”",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 82.5
+      },
+      {
+        "concept_id": "C07",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 10,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 12,
+              "silent_readability": 9
+            },
+            "total": 85,
+            "strength": "Wyrazisty pomysł: Do wesela zostało 48 godzin. Wszystko nagle przyspiesza.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 9,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 13,
+              "silent_readability": 9
+            },
+            "total": 82,
+            "strength": "Wyrazisty pomysł: Do wesela zostało 48 godzin. Wszystko nagle przyspiesza.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 83.5
+      },
+      {
+        "concept_id": "C08",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 13,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 12,
+              "silent_readability": 9
+            },
+            "total": 88,
+            "strength": "Wyrazisty pomysł: Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 12,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 13,
+              "silent_readability": 9
+            },
+            "total": 85,
+            "strength": "Wyrazisty pomysł: Narzeczeni otrzymują 17 pytań od rodziny w 30 sekund.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 86.5
+      },
+      {
+        "concept_id": "C09",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 18,
+              "story": 13,
+              "originality": 12,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 10,
+              "silent_readability": 9
+            },
+            "total": 85,
+            "strength": "Wyrazisty pomysł: Na stole pojawia się ogromna mapa weselnych krain.",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 17,
+              "story": 12,
+              "originality": 11,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 11,
+              "silent_readability": 9
+            },
+            "total": 82,
+            "strength": "Wyrazisty pomysł: Na stole pojawia się ogromna mapa weselnych krain.",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 83.5
+      },
+      {
+        "concept_id": "C10",
+        "reviews": [
+          {
+            "reviewer": "Dramaturg",
+            "scores": {
+              "hook": 16,
+              "story": 13,
+              "originality": 11,
+              "product": 14,
+              "marketing": 9,
+              "feasibility": 12,
+              "silent_readability": 9
+            },
+            "total": 84,
+            "strength": "Wyrazisty pomysł: Z pokoju przesłuchań dobiega: „A umowa?”",
+            "weakness": "Sprawdź tempo eskalacji i czy nie ma zbyt długiej ekspozycji.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          },
+          {
+            "reviewer": "Krytyk marketingowy",
+            "scores": {
+              "hook": 15,
+              "story": 12,
+              "originality": 10,
+              "product": 14,
+              "marketing": 8,
+              "feasibility": 13,
+              "silent_readability": 9
+            },
+            "total": 81,
+            "strength": "Wyrazisty pomysł: Z pokoju przesłuchań dobiega: „A umowa?”",
+            "weakness": "Upewnij się, że korzyść produktu jest widoczna przed końcową planszą.",
+            "veto": false,
+            "kind": "rule_based_demo"
+          }
+        ],
+        "average": 82.5
+      }
+    ],
+    "selected_concept_id": "C01",
+    "script": "NASZ DZIEŃ — OPERACJA: PLAN STOŁÓW | DIRECTOR V4 | 30s\nTo przykładowy scenariusz reżyserski offline, nie wynik LLM.\n\n0.0–2.1 s · S01 · hook\nZbliżenie dłoni przesuwającej dwie winietki obok siebie; ręka drugiej osoby łagodnie ją zatrzymuje.\nBez dialogu\n\n2.1–4.8 s · S02 · reaction\nMaja unosi brwi, spogląda na Kubę, z trudem powstrzymuje śmiech; oboje patrzą na winietki, nie na kamerę.\nDialog: Nie. Tylko nie obok siebie.\n\n4.8–7.0 s · S03 · conflict\nCiocia Marianna uśmiecha się przesadnie uprzejmie do kogoś poza kadrem i poprawia serwetkę.\nBez dialogu\n\n7.0–8.9 s · S04 · reaction\nWujek Zygmunt na moment zastyga z filiżanką, po czym odwraca wzrok.\nBez dialogu\n\n8.9–11.4 s · S05 · action\nKuba wskazuje plan stołów na stole; Maja przysuwa laptop. Krótki, autentyczny ruch dłoni.\nDialog: Dobra. Zróbmy to inaczej.\n\n11.4–15.6 s · S06 · product_before_after\nAUTENTYCZNY SCREEN CAPTURE: plan stołów Nasz Dzień, przybliżenie na jednego gościa, przesunięcie do innego stołu, widoczny wynik PRZED i PO. Bez fikcyjnego UI.\nBez dialogu\n\n15.6–18.6 s · S07 · relief\nKuba patrzy na Maję z niedowierzaniem, po chwili lekko się uśmiecha. Maja odpowiada krótkim spojrzeniem.\nDialog: I już?\n\n18.6–22.4 s · S08 · payoff\nCiocia Marianna przy innym stole rozmawia radośnie z gośćmi. Wujek Zygmunt w tle dyskretnie podnosi filiżankę na znak pokoju.\nBez dialogu\n\n22.4–25.6 s · S09 · human_close\nMaja i Kuba wymieniają spojrzenia i spontanicznie, krótko się śmieją — bez patrzenia w kamerę.\nBez dialogu\n\n25.6–30.0 s · S10 · cta\nOryginalne logo Nasz Dzień i hasło „Mniej stresu. Więcej Was.” zmontowane lokalnie na prawdziwym ujęciu lub własnej planszy.\nBez dialogu",
+    "cast": [
+      {
+        "id": "ONA",
+        "name": "Maja",
+        "look": "fictional Polish woman, 28, chestnut shoulder-length hair, brown eyes, subtle natural makeup, ivory blazer, small gold hoop earrings",
+        "personality": "spokojna, dowcipna; subtelne reakcje",
+        "avoid": "no glamour filter, no overly broad smile, no frontal advertising poses"
+      },
+      {
+        "id": "ON",
+        "name": "Kuba",
+        "look": "fictional Polish man, 29, short dark brown hair, light stubble, dark charcoal shirt, navy trousers",
+        "personality": "ciepły, nieco roztargniony; łagodny humor",
+        "avoid": "no overacting, no exaggerated surprise, no speaking to camera"
+      },
+      {
+        "id": "CIOCIA",
+        "name": "Marianna",
+        "look": "fictional Polish woman, 63, short silver hair, burgundy silk jacket, discreet pearl earrings",
+        "personality": "dumna, dowcipna, uprzejma aż do przesady",
+        "avoid": "no changing age or wardrobe"
+      },
+      {
+        "id": "WUJEK",
+        "name": "Zygmunt",
+        "look": "fictional Polish man, 67, grey hair, thin silver glasses, navy suit, muted green tie",
+        "personality": "powściągliwy, lekko ironiczny",
+        "avoid": "no changing glasses, age or tie"
+      }
+    ],
+    "shots": [
+      {
+        "id": "S01",
+        "index": 1,
+        "start": 0.0,
+        "duration": 2.143,
+        "in_point": 0.0,
+        "out_point": 2.143,
+        "shot_role": "hook",
+        "function": "hook",
+        "beat": "Zbliżenie dłoni przesuwającej dwie winietki obok siebie; ręka drugiej osoby łagodnie ją zatrzymuje.",
+        "dialogue": "",
+        "dialogue_id": null,
+        "camera": "85mm macro, gentle handheld, tiny rack focus",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish woman, 28, chestnut shoulder-length hair, brown eyes, subtle natural makeup, ivory blazer, small gold hoop earrings; fictional Polish man, 29, short dark brown hair, light stubble, dark charcoal shirt, navy trousers. Scene action: Zbliżenie dłoni przesuwającej dwie winietki obok siebie; ręka drugiej osoby łagodnie ją zatrzymuje.. Camera: 85mm macro, gentle handheld, tiny rack focus.",
+        "mode": "t2v",
+        "characters": [
+          "ONA",
+          "ON"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "d1e1a376-ff08-46fb-bcc8-f00d25831b14"
+      },
+      {
+        "id": "S02",
+        "index": 2,
+        "start": 2.143,
+        "duration": 2.679,
+        "in_point": 0.0,
+        "out_point": 2.679,
+        "shot_role": "reaction",
+        "function": "reaction",
+        "beat": "Maja unosi brwi, spogląda na Kubę, z trudem powstrzymuje śmiech; oboje patrzą na winietki, nie na kamerę.",
+        "dialogue": "Nie. Tylko nie obok siebie.",
+        "dialogue_id": "D02",
+        "camera": "50mm close two-shot, eye line continuity",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish woman, 28, chestnut shoulder-length hair, brown eyes, subtle natural makeup, ivory blazer, small gold hoop earrings; fictional Polish man, 29, short dark brown hair, light stubble, dark charcoal shirt, navy trousers. Scene action: Maja unosi brwi, spogląda na Kubę, z trudem powstrzymuje śmiech; oboje patrzą na winietki, nie na kamerę.. Camera: 50mm close two-shot, eye line continuity.",
+        "mode": "t2v",
+        "characters": [
+          "ONA",
+          "ON"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "a762942a-63b5-4452-a25b-ce976e3312d4"
+      },
+      {
+        "id": "S03",
+        "index": 3,
+        "start": 4.822,
+        "duration": 2.143,
+        "in_point": 0.0,
+        "out_point": 2.143,
+        "shot_role": "conflict",
+        "function": "conflict",
+        "beat": "Ciocia Marianna uśmiecha się przesadnie uprzejmie do kogoś poza kadrem i poprawia serwetkę.",
+        "dialogue": "",
+        "dialogue_id": null,
+        "camera": "70mm medium close-up, camera locked",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish woman, 63, short silver hair, burgundy silk jacket, discreet pearl earrings. Scene action: Ciocia Marianna uśmiecha się przesadnie uprzejmie do kogoś poza kadrem i poprawia serwetkę.. Camera: 70mm medium close-up, camera locked.",
+        "mode": "t2v",
+        "characters": [
+          "CIOCIA"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "64a68d37-16a1-4478-989e-9b3f87160a50"
+      },
+      {
+        "id": "S04",
+        "index": 4,
+        "start": 6.965,
+        "duration": 1.929,
+        "in_point": 0.0,
+        "out_point": 1.929,
+        "shot_role": "reaction",
+        "function": "reaction",
+        "beat": "Wujek Zygmunt na moment zastyga z filiżanką, po czym odwraca wzrok.",
+        "dialogue": "",
+        "dialogue_id": null,
+        "camera": "70mm close-up, subtle natural breathing",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish man, 67, grey hair, thin silver glasses, navy suit, muted green tie. Scene action: Wujek Zygmunt na moment zastyga z filiżanką, po czym odwraca wzrok.. Camera: 70mm close-up, subtle natural breathing.",
+        "mode": "t2v",
+        "characters": [
+          "WUJEK"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "60894f66-9c95-4ac6-92d0-addebeceede6"
+      },
+      {
+        "id": "S05",
+        "index": 5,
+        "start": 8.894,
+        "duration": 2.464,
+        "in_point": 0.0,
+        "out_point": 2.464,
+        "shot_role": "action",
+        "function": "action",
+        "beat": "Kuba wskazuje plan stołów na stole; Maja przysuwa laptop. Krótki, autentyczny ruch dłoni.",
+        "dialogue": "Dobra. Zróbmy to inaczej.",
+        "dialogue_id": "D05",
+        "camera": "35mm over-shoulder, small dolly",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish woman, 28, chestnut shoulder-length hair, brown eyes, subtle natural makeup, ivory blazer, small gold hoop earrings; fictional Polish man, 29, short dark brown hair, light stubble, dark charcoal shirt, navy trousers. Scene action: Kuba wskazuje plan stołów na stole; Maja przysuwa laptop. Krótki, autentyczny ruch dłoni.. Camera: 35mm over-shoulder, small dolly.",
+        "mode": "t2v",
+        "characters": [
+          "ONA",
+          "ON"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "48f28bef-41c1-46a8-99fd-be428d260ffc"
+      },
+      {
+        "id": "S06",
+        "index": 6,
+        "start": 11.358,
+        "duration": 4.286,
+        "in_point": 0.0,
+        "out_point": 4.286,
+        "shot_role": "product_before_after",
+        "function": "product_before_after",
+        "beat": "AUTENTYCZNY SCREEN CAPTURE: plan stołów Nasz Dzień, przybliżenie na jednego gościa, przesunięcie do innego stołu, widoczny wynik PRZED i PO. Bez fikcyjnego UI.",
+        "dialogue": "",
+        "dialogue_id": null,
+        "camera": "Real screen recording, deliberate crop, readable labels",
+        "prompt": "AUTENTYCZNY SCREEN CAPTURE: plan stołów Nasz Dzień, przybliżenie na jednego gościa, przesunięcie do innego stołu, widoczny wynik PRZED i PO. Bez fikcyjnego UI.",
+        "mode": "ui",
+        "characters": [],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 0,
+        "video_model": null,
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "ad765cc1-0927-4e55-a6ed-fec631db0ed7"
+      },
+      {
+        "id": "S07",
+        "index": 7,
+        "start": 15.644,
+        "duration": 3.0,
+        "in_point": 0.0,
+        "out_point": 3.0,
+        "shot_role": "relief",
+        "function": "relief",
+        "beat": "Kuba patrzy na Maję z niedowierzaniem, po chwili lekko się uśmiecha. Maja odpowiada krótkim spojrzeniem.",
+        "dialogue": "I już?",
+        "dialogue_id": "D07",
+        "camera": "50mm medium two-shot, natural imperfect timing",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish woman, 28, chestnut shoulder-length hair, brown eyes, subtle natural makeup, ivory blazer, small gold hoop earrings; fictional Polish man, 29, short dark brown hair, light stubble, dark charcoal shirt, navy trousers. Scene action: Kuba patrzy na Maję z niedowierzaniem, po chwili lekko się uśmiecha. Maja odpowiada krótkim spojrzeniem.. Camera: 50mm medium two-shot, natural imperfect timing.",
+        "mode": "t2v",
+        "characters": [
+          "ONA",
+          "ON"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "d6c12475-182b-4df4-b10c-fb6d869bfc99"
+      },
+      {
+        "id": "S08",
+        "index": 8,
+        "start": 18.644,
+        "duration": 3.75,
+        "in_point": 0.0,
+        "out_point": 3.75,
+        "shot_role": "payoff",
+        "function": "payoff",
+        "beat": "Ciocia Marianna przy innym stole rozmawia radośnie z gośćmi. Wujek Zygmunt w tle dyskretnie podnosi filiżankę na znak pokoju.",
+        "dialogue": "",
+        "dialogue_id": null,
+        "camera": "35mm warm wide shot, one slow handheld move",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish woman, 63, short silver hair, burgundy silk jacket, discreet pearl earrings; fictional Polish man, 67, grey hair, thin silver glasses, navy suit, muted green tie. Scene action: Ciocia Marianna przy innym stole rozmawia radośnie z gośćmi. Wujek Zygmunt w tle dyskretnie podnosi filiżankę na znak pokoju.. Camera: 35mm warm wide shot, one slow handheld move.",
+        "mode": "t2v",
+        "characters": [
+          "CIOCIA",
+          "WUJEK"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "5a33bbbd-0401-4bd7-ae54-13008387a1cd"
+      },
+      {
+        "id": "S09",
+        "index": 9,
+        "start": 22.394,
+        "duration": 3.214,
+        "in_point": 0.0,
+        "out_point": 3.214,
+        "shot_role": "human_close",
+        "function": "human_close",
+        "beat": "Maja i Kuba wymieniają spojrzenia i spontanicznie, krótko się śmieją — bez patrzenia w kamerę.",
+        "dialogue": "",
+        "dialogue_id": null,
+        "camera": "50mm intimate two-shot, shallow but realistic depth",
+        "prompt": "Same lived-in Polish wedding venue, ivory linen, subtle flowers, warm practical light, believable skin texture and naturally imperfect placement of tableware. Observational cinematic live action, modest facial micro-expressions, imperfect natural timing, one physically plausible action. Stable identity, garments and prop placement. NO eye contact with camera, NO exaggerated acting, NO uncanny smiles, NO fake screens, NO subtitles, NO generated logos, NO written text. Character continuity: fictional Polish woman, 28, chestnut shoulder-length hair, brown eyes, subtle natural makeup, ivory blazer, small gold hoop earrings; fictional Polish man, 29, short dark brown hair, light stubble, dark charcoal shirt, navy trousers. Scene action: Maja i Kuba wymieniają spojrzenia i spontanicznie, krótko się śmieją — bez patrzenia w kamerę.. Camera: 50mm intimate two-shot, shallow but realistic depth.",
+        "mode": "t2v",
+        "characters": [
+          "ONA",
+          "ON"
+        ],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 5.2,
+        "video_model": "minimax-h3-fasth3-t2v-turbo",
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "44c7af22-721a-4773-a73b-9f2328aa32e7"
+      },
+      {
+        "id": "S10",
+        "index": 10,
+        "start": 25.608,
+        "duration": 4.392,
+        "in_point": 0.0,
+        "out_point": 4.392,
+        "shot_role": "cta",
+        "function": "cta",
+        "beat": "Oryginalne logo Nasz Dzień i hasło „Mniej stresu. Więcej Was.” zmontowane lokalnie na prawdziwym ujęciu lub własnej planszy.",
+        "dialogue": "",
+        "dialogue_id": null,
+        "camera": "Static branded end card created in editor, safe margins",
+        "prompt": "Oryginalne logo Nasz Dzień i hasło „Mniej stresu. Więcej Was.” zmontowane lokalnie na prawdziwym ujęciu lub własnej planszy.",
+        "mode": "overlay",
+        "characters": [],
+        "continuity_id": "SALA_A_2026",
+        "location": "Sala weselna, światło ciepłe, wieczór",
+        "wardrobe_locked": true,
+        "approved": false,
+        "qc_approved": false,
+        "generation_seconds": 0,
+        "video_model": null,
+        "media_url": null,
+        "workflow_id": null,
+        "reference_image_urls": [],
+        "edit_version": "18de4ff8-9f2e-4aae-87fc-9382e071ed0f"
+      }
+    ],
+    "mode": "demo",
+    "revisions": 0,
+    "storyboard_stale": false,
+    "creative_memory": [],
+    "shot_generation": "a5015d41-d3c4-48b2-8488-8f8928b61d4c",
+    "script_versions": [
+      {
+        "script": "TYTUŁ: Operacja: Plan Stołów\nGATUNEK: Komedia szpiegowska | FORMAT: 9:16 | CZAS: 30 s\n\nLOGLINE\nJedna wizytówka potrafi wywołać kryzys dyplomatyczny. Ciocia odkrywa, że siedzi obok dawnej rywalki. Okazuje się, że największą bronią pary jest spokojne przesunięcie miejsca.\n\nSCENARIUSZ\n000.0–003.0 s | Hook\nDwie bezimienne winietki zaczynają zbliżać się do siebie\nDialog: [bez dialogu]\n\n003.0–007.8 s | Reakcja\nNarzeczona wstrzymuje ruch dłoni i patrzy wprost w obiektyw\nDialog: „Nie. Tylko nie to.”\n\n007.8–012.9 s | Eskalacja\nPrzebitki na skonfliktowanych gości jak w thrillerze\nDialog: [bez dialogu]\n\n012.9–018.0 s | Zwrot\nNarzeczony wskazuje stos kartek z planem sali\nDialog: „To przecież miało być proste...”\n\n018.0–025.2 s | Produkt\nAutentyczny widok planu stołów w Nasz Dzień\nDialog: [bez dialogu]\n\n025.2–030.0 s | CTA\nPara spokojnie rozmawia przy kawie; logo i hasło\nDialog: „Nasz Dzień. Mniej chaosu, więcej Was.”\n\nUWAGA: film fikcyjny, lecz ekran aplikacji musi pochodzić z prawdziwego nagrania. Wszystkie roszczenia produktowe wymagają potwierdzenia.",
+        "shots": [
+          {
+            "id": "S01",
+            "index": 1,
+            "start": 0,
+            "duration": 3.0,
+            "generation_seconds": 5.2,
+            "beat": "Dwie bezimienne winietki zaczynają zbliżać się do siebie",
+            "function": "Hook",
+            "dialogue": "",
+            "camera": "Macro, 85mm, slow push-in",
+            "prompt": "Cinematic realistic live action, original fictional Polish couple. Dwie bezimienne winietki zaczynają zbliżać się do siebie. Macro, 85mm, slow push-in. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text.",
+            "mode": "t2v",
+            "video_model": "minimax-h3-fasth3-t2v-turbo",
+            "media_url": null,
+            "workflow_id": null,
+            "reference_image_urls": []
+          },
+          {
+            "id": "S02",
+            "index": 2,
+            "start": 3.0,
+            "duration": 4.8,
+            "generation_seconds": 5.2,
+            "beat": "Narzeczona wstrzymuje ruch dłoni i patrzy wprost w obiektyw",
+            "function": "Reakcja",
+            "dialogue": "„Nie. Tylko nie to.”",
+            "camera": "Medium close-up, rack focus",
+            "prompt": "Cinematic realistic live action, original fictional Polish couple. Narzeczona wstrzymuje ruch dłoni i patrzy wprost w obiektyw. Medium close-up, rack focus. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text. Featured woman: fictional Polish woman, 28, soft chestnut shoulder-length hair, brown eyes, natural makeup, ivory blazer, thin gold earrings. Featured man: fictional Polish man, 29, short dark brown hair, light stubble, charcoal shirt, navy trousers.",
+            "mode": "t2v",
+            "video_model": "minimax-h3-fasth3-t2v-turbo",
+            "media_url": null,
+            "workflow_id": null,
+            "reference_image_urls": []
+          },
+          {
+            "id": "S03",
+            "index": 3,
+            "start": 7.8,
+            "duration": 5.1,
+            "generation_seconds": 5.2,
+            "beat": "Przebitki na skonfliktowanych gości jak w thrillerze",
+            "function": "Eskalacja",
+            "dialogue": "",
+            "camera": "Alternating close-ups, whip pan",
+            "prompt": "Cinematic realistic live action, original fictional Polish couple. Przebitki na skonfliktowanych gości jak w thrillerze. Alternating close-ups, whip pan. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text.",
+            "mode": "t2v",
+            "video_model": "minimax-h3-fasth3-t2v-turbo",
+            "media_url": null,
+            "workflow_id": null,
+            "reference_image_urls": []
+          },
+          {
+            "id": "S04",
+            "index": 4,
+            "start": 12.9,
+            "duration": 5.1,
+            "generation_seconds": 5.2,
+            "beat": "Narzeczony wskazuje stos kartek z planem sali",
+            "function": "Zwrot",
+            "dialogue": "„To przecież miało być proste...”",
+            "camera": "Over-shoulder, controlled dolly",
+            "prompt": "Cinematic realistic live action, original fictional Polish couple. Narzeczony wskazuje stos kartek z planem sali. Over-shoulder, controlled dolly. Stable natural faces, physically believable hands, simple single continuous action, no subtitles, no logos, no written text. Featured woman: fictional Polish woman, 28, soft chestnut shoulder-length hair, brown eyes, natural makeup, ivory blazer, thin gold earrings. Featured man: fictional Polish man, 29, short dark brown hair, light stubble, charcoal shirt, navy trousers.",
+            "mode": "t2v",
+            "video_model": "minimax-h3-fasth3-t2v-turbo",
+            "media_url": null,
+            "workflow_id": null,
+            "reference_image_urls": []
+          },
+          {
+            "id": "S05",
+            "index": 5,
+            "start": 18.0,
+            "duration": 7.2,
+            "generation_seconds": 0,
+            "beat": "Autentyczny widok planu stołów w Nasz Dzień",
+            "function": "Produkt",
+            "dialogue": "",
+            "camera": "Real recorded screen capture, no AI depiction",
+            "prompt": "Nagraj autentyczny interfejs aplikacji Nasz Dzień, pokaż rzeczywistą funkcję, zamazuj dane prywatne.",
+            "mode": "ui",
+            "video_model": null,
+            "media_url": null,
+            "workflow_id": null,
+            "reference_image_urls": []
+          },
+          {
+            "id": "S06",
+            "index": 6,
+            "start": 25.2,
+            "duration": 4.8,
+            "generation_seconds": 0,
+            "beat": "Para spokojnie rozmawia przy kawie; logo i hasło",
+            "function": "CTA",
+            "dialogue": "„Nasz Dzień. Mniej chaosu, więcej Was.”",
+            "camera": "Warm two-shot, gentle pullback",
+            "prompt": "Nałóż własne logo i hasło w montażu, bez generowania tekstu w modelu wideo.",
+            "mode": "overlay",
+            "video_model": null,
+            "media_url": null,
+            "workflow_id": null,
+            "reference_image_urls": []
+          }
+        ],
+        "created": "2026-10-28T16:21:08+00:00",
+        "reason": "director_v4_upgrade"
+      }
+    ],
+    "v4_quality_mode": true,
+    "v4_approved_screen": false,
+    "v4_story_review": {
+      "method": "offline_template",
+      "observations": [
+        "Hook pokazany działaniem w pierwszych 2 s",
+        "Naturalna reakcja bohaterów bez patrzenia w kamerę",
+        "Autentyczny produkt z konkretnym gestem przesunięcia gościa",
+        "Wizualna puenta przed końcowym CTA",
+        "Ujęcia zgrupowane w jednym spójnym wnętrzu"
+      ]
+    }
+  }
+}

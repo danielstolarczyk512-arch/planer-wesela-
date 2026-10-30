@@ -1,0 +1,189 @@
+{
+  "angles": {
+    "azimuths": [
+      "front",
+      "front-right",
+      "right",
+      "back-right",
+      "back",
+      "back-left",
+      "left",
+      "front-left"
+    ],
+    "elevations": [
+      "low-angle",
+      "eye-level",
+      "elevated",
+      "high-angle"
+    ],
+    "distances": [
+      "close-up",
+      "medium",
+      "wide"
+    ]
+  },
+  "presets": {
+    "portrait_trio": {
+      "name": "Portret z trzech stron",
+      "use": "Arkusze i kontrola tożsamości postaci",
+      "angles_count": 4,
+      "points": [
+        {
+          "azimuth": "front",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front-right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front-left",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front",
+          "elevation": "elevated",
+          "distance": "medium"
+        }
+      ]
+    },
+    "dialogue_reveal": {
+      "name": "Filmowe odkrycie pary",
+      "use": "Krótkie ujęcie wspólne, maks. 45° zmiany",
+      "angles_count": 2,
+      "points": [
+        {
+          "azimuth": "front",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front-right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        }
+      ]
+    },
+    "phone_reveal": {
+      "name": "Odsłonięcie telefonu",
+      "use": "Płynny przejazd do ramienia, UI nakładane podczas montażu",
+      "angles_count": 2,
+      "points": [
+        {
+          "azimuth": "front-right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "right",
+          "elevation": "elevated",
+          "distance": "close-up"
+        }
+      ]
+    },
+    "wedding_room": {
+      "name": "Odkrycie sali weselnej",
+      "use": "Duży plan i lekki ruch ponad scenografią",
+      "angles_count": 2,
+      "points": [
+        {
+          "azimuth": "front",
+          "elevation": "eye-level",
+          "distance": "wide"
+        },
+        {
+          "azimuth": "front-right",
+          "elevation": "elevated",
+          "distance": "wide"
+        }
+      ]
+    },
+    "hero_orbit": {
+      "name": "Bohater — krótki orbit",
+      "use": "Jedna postać bez skomplikowanych gestów",
+      "angles_count": 3,
+      "points": [
+        {
+          "azimuth": "front",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front-right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        }
+      ]
+    },
+    "full_360": {
+      "name": "Pełen obrót 360 — ostrożnie",
+      "use": "Test modelu postaci lub produkt; nie domyślny montaż reklamowy",
+      "angles_count": 9,
+      "points": [
+        {
+          "azimuth": "front",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front-right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "back-right",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "back",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "back-left",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "left",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front-left",
+          "elevation": "eye-level",
+          "distance": "medium"
+        },
+        {
+          "azimuth": "front",
+          "elevation": "eye-level",
+          "distance": "medium"
+        }
+      ]
+    }
+  },
+  "warnings": [
+    "360 jest syntezą nowych widoków, a nie dokładną kamerą w prawdziwej scenie 3D; niewidoczne fragmenty są zgadywane.",
+    "Przy dwóch osobach, dłoniach, telefonach i bogatym tle ryzyko deformacji rośnie.",
+    "Pełne 360° często osłabia dramaturgię; w reklamie preferuj 2–3 punkty i maksymalnie 45–90° zmiany.",
+    "Tekst interfejsu Nasz Dzień wstawiaj podczas montażu, a nie generuj przez 360.",
+    "Nie wysyłaj automatycznie zleceń. Operacje wymagają aktualnego Unlimited, weryfikacji oraz billing_mode=subscription."
+  ],
+  "service_url": "https://360.sogni.ai/",
+  "cloud_generation_implemented": false,
+  "local_planning_available": true
+}
