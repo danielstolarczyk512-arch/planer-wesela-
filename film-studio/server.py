@@ -1,56 +1,31 @@
 #!/usr/bin/env python3
 """Nasz Dzień Film Studio v4: local-first production with QC gates."""
 import argparse
+import base64
 import json
 import mimetypes
 import os
 import re
 import secrets
-import shutil
 import sys
 import traceback
-import uuid
 import zipfile
-from datetime import UTC, datetime
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import uuid
+import shutil
+from datetime import datetime,timezone
+from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from pathlib import Path
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import urlparse,parse_qs
 
+from studio import reference_forge_v87,rendered_inspector_v86,timeline_v85,quality_v85,story_director_v84,jobs_v84,ai,engine,exporter,sogni,personas,style_guide,reference_v6,camera360,camera360_cli,dialogue_v7,cinematic_v7,voice_cli_v7,voice_v8,pace_v8,product_demo_v8,visual_lock_v82,character_bible_v83,reference_v83,portable_v83
 from director.story import apply_director_v4
-from product.screen_capture import provenance
-from qc.continuity_v85 import contact_sheet
-from qc.lips_v7 import inspect_mouth
-from qc.motion_v8 import inspect_motion
 from qc.story import audit as story_audit
 from qc.video import inspect_shot
-from studio import (
-    ai,
-    camera360,
-    camera360_cli,
-    character_bible_v83,
-    cinematic_v7,
-    dialogue_v7,
-    engine,
-    exporter,
-    jobs_v84,
-    pace_v8,
-    personas,
-    portable_v83,
-    product_demo_v8,
-    quality_v85,
-    reference_v6,
-    reference_v83,
-    rendered_inspector_v86,
-    sogni,
-    story_director_v84,
-    style_guide,
-    timeline_v85,
-    visual_lock_v82,
-    voice_cli_v7,
-    voice_v8,
-)
+from qc.lips_v7 import inspect_mouth
+from qc.motion_v8 import inspect_motion
+from qc.continuity_v85 import contact_sheet
+from product.screen_capture import provenance
 from studio.store import Store
-
 ROOT=Path(__file__).resolve().parent
 STATIC=ROOT/'web'
 ID=r'([0-9a-f]{8}-[0-9a-f-]{27,36})'
@@ -124,6 +99,46 @@ class Handler(BaseHTTPRequestHandler):
                 'example_shot_roles':['ONA','ON','WUJEK']},
               'film_inspector':'ffmpeg_offline_actual_mp4','no_sogni_requests':True,
               'quality_limits':'no visual identity recognition or phoneme sync verification'})
+        # V8.7: kreator referencji (nowe postacie i lokalizacje, styl realistyczny lub animowany).
+        forge=re.fullmatch(r'/api/v87/forge(?:/([a-z0-9_]{1,50})(?:/(approve|generate|manifest|image/([a-z0-9_]{1,60})))?)?',path)
+        if forge:
+            eid,action,image_key=forge.groups()
+            F=reference_forge_v87
+            try:
+                if eid is None and method=='GET':
+                    return self.send_json({'sets':F.list_all(),'styles':list(F.STYLES),'billing_mode':'subscription_only',
+                        'views':{'character':[v[:2] for v in F.CHARACTER_VIEWS],'location':[v[:2] for v in F.LOCATION_VIEWS]}})
+                if eid is None and method=='POST':
+                    d=self.read_json();import tempfile,base64
+                    tmp=Path(tempfile.mkdtemp());paths=[]
+                    for i,u in enumerate((d.get('sources_base64') or [])[:3]):
+                        m=re.fullmatch(r'data:image/(png|jpeg|webp);base64,([A-Za-z0-9+/=]+)',str(u))
+                        if not m:raise ApiError('Obraz źródłowy musi być data URL png/jpeg/webp',400)
+                        f=tmp/f'src{i}.{"jpg" if m.group(1)=="jpeg" else m.group(1)}';f.write_bytes(base64.b64decode(m.group(2)));paths.append(f)
+                    try:meta=F.create(str(d.get('kind','')),str(d.get('name','')),str(d.get('description','')),str(d.get('style','realistic')),paths,str(d.get('extra','')))
+                    finally:shutil.rmtree(tmp,ignore_errors=True)
+                    return self.send_json(F.public_view(meta),201)
+                meta=F._load(eid)
+                if action is None and method=='GET':return self.send_json(F.public_view(meta))
+                if action and action.startswith('image/') and method=='GET':
+                    if image_key not in meta['images']:raise ApiError('Nie ma takiego obrazu',404)
+                    return self.send_bytes((F._dir(eid)/meta['images'][image_key]['file']).read_bytes(),'image/png')
+                if action=='approve' and method=='POST':
+                    d=self.read_json()
+                    return self.send_json(F.public_view(F.approve(eid,str(d.get('image','')),viewed_confirmed=d.get('viewed') is True)))
+                if action=='manifest' and method=='POST':return self.send_json(F.manifest(eid))
+                if action=='generate' and method=='POST':
+                    d=self.read_json()
+                    if d.get('confirm_cost') is not True:raise ApiError('Wymagane potwierdzenie generacji w planie Unlimited (confirm_cost=true)',428)
+                    views=[str(v) for v in d.get('views',[])] or [F.ANCHOR[meta['kind']]]
+                    made=F.generate(eid,views,cands=max(1,min(int(d.get('cands',1)),4)),max_units_total=float(d.get('max_units_total',60)))
+                    return self.send_json({'generated':made,'set':F.public_view(F._load(eid))})
+            except KeyError as e:raise ApiError(str(e).strip("'\""),404) from None
+            except PermissionError as e:raise ApiError(str(e),403) from None
+            except ValueError as e:raise ApiError(str(e),400) from None
+            except F.HaltError as e:raise ApiError(str(e),409) from None
+            except sogni.ProviderError as e:raise ApiError(str(e),e.status if 400<=e.status<600 else 502) from None
+            raise ApiError('Metoda nie jest obsługiwana',405)
         film_match=re.fullmatch('/api/v86/projects/'+ID+'/film',path)
         if film_match:
             pid=film_match.group(1);project=self.get_project(pid)
@@ -145,8 +160,7 @@ class Handler(BaseHTTPRequestHandler):
                     raise ApiError('Rozmiar MP4: maksymalnie 200 MB',413)
                 if self.headers.get('X-Film-Review-Consent')!='true':
                     raise ApiError('Potwierdź lokalny import MP4 do audytu',403)
-                import hashlib
-                import tempfile
+                import tempfile,hashlib
                 dst.parent.mkdir(parents=True,exist_ok=True)
                 with tempfile.NamedTemporaryFile(dir=dst.parent,suffix='.mp4',delete=False) as f:
                     temp=Path(f.name); left=n;hasher=hashlib.sha256()
@@ -1111,7 +1125,7 @@ class Handler(BaseHTTPRequestHandler):
                 shot['image_url']=result['url'];shot['video_model']='minimax-h3-fasth3-i2v-turbo'
                 if p.get('v82_visual_lock'):
                     shot['v82_synced_sha256']=(shot.get('v82_frame_approval') or {}).get('sha256')
-                    shot['v82_synced_at']=datetime.now(UTC).isoformat(timespec='seconds')
+                    shot['v82_synced_at']=datetime.now(timezone.utc).isoformat(timespec='seconds')
                 shot.pop('quote',None)
                 if not p.get('v82_visual_lock'):shot['edit_version']=str(uuid.uuid4())
                 p['updated']=engine.now();self.db.save_project(p)
@@ -1192,7 +1206,7 @@ class Handler(BaseHTTPRequestHandler):
                 if data.get('approve') is not True:raise ApiError('Wymagana zgoda na generowanie w abonamencie Unlimited.',403)
                 quote=shot.get('image_quote') or {}
                 if quote.get('id')!=data.get('quote_id'):raise ApiError('Wycena obrazu nieaktualna.',409)
-                if (datetime.now(UTC)-datetime.fromisoformat(quote['created'])).total_seconds()>300:
+                if (datetime.now(timezone.utc)-datetime.fromisoformat(quote['created'])).total_seconds()>300:
                     raise ApiError('Wycena obrazu straciła ważność.',409)
                 try:limit=float(data.get('max_capacity_units',0))
                 except (ValueError,TypeError):raise ApiError('Nieprawidłowy limit kosztu')
@@ -1226,7 +1240,7 @@ class Handler(BaseHTTPRequestHandler):
                 if data.get('approve') is not True:raise ApiError('Potwierdź generację w abonamencie Unlimited.',403)
                 quote=shot.get('quote') or {}
                 if quote.get('id')!=data.get('quote_id'):raise ApiError('Wycena wygasła lub nie dotyczy tego ujęcia.',409)
-                age=(datetime.now(UTC)-datetime.fromisoformat(quote['created'])).total_seconds()
+                age=(datetime.now(timezone.utc)-datetime.fromisoformat(quote['created'])).total_seconds()
                 if age>300:raise ApiError('Wycena starsza niż 5 minut. Pobierz aktualną.',409)
                 try:limit=float(data.get('max_capacity_units',0))
                 except (ValueError,TypeError):raise ApiError('Nieprawidłowy limit kosztu')
